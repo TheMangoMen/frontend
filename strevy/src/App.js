@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
+const BASE_URL = "http://localhost:8080/";
+
 function App() {
 
   const [data, setData] = useState(null);
 
   useEffect(()=> {
-    fetch('https://api.coincap.io/v2/assets')
+    fetch(`${BASE_URL}/hevy/workouts`)
       .then(response => response.json())
       .then(json =>setData(json))
       .catch(error=>console.error(error));
@@ -16,12 +18,11 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        Personal finances tracker
-        <p>
-        {data ? <pre>{JSON.stringify(data, null, 2)}</pre> : 'Loading...'}
-        </p>
-        
+        Personal fitness tracker
       </header>
+      <div>
+        {data ? <pre>{JSON.stringify(data, null, 2)}</pre> : 'Loading...'}
+      </div>
     </div>
   );
 }
