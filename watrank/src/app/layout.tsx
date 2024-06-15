@@ -28,8 +28,8 @@ export default function RootLayout({
             disableTransitionOnChange>
         <div>
         <header className="bg-background flex items-center justify-between px-10 py-10 sticky h-[60px] left-0 right-0 top-0 z-[100]">
-        <div className="text-2xl flex gap-2 items-center">
-          <ChevronsUp className="text-primary" width={"100%"} height={"1.2em"} strokeWidth={3} strokeLinecap="square"/>
+        <div className="text-2xl flex gap-2 justify-start">
+          <ChevronsUp className="text-primary" width={"1.2em"} height={"1.2em"} strokeWidth={3} strokeLinecap="square"/>
           <div className="font-light">Wat<span className="font-bold ">Rank</span></div>
         </div>
         <div className="flex gap-5">
