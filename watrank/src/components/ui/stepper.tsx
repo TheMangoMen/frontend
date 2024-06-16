@@ -31,11 +31,11 @@ const Stepper: React.FC<StepperProps> = ({ steps }) => {
 					}
 
 					return (
-						<div>
+						<div key={index}>
 							<TooltipProvider>
 								<Tooltip>
 									<TooltipTrigger>
-										<div key={index} className="flex items-center">
+										<div className="flex items-center">
 											<div
 												className={`flex items-center justify-center w-8 h-8 rounded-full ${
 													index === currentStep ? "bg-primary/80 " : "bg-transparent outline outline-primary/80"

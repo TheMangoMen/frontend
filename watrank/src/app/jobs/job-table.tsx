@@ -4,10 +4,11 @@ import * as React from "react"
 
 import {
   ColumnDef,
-  SortingState,
+  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   useReactTable,
+  getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   VisibilityState,
@@ -35,7 +36,6 @@ import { Input } from "@/components/ui/input"
 interface JobTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-
 }
 
 export function JobTable<TData, TValue>({
@@ -47,6 +47,9 @@ export function JobTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] =
       React.useState<VisibilityState>({})
   
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  )
 
   const table = useReactTable({
     data,
@@ -55,22 +58,33 @@ export function JobTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
     state: {
       columnVisibility,
+      columnFilters,
     },
+    initialState: {
+      pagination: {
+        pageSize: 30
+      }
+    }
   })
 
 
 
   return (
     <div>
-    <div className="py-5 flex justify-between">
-      <div className="flex gap-5">
-        <Input type="text" placeholder="Job ID, Title or Company">
-        </Input>
-        <Button >Search</Button>
-      </div>
-      <div className="hidden md:block">
+    <div className="py-5 flex gap-5 justify-between"> 
+      <Input
+      className="max-w-60"
+          placeholder="Filter company..."
+          value={(table.getColumn("company")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("company")?.setFilterValue(event.target.value)
+          }
+        />
+      <div className="hidden md:block px-2">
         <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="ml-auto">
