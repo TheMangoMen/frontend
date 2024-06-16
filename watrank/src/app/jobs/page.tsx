@@ -1,5 +1,3 @@
-import { ModeToggle } from "../../components/ui/mode-toggle"
-import Stepper from "../../components/ui/stepper"
 import { columns } from "./columns"
 import { Job } from "./job"
 import { Status } from "./status"
@@ -19,7 +17,10 @@ async function getData(): Promise<Job[]> {
 }
  
 
+
 export default async function JobPage() {
+
+
   const data = await getData()
   
   return (

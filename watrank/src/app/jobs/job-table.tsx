@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+
 import {
   ColumnDef,
   SortingState,
@@ -29,10 +30,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { Input } from "@/components/ui/input"
 
 interface JobTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+
 }
 
 export function JobTable<TData, TValue>({
@@ -40,56 +43,63 @@ export function JobTable<TData, TValue>({
   data,
 }: JobTableProps<TData, TValue>) {
 
-const [sorting, setSorting] = React.useState<SortingState>([])
 
-    const [columnVisibility, setColumnVisibility] =
-        React.useState<VisibilityState>({})
+  const [columnVisibility, setColumnVisibility] =
+      React.useState<VisibilityState>({})
+  
 
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     state: {
-      sorting,
       columnVisibility,
     },
   })
 
+
+
   return (
     <div>
-    <div className="py-5 flex justify-end">
-    <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter(
-                (column) => column.getCanHide()
-              )
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                )
-              })}
-          </DropdownMenuContent>
-    </DropdownMenu>
+    <div className="py-5 flex justify-between">
+      <div className="flex gap-5">
+        <Input type="text" placeholder="Job ID, Title or Company">
+        </Input>
+        <Button >Search</Button>
+      </div>
+      <div className="hidden md:block">
+        <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="ml-auto">
+                  Columns
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {table
+                  .getAllColumns()
+                  .filter(
+                    (column) => column.getCanHide()
+                  )
+                  .map((column) => {
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="capitalize"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value) =>
+                          column.toggleVisibility(!!value)
+                        }
+                      >
+                        {column.id}
+                      </DropdownMenuCheckboxItem>
+                    )
+                  })}
+              </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </div>
     <div className="rounded-md border">
       <Table>
