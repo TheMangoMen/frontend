@@ -31,7 +31,7 @@ const Stepper: React.FC<StepperProps> = ({ steps }) => {
 					}
 
 					return (
-						<div>
+						<div key={index}>
 							<TooltipProvider>
 								<Tooltip>
 									<TooltipTrigger>
