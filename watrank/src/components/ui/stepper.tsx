@@ -52,7 +52,7 @@ const Stepper: React.FC<StepperProps> = ({ steps }) => {
 										</div>
 									</TooltipTrigger>
 									<TooltipContent>
-										<div className="text-sm">{step.name} : {step.count}</div>
+										<div className="text-sm">{step.name}: {step.count}</div>
 									</TooltipContent>
 								</Tooltip>
 							</TooltipProvider>

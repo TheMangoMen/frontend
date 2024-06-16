@@ -1,7 +1,11 @@
 import Image from "next/image";
+import JobIDExtractor from "@/components/ui/job-id-extractor";
 
 export default function Home() {
   return (
-    <h1>Sumedh</h1>
+    <div className="App">
+            <JobIDExtractor />
+        </div>
+    
   );
 }
