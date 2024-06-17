@@ -9,18 +9,19 @@ type AuthContextType = {
     token: string | null;
     login: (token: string) => void;
     logout: () => void;
+    isLoggedIn: () => boolean;
+    authIsLoading: boolean;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [token, setToken] = useState<string | null>(null);
+    const [authIsLoading, setAuthIsLoading] = useState<boolean>(true);
     const { toast } = useToast();
 
-    const showLogoutToast = () => {
-    };
-
     useEffect(() => {
+        setAuthIsLoading(true)
         const token = Cookies.get('token');
         if (token) {
             try {
@@ -30,7 +31,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 Cookies.remove('token');
             }
         }
+        setAuthIsLoading(false)
     }, []);
+
 
     const login = (token: string) => {
         Cookies.set('token', token);
@@ -44,8 +47,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         toast({ title: "Log out successful!", });
     };
 
+    const isLoggedIn = () => token !== null;
+
     return (
-        <AuthContext.Provider value={{ token, login, logout }}>
+        <AuthContext.Provider value={{ token, login, logout, isLoggedIn, authIsLoading }}>
             {children}
         </AuthContext.Provider>
     );

@@ -66,7 +66,7 @@ export function JobTable<TData, TValue>({
         },
         initialState: {
             pagination: {
-                pageSize: 30
+                pageSize: 50
             }
         }
     })
