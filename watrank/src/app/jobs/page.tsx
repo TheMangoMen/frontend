@@ -6,7 +6,7 @@ import { JobTable } from "./job-table"
 
 async function getData(): Promise<Job[]> {
   // Fetch data from your API here.
-    const response = await fetch(`http://localhost:8080/jobs/j12cole`);
+    const response = await fetch(`http://localhost:8080/jobs?uID=j12cole`);
     if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
     }

@@ -6,6 +6,21 @@ import { EyeClosedIcon, EyeOpenIcon, StarFilledIcon, StarIcon } from "@radix-ui/
 import Stepper from "@/components/ui/stepper"
 import { Status } from "./status"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { ComboBoxResponsive } from "@/components/ui/combo-box-responsive"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+  } from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Stage } from "@/components/ui/combo-box-responsive"
+  
+const uid = "j12cole"
+
+
 
 export const columns: ColumnDef<Job>[] = [
     {
@@ -24,14 +39,20 @@ export const columns: ColumnDef<Job>[] = [
     {
         accessorKey: "title",
         header: "Title",
-        enableHiding: false
+        enableHiding: false,
+        cell: ({ row }) => {
+            const title :string = row.getValue("title")
+            return <div className="w-48">{title}</div>
+          },
     },
     {
         accessorKey: "company",
         header: "Company",
         enableHiding: false,
-        size: 10,
-        enableResizing: false,
+        cell: ({ row }) => {
+            const company :string = row.getValue("company")
+            return <div className="max-w-40">{company}</div>
+          },
     },
     {
         accessorKey: "location",
@@ -54,12 +75,23 @@ export const columns: ColumnDef<Job>[] = [
     {
         accessorKey: "",
         id: "contribute",
-        header: "Contribute",
+        header: "",
         cell: ({ row }) => {
-            return<Popover>
-            <PopoverTrigger><div className="text-primary"><EditIcon/></div></PopoverTrigger>
-            <PopoverContent>Place content for the popover here.</PopoverContent>
-          </Popover>
+
+
+            return<Dialog>
+            <DialogTrigger><EditIcon/></DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>What's your status for <span className="text-primary">{row.getValue("title")}</span> at <span className="text-primary">{row.getValue("company")}</span>?</DialogTitle>
+                <DialogDescription>
+                 
+                </DialogDescription>
+              </DialogHeader>
+              <ComboBoxResponsive jID={row.getValue("jid")}></ComboBoxResponsive> 
+            </DialogContent>
+          </Dialog>
+            
           },
         enableHiding: false
     },
