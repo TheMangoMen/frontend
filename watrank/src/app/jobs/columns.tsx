@@ -168,7 +168,13 @@ export const columns: ColumnDef<Job>[] = [
         header: "",
         cell: ({ row }) => {
             const isWatching = row.getValue("watching")
-            return <a key={row.id} className={`${!isWatching && "text-transparent"} h-full w-full justify-center text-primary flex hover:text-primary`}><StarFilledIcon /></a>
+            return <div className="h-full w-full flex justify-center">
+                <Button
+                    key={row.id}
+                    className={`text-primary ${!isWatching && "text-transparent"} h-full flex hover:text-primary p-1`} variant="ghost">
+                    <StarFilledIcon />
+                </Button >
+            </div>
         },
         enableHiding: false
     },

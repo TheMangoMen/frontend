@@ -6,12 +6,14 @@ import { Job } from "./job"
 import { JobTable } from "./job-table"
 import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/components/ui/use-toast";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Icons } from "../login/components/icons";
 
 export default function JobPage() {
     const { token, authIsLoading } = useAuth()
     const { toast } = useToast()
     const [data, setData] = useState([])
-    // const [isLoading, ]
+    const [isLoading, setIsLoading] = useState(true);
 
     const showErrorToast = () => toast({
         variant: "destructive",
@@ -31,8 +33,8 @@ export default function JobPage() {
                 showErrorToast();
             }
             const json = await response.json()
-            // console.log(json)
             setData(json)
+            setIsLoading(false)
         } catch (error) {
             console.error(error);
             showErrorToast();
@@ -44,6 +46,12 @@ export default function JobPage() {
             fetchJobs()
         }
     }, [authIsLoading])
+
+    if (isLoading) {
+        return <div className="w-full h-full flex justify-center items-center">
+            <Icons.spinner className="h-12 w-12 animate-spin" />
+        </div>
+    }
 
     return (
         <div className="px-10">
