@@ -1,7 +1,7 @@
 import { Status } from "./status"
 export type Job = {
     watching: boolean
-    jID: number
+    jid: number
     title: string
     company: string
     location: string
