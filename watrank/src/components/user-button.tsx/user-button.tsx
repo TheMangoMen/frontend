@@ -25,7 +25,6 @@ export function User() {
     }
 
     if (authIsLoading) {
-        // return <Icons.spinner className="h-4 w-4 animate-spin" />
         return <Skeleton className="w-[100px] h-9 bg-zinc-100 dark:bg-muted" />
     }
 

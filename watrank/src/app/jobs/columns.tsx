@@ -27,68 +27,77 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { useToast } from "@/components/ui/use-toast"
-import { Skeleton } from "@/components/ui/skeleton"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { cn } from "@/lib/utils"
 
-export type Stage = {
-    value: string
-    label: string
-}
+const StageEnum = z.enum([
+    "Ghosted :(",
+    "OA",
+    "Interview 1",
+    "Interview 2",
+    "Interview 3",
+    "Offer Call",
+])
 
-const statuses: Stage[] = [
-    {
-        value: "None",
-        label: "None",
-    },
-    {
-        value: "Online Assessment",
-        label: "OA",
-    },
-    {
-        value: "Interview 1",
-        label: "Interview 1",
-    },
-    {
-        value: "Interview 2",
-        label: "Interview 2",
-    },
-    {
-        value: "Interview 3",
-        label: "Interview 3",
-    },
-    {
-        value: "Offer Call",
-        label: "Offer Call",
-    },
-]
+const formSchema = z.object({
+    status: StageEnum
+})
+
+
+const Loading = React.forwardRef((props, forwardedRef) => (
+    <div className={cn("animate-pulse rounded-md bg-primary/10", "w-[24px] h-[24px] bg-zinc-100 dark:bg-muted")}
+        {...props}
+        ref={forwardedRef}
+    />
+))
 
 function Contribute({ row }: { row: Row<Job> }) {
-    const { isLoggedIn, authIsLoading } = useAuth()
+    const { token, isLoggedIn, authIsLoading } = useAuth()
     const { toast } = useToast()
     const [open, setOpen] = React.useState(false);
-    const [selectedStatus, setSelectedStatus] = React.useState<Stage | null>(null)
+    // const [selectedStatus, setSelectedStatus] = React.useState<Stage | null>(null)
 
-    const handleSubmit = async () => {
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            status: "Ghosted :(",
+        },
+    })
+
+    const showErrorToast = () => toast({ variant: "destructive", title: "An error occured." });
+
+    async function onSubmit(values: z.infer<typeof formSchema>) {
         const data = {
-            jID: row.getValue("jid"),
-            status: selectedStatus
+            jid: row.getValue("jid"),
+            oa: values.status === StageEnum.enum["OA"],
+            interviewstage: ["Interview 1", "Interview 2", "Interview 3"].includes(values.status) ? parseInt(values.status.split(" ")[1]) : 0,
+            offercall: values.status === StageEnum.enum["Offer Call"]
         };
+        // console.log(data)
+        // console.log(process.env.NEXT_PUBLIC_API_URL)
+        // return
 
         try {
-            const response = await fetch("http://localhost:8080/contribution", {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/contribution`, {
                 method: "POST",
                 headers: {
+                    'Authorization': `Bearer ${token}`,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(data),
             });
-
-            // const response = await fetch(`http://localhost:8080/jobs?uID=j12cole`);
-
-            toast({ title: "Thank you for your contribution!" });
-            setOpen(false);
+            if (!response.ok) {
+                showErrorToast();
+            } else {
+                toast({ title: "Thank you for your contribution!" });
+                setOpen(false);
+            }
         } catch (error) {
             console.error(error);
-            toast({ variant: "destructive", title: "An error occured." });
+            showErrorToast();
         }
     }
 
@@ -98,9 +107,8 @@ function Contribute({ row }: { row: Row<Job> }) {
             <DialogTrigger disabled={!isLoggedIn()}>
                 <Tooltip>
                     <TooltipTrigger asChild>
-                        {authIsLoading ? <Skeleton className="w-[24px] h-[24px] bg-zinc-100 dark:bg-muted" />
+                        {authIsLoading ? <Loading />
                             : <EditIcon color={isLoggedIn() ? "currentColor" : "gray"} />}
-
                     </TooltipTrigger>
                     <TooltipContent>
                         <p>{isLoggedIn() ? "Contribute your status" : "Log in to contribute"}</p>
@@ -116,25 +124,40 @@ function Contribute({ row }: { row: Row<Job> }) {
                     {row.getValue("company")}
                 </DialogTitle>
             </DialogHeader>
-            <form>
-                <Label htmlFor="status">What's your status?</Label>
-                <Select>
-                    <SelectTrigger id="status">
-                        <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                    <SelectContent position="popper">
-                        {statuses.map((status) => (
-                            <SelectItem
-                                key={status.value}
-                                value={status.value}
-                            >{status.label}</SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-            </form>
-            <DialogFooter>
-                <Button onClick={handleSubmit}>Contribute</Button>
-            </DialogFooter>
+
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <FormField
+                        control={form.control}
+                        name="status"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>What's your status?</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl>
+                                        <SelectTrigger id="status" className="w-40">
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent position="popper" >
+                                        {Object.keys(StageEnum.enum).map((stage) => (
+                                            <SelectItem
+                                                key={stage}
+                                                value={stage}
+                                            >{stage}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                {/* <FormDescription>
+                                    We
+                                </FormDescription> */}
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <Button type="submit">Contribute</Button>
+                </form>
+            </Form>
         </DialogContent>
     </Dialog >
 }

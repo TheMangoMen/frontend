@@ -33,7 +33,6 @@ export default function AuthenticationPage() {
             username: "",
         },
     })
-    const { login } = useAuth()
 
     const showErrorToast = ({ title, description }: { title?: string; description?: string } = {}) => {
         toast({
@@ -46,36 +45,34 @@ export default function AuthenticationPage() {
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setIsLoading(true)
         console.log(values)
-        setUsername(values.username)
 
-        // const url = 'https://example.com/api/login';
-        // const data = { username };
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/login/${values.username}`;
 
-        // try {
-        //     const response = await fetch(url, {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: JSON.stringify(data)
-        //     });
-        //     if (!response.ok) {
-        //         showErrorToast()
-        //     }
-        // } catch (error) {
-        //     console.error('There has been a problem with your fetch operation:', error);
-        //     showErrorToast()
-        // }
+        try {
+            const response = await fetch(url, { method: 'POST' });
+            // 429: rate limit exceeded, 401: token expired, 403: forbidden
+            if (!response.ok) {
+                showErrorToast()
+            } else {
+                setIsSuccessful(true)
+                setUsername(values.username)
+            }
+        } catch (error) {
+            console.error('There has been a problem with your fetch operation:', error);
+            showErrorToast()
+        } finally {
+            setIsLoading(false)
+        }
 
         // FOR TESTING ONLY
-        setTimeout(() => {
-            setIsLoading(false)
-            showErrorToast({
-                title: "Slow down there buddy!",
-                description: "Please wait a few minutes before sending another link.",
-            })
-            setIsSuccessful(true)
-        }, 500)
+        // setTimeout(() => {
+        //     setIsLoading(false)
+        //     showErrorToast({
+        //         title: "Slow down there buddy!",
+        //         description: "Please wait a few minutes before sending another link.",
+        //     })
+        //     setIsSuccessful(true)
+        // }, 500)
     }
 
     let content;

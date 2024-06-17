@@ -33,7 +33,8 @@ export default function RootLayout({
                         </div>
                     </ThemeProvider>
                     <Toaster />
-                </body></AuthProvider>
+                </body>
+            </AuthProvider>
         </html>
 
     );

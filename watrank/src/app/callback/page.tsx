@@ -5,23 +5,26 @@ import { jwtDecode } from 'jwt-decode';
 import { useRouter } from 'next/navigation'
 
 import { useSearchParams } from 'next/navigation'
+import { useEffect } from 'react';
 
 export default function Callback() {
     const { login } = useAuth();
     const searchParams = useSearchParams()
     const router = useRouter()
 
-    const code = searchParams?.get("code")
+    useEffect(() => {
+        const code = searchParams?.get("code")
 
-    if (code) {
-        try {
-            const token = atob(code);
-            const user = jwtDecode(token).sub
+        if (code) {
+            try {
+                const token = atob(code);
+                const user = jwtDecode(token).sub
 
-            login(token)
-            router.push('/jobs')
-        } catch { }
-    }
+                login(token)
+                router.push('/jobs')
+            } catch { }
+        }
+    }, [])
 
     return "OOPs"
 }
