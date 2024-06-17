@@ -5,11 +5,9 @@ import { EditIcon } from "lucide-react"
 import { StarFilledIcon } from "@radix-ui/react-icons"
 import Stepper from "@/components/ui/stepper"
 import { Status } from "./status"
-import { ComboBoxResponsive } from "@/components/ui/combo-box-responsive"
 import {
     Dialog,
     DialogContent,
-    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -17,8 +15,6 @@ import {
 import { useAuth } from "@/context/AuthContext"
 import { Button } from "@/components/ui/button"
 import * as React from "react"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
     Tooltip,
@@ -47,12 +43,12 @@ const formSchema = z.object({
 })
 
 
-const Loading = React.forwardRef((props, forwardedRef) => (
-    <div className={cn("animate-pulse rounded-md bg-primary/10", "w-[24px] h-[24px] bg-zinc-100 dark:bg-muted")}
+const Loading = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(function Skeley(props, forwardedRef) {
+    return <div className={cn("animate-pulse rounded-md bg-primary/10", "w-[24px] h-[24px] bg-zinc-100 dark:bg-muted")}
         {...props}
         ref={forwardedRef}
     />
-))
+})
 
 function Contribute({ row }: { row: Row<Job> }) {
     const { token, isLoggedIn, authIsLoading } = useAuth()
@@ -132,7 +128,7 @@ function Contribute({ row }: { row: Row<Job> }) {
                         name="status"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>What's your status?</FormLabel>
+                                <FormLabel>What&apos;s your status?</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormControl>
                                         <SelectTrigger id="status" className="w-40">

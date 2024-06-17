@@ -2,11 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { columns } from "./columns"
-import { Job } from "./job"
 import { JobTable } from "./job-table"
 import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/components/ui/use-toast";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Icons } from "../login/components/icons";
 
 export default function JobPage() {

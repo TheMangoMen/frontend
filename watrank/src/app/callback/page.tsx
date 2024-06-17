@@ -5,7 +5,8 @@ import { jwtDecode } from 'jwt-decode';
 import { useRouter } from 'next/navigation'
 
 import { useSearchParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
+import { Icons } from '../login/components/icons';
 
 const Message = ({ title, description }: { title: string, description: string }) => {
     return <div className="w-full h-full flex justify-center items-center mb-[80px]">
@@ -20,11 +21,12 @@ const Message = ({ title, description }: { title: string, description: string })
     </div>
 }
 
-export default function Callback() {
+function CallbackHelper() {
     const { login } = useAuth();
     const searchParams = useSearchParams()
     const router = useRouter()
-    const [content, setContent] = useState<React.ComponentType<any> | null>(null);
+    const [isValid, setIsValid] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const code = searchParams?.get("code")
@@ -32,16 +34,35 @@ export default function Callback() {
         if (code) {
             try {
                 const token = atob(code);
-                const user = jwtDecode(token).sub
+                jwtDecode(token).sub
 
                 login(token)
+                setIsValid(true);
                 router.push('/jobs')
-                setContent(() => <Message title='Success!' description='Redirecting you to jobs...' />)
             } catch {
-                setContent(() => <Message title='Error :(' description='Please double check that your link is valid' />)
+                setIsValid(false);
+            } finally {
+                setIsLoading(false);
             }
         }
     }, [])
 
-    return content;
+    if (isLoading) {
+        return
+    }
+
+    if (isValid) {
+        return <Message title='Success!' description='Redirecting you to jobs...' />
+    }
+
+    return <Message title='Error :(' description='Please double check that your link is valid' />;
+}
+
+export default function Callback() {
+    return (
+        // You could have a loading skeleton as the `fallback` too
+        <Suspense>
+            <CallbackHelper />
+        </Suspense>
+    )
 }

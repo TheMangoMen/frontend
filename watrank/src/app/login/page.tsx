@@ -12,7 +12,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { useAuth } from "@/context/AuthContext"
 
 const formSchema = z.object({
     username: z.string()
@@ -83,7 +82,7 @@ export default function AuthenticationPage() {
                     Log In with WatIAM
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                    We'll send a link to your @uwaterloo.ca email
+                    We&apos;ll send a link to your @uwaterloo.ca email
                 </p>
             </div>
             <Form {...form}>
@@ -144,7 +143,7 @@ export default function AuthenticationPage() {
                     Thanks!
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                    We've sent a link to {username}@uwaterloo.ca
+                    We&apos;ve sent a link to {username}@uwaterloo.ca
                 </p>
             </div>
     }
