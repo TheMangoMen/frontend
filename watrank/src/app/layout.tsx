@@ -2,26 +2,11 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css";
-import { Button } from "@/components/ui/button";
-import { ModeToggle } from "@/components/ui/mode-toggle";
-import { ChevronUpCircleIcon, ChevronsUp } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { User } from "@/components/user-button.tsx/user-button";
-import { Logo } from "@/components/logo";
 import { Toaster } from "@/components/ui/toaster"
+import { AuthProvider } from '@/context/AuthContext';
+import { Header } from "@/components/header";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,23 +22,19 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={cn(inter.className, "antialiased")}>
-                <ThemeProvider attribute="class"
-                    defaultTheme="dark"
-                    disableTransitionOnChange>
-                    <div className="flex flex-col h-screen">
-                        <header className="bg-background transition flex items-center justify-between px-6 md:px-10 py-10 sticky h-[60px] left-0 right-0 top-0 z-10">
-                            <Logo />
-                            <div className="flex gap-5 items-center">
-                                <User loggedin={true} name={"helguind"}></User>
-                                <div className="justify-end"><ModeToggle /></div>
-                            </div>
-                        </header>
-                        {children}
-                    </div>
-                </ThemeProvider>
-                <Toaster />
-            </body>
+            <AuthProvider>
+                <body className={cn(inter.className, "antialiased")}>
+                    <ThemeProvider attribute="class"
+                        defaultTheme="dark"
+                        disableTransitionOnChange>
+                        <div className="flex flex-col h-screen">
+                            <Header />
+                            {children}
+                        </div>
+                    </ThemeProvider>
+                    <Toaster />
+                </body></AuthProvider>
         </html>
+
     );
 }
