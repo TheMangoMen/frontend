@@ -1,6 +1,9 @@
 "use client"
 
 import { Logo } from "./logo";
+import { Import } from "./import-button";
+import { Button } from "./ui/button";
+import JobIDExtractor from "./ui/job-id-extractor";
 import { ModeToggle } from "./ui/mode-toggle";
 import { User } from "./user-button.tsx/user-button";
 
@@ -9,6 +12,7 @@ export function Header() {
         <Logo />
         <div className="flex gap-5 items-center">
             <User /> {/* it's dinner time */}
+            <Import></Import>
             <div className="justify-end"><ModeToggle /></div>
         </div>
     </header>
