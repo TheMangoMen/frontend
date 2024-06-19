@@ -28,6 +28,7 @@ export default function JobPage() {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!response.ok) {
+            
                 showErrorToast();
             }
             const json = await response.json()
