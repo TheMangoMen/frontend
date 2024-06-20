@@ -96,7 +96,7 @@ export default function AuthenticationPage() {
                                 <FormItem>
                                     <FormControl>
                                         <Input
-                                            placeholder="v42goel"
+                                            placeholder="n42chen"
                                             autoCapitalize="none"
                                             autoComplete="username"
                                             autoCorrect="off"

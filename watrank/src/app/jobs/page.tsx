@@ -25,9 +25,10 @@ export default function JobPage() {
         try {
             const response = await fetch(url, {
                 method: "GET",
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { ...(!!token && {'Authorization': `Bearer ${token}`}) }
             });
             if (!response.ok) {
+            
                 showErrorToast();
             }
             const json = await response.json()
