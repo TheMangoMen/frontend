@@ -32,6 +32,8 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
+import { StarFilledIcon } from "@radix-ui/react-icons"
+import { Toggle } from "@/components/ui/toggle"
 
 interface JobTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -76,14 +78,23 @@ export function JobTable<TData, TValue>({
     return (
         <div>
             <div className="py-5 flex gap-5 justify-between">
-                <Input
-                    className="max-w-60"
-                    placeholder="Filter company..."
-                    value={(table.getColumn("company")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) =>
-                        table.getColumn("company")?.setFilterValue(event.target.value)
-                    }
-                />
+                <div className="flex gap-2">
+                    <Input
+                        className="max-w-60"
+                        placeholder="Filter company..."
+                        value={(table.getColumn("company")?.getFilterValue() as string) ?? ""}
+                        onChange={(event) =>
+                            table.getColumn("company")?.setFilterValue(event.target.value)
+                        }
+                    />
+                    <Toggle
+                        variant="outline"
+                        pressed={(table.getColumn("watching")?.getFilterValue() as boolean) ?? false}
+                        onPressedChange={(value) => table.getColumn("watching")?.setFilterValue(value || null)}
+                    >
+                        <StarFilledIcon className="text-primary" />
+                    </Toggle>
+                </div>
                 <div className="hidden md:block px-2">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -107,7 +118,7 @@ export function JobTable<TData, TValue>({
                                                 column.toggleVisibility(!!value)
                                             }
                                         >
-                                            {column.id}
+                                            {column.columnDef.header?.toString() || column.id}
                                         </DropdownMenuCheckboxItem>
                                     )
                                 })}
