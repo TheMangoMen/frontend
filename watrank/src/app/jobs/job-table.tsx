@@ -12,6 +12,7 @@ import {
     getPaginationRowModel,
     getSortedRowModel,
     VisibilityState,
+    RowData,
 } from "@tanstack/react-table"
 
 import { Button } from "@/components/ui/button"
@@ -35,6 +36,12 @@ import { Input } from "@/components/ui/input"
 import { StarFilledIcon } from "@radix-ui/react-icons"
 import { Toggle } from "@/components/ui/toggle"
 
+declare module '@tanstack/table-core' {
+    interface TableMeta<TData extends RowData> {
+        updateData: (rowIndex: number, columnId: string, value: unknown) => void
+    }
+}
+
 interface JobTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
@@ -56,6 +63,7 @@ function useSkipper() {
 
     return [shouldSkip, skip] as const
 }
+
 
 
 export function JobTable<TData, TValue>({
