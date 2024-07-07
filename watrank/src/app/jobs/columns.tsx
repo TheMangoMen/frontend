@@ -41,7 +41,6 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@/components/ui/accordion";
-
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
 	Select,
@@ -503,7 +502,12 @@ export const columns: ColumnDef<Job>[] = [
 		enableHiding: false,
 		cell: ({ row }) => {
 			const title: string = row.getValue("title");
-			return <div className="w-48">{title}</div>;
+      const jid: string = row.getValue("jid");
+      return <a href={`https://waterlooworks.uwaterloo.ca/myAccount/co-op/full/jobs.htm?ck_jobid=${jid}`}
+          className="hover:underline"
+          target="_blank" >
+          {title}
+      </a >;
 		},
 	},
 	{

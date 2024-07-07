@@ -25,10 +25,10 @@ export default function JobPage() {
         try {
             const response = await fetch(url, {
                 method: "GET",
-                headers: { ...(!!token && {'Authorization': `Bearer ${token}`}) }
+                headers: { ...(!!token && { 'Authorization': `Bearer ${token}` }) }
             });
             if (!response.ok) {
-            
+
                 showErrorToast();
             }
             const json = await response.json()
@@ -47,15 +47,11 @@ export default function JobPage() {
     }, [authIsLoading])
 
     if (isLoading) {
-        return <div className="w-full h-full flex justify-center items-center">
-            <Icons.spinner className="h-12 w-12 animate-spin" />
-        </div>
+        return <Icons.spinner className="m-auto h-12 w-12 animate-spin stroke-primary" />
     }
 
     return (
-        <div className="px-10">
-            <JobTable columns={columns} data={data} setData={setData} />
-        </div>
+        <JobTable columns={columns} data={data} setData={setData} />
     )
 
 }
