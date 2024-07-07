@@ -5,11 +5,13 @@ import { ModeToggle } from "./ui/mode-toggle";
 import { User } from "./user-button.tsx/user-button";
 
 export function Header() {
-    return <header className="bg-background transition flex items-center justify-between px-6 md:px-10 py-10 sticky h-[60px] left-0 right-0 top-0 z-10 select-none">
-        <Logo />
-        <div className="flex gap-5 items-center">
-            <User /> {/* it's dinner time */}
-            <div className="justify-end"><ModeToggle /></div>
+    return <header className="top-0 left-0 bg-background z-10 shadow sticky dark:shadow-gray-700">
+        <div className="flex items-center justify-between h-20 select-none max-w-6xl mx-auto px-8">
+            <Logo />
+            <div className="flex gap-5 items-center">
+                <div className="justify-end"><ModeToggle /></div>
+                <User /> {/* it's dinner time */}
+            </div>
         </div>
     </header>
 }
