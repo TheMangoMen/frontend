@@ -134,7 +134,7 @@ export default function AnalyticsPage() {
                 <Card className="w-full lg:w-1/2">
                     <CardHeader>
                         <CardTitle>Watched Companies Status</CardTitle>
-                        <CardDescription>Check what companies you applied to are at what stages for all jobs</CardDescription>
+                        <CardDescription>Check what companies you applied to are at what stages for all their jobs</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <ChartContainer config={chartConfig}>
