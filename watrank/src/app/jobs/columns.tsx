@@ -71,7 +71,7 @@ const Loading = React.forwardRef<
 const Difficulty = z.enum(["Easy", "Medium", "Hard"]);
 const Length = z.enum(["Under 1 Hour", "1 to 2 Hours", "Over 2 Hours"]);
 const Vibe = z.enum(["Bad", "Good", "Neutral"]);
-const Technical = z.enum(["Behaviourial", "Mixed", "Technical"]);
+const Technical = z.enum(["Non-technical", "Somewhat", "Technical"]);
 
 const formSchema = z.object({
 	interviewCount: z.number().min(1).max(3).default(1),
@@ -122,14 +122,15 @@ function Contribute({ row }: { row: Row<Job> }) {
 			oa: parsedStatus[0],
 			interview: parsedStatus[1],
 			offercall: parsedStatus[2],
-			interviewCount: values.interviewCount,
-			oadiffculty: values.oadifficulty,
-			oalength: values.oalength,
-			interviewVibe: values.interviewVibe,
-			interviewTechnical: values.interviewTechnical,
-			compensation: values.compensation,
+			interviewCount: values.interviewCount ?? 0,
+			oadifficulty: values.oadifficulty ?? null,
+			oalength: values.oalength ?? null,
+			interviewVibe: values.interviewVibe ?? null,
+			interviewTechnical: values.interviewTechnical ?? null,
+			compensation: values.compensation ?? null,
 		};
-		console.log("submitted");
+		console.log("submitting");
+		console.log(data);
 		try {
 			const response = await fetch(
 				`${process.env.NEXT_PUBLIC_API_URL}/contribution`,
@@ -341,7 +342,7 @@ function Contribute({ row }: { row: Row<Job> }) {
 																defaultValue={field.value}
 																className="flex flex-col space-y-1"
 															>
-																{["Behaviourial", "Mixed", "Technical"].map(
+																{["Non-technical", "Somewhat", "Technical"].map(
 																	(value) => (
 																		<FormItem
 																			key={value}
