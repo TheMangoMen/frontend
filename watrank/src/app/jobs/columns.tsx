@@ -1,6 +1,6 @@
 "use client";
 import { Job } from "./job";
-import { ColumnDef, Row } from "@tanstack/react-table";
+import { ColumnDef, Row, Table, useReactTable } from "@tanstack/react-table";
 import { EditIcon } from "lucide-react";
 import { StarFilledIcon } from "@radix-ui/react-icons";
 import Stepper from "@/components/ui/stepper";
@@ -197,7 +197,7 @@ function Contribute({ row }: { row: Row<Job> }) {
     </Dialog>
   );
 }
-function Watching({ row }: { row: Row<Job> }) {
+function Watching({ row, table }: { row: Row<Job>, table: Table<Job> }) {
   const { token, isLoggedIn, authIsLoading } = useAuth();
   const { toast } = useToast();
   const [watching, setWatching] = React.useState(false);
@@ -214,6 +214,9 @@ function Watching({ row }: { row: Row<Job> }) {
       delete: isWatching,
     };
 
+    // Update table data state (so column filters are updated)
+    table.options.meta?.updateData(row.index, "watching", !isWatching);
+
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/watching`,
@@ -228,6 +231,7 @@ function Watching({ row }: { row: Row<Job> }) {
       );
       if (!response.ok) {
         showErrorToast();
+        table.options.meta?.updateData(row.index, "watching", isWatching); // reset
       } else {
         setWatching(!watching);
         toast({ title: "Updated your watch list!" });
@@ -276,8 +280,8 @@ export const columns: ColumnDef<Job>[] = [
   {
     accessorKey: "watching",
     header: "",
-    cell: ({ row }) => {
-      return <Watching row={row} />;
+    cell: ({ row, table }) => {
+      return <Watching row={row} table={table} />;
     },
     enableHiding: false,
   },

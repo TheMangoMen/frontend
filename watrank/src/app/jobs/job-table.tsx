@@ -38,11 +38,30 @@ import { Toggle } from "@/components/ui/toggle"
 interface JobTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
+    setData(_: any): void
 }
+
+function useSkipper() {
+    const shouldSkipRef = React.useRef(true)
+    const shouldSkip = shouldSkipRef.current
+
+    // Wrap a function with this to skip a pagination reset temporarily
+    const skip = React.useCallback(() => {
+      shouldSkipRef.current = false
+    }, [])
+
+    React.useEffect(() => {
+      shouldSkipRef.current = true
+    })
+
+    return [shouldSkip, skip] as const
+}
+
 
 export function JobTable<TData, TValue>({
     columns,
     data,
+    setData,
 }: JobTableProps<TData, TValue>) {
 
 
@@ -52,6 +71,8 @@ export function JobTable<TData, TValue>({
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
     )
+
+    const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper()
 
     const table = useReactTable({
         data,
@@ -69,6 +90,27 @@ export function JobTable<TData, TValue>({
         initialState: {
             pagination: {
                 pageSize: 50
+            }
+        },
+
+        autoResetPageIndex,
+        meta: {
+            // https://tanstack.com/table/v8/docs/framework/react/examples/editable-data
+            // https://github.com/TanStack/table/tree/241f26fc0b9e1945c996926dfc127c7f8cc97fcf/examples/react/editable-data
+            updateData: (rowIndex: any, columnId: any, value: any) => {
+                // Skip page index reset until after next rerender
+                skipAutoResetPageIndex()
+                setData((old: any) =>
+                    old.map((row: any, index: any) => {
+                        if (index === rowIndex) {
+                            return {
+                                ...old[rowIndex]!,
+                                [columnId]: value,
+                            }
+                        }
+                        return row
+                    })
+                )
             }
         }
     })

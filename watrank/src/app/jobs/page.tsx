@@ -54,7 +54,7 @@ export default function JobPage() {
 
     return (
         <div className="px-10">
-            <JobTable columns={columns} data={data} />
+            <JobTable columns={columns} data={data} setData={setData} />
         </div>
     )
 
