@@ -20,10 +20,16 @@ interface WatchedStatusCount {
     Count: number;
 }
 
+interface AnalyticsData {
+    jobs: WatchedStatusCount[];
+    companies: WatchedStatusCount[];
+}
+
 export default function AnalyticsPage() {
     const { token, authIsLoading } = useAuth()
     const { toast } = useToast()
-    const [data, setData] = useState<WatchedStatusCount[]>([])
+    const [jobData, setJobData] = useState<WatchedStatusCount[]>([])
+    const [companyData, setCompanyData] = useState<WatchedStatusCount[]>([])
     const [isLoading, setIsLoading] = useState(true);
     const chartConfig = {
         total: {
@@ -43,9 +49,9 @@ export default function AnalyticsPage() {
         }
     } satisfies ChartConfig
 
-    const total = useMemo(() => {
-        return data.reduce((acc, cur) => acc + cur.Count, 0)
-    }, [data])
+    const total_jobs_watched = useMemo(() => {
+        return jobData.reduce((acc, cur) => acc + cur.Count, 0)
+    }, [jobData])
 
     const showErrorToast = () => toast({
         variant: "destructive",
@@ -54,7 +60,7 @@ export default function AnalyticsPage() {
     });
 
     const fetchStatus = async () => {
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/analytics/status_count`;
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/analytics/status_counts`;
 
         try {
             const response = await fetch(url, {
@@ -65,8 +71,9 @@ export default function AnalyticsPage() {
 
                 showErrorToast();
             }
-            const json: WatchedStatusCount[] = await response.json();
-            setData(json)
+            const json: AnalyticsData = await response.json();
+            setJobData(json.jobs)
+            setCompanyData(json.companies)
             setIsLoading(false)
         } catch (error) {
             console.error(error);
@@ -88,41 +95,73 @@ export default function AnalyticsPage() {
 
     return (
         <div className="px-10">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Watched Jobs Status</CardTitle>
-                    <CardDescription>Check what jobs you applied to are at what stages</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <ChartContainer config={chartConfig}>
-                        <BarChart
-                            accessibilityLayer
-                            data={data}
-                            layout="vertical"
-                            margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-                        >
-                            <XAxis type="number" dataKey="Count" interval={0} tickFormatter={(value) => Number.isInteger(value) ? value : ''} />
-                            <YAxis
-                                dataKey="Status"
-                                type="category"
-                                tickLine={false}
-                                tickMargin={10}
-                                axisLine={true}
-                            />
-                            <ChartTooltip
-                                cursor={false}
-                                content={<ChartTooltipContent />}
-                            />
-                            <Bar dataKey="Count" fill="var(--color-bar)" radius={5} />
-                        </BarChart>
-                    </ChartContainer>
-                </CardContent>
-                <CardFooter className="flex-col items-start gap-2 text-sm">
-                    <div className="flex gap-2 font-medium leading-none">
-                        Total Watched: {total}
-                    </div>
-                </CardFooter>
-            </Card>
+            <div className="flex flex-wrap lg:flex-nowrap justify-between gap-2">
+                <Card className="w-full lg:w-1/2">
+                    <CardHeader>
+                        <CardTitle>Watched Jobs Status</CardTitle>
+                        <CardDescription>Check what jobs you applied to are at what stages</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <ChartContainer config={chartConfig}>
+                            <BarChart
+                                accessibilityLayer
+                                data={jobData}
+                                layout="vertical"
+                                margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                            >
+                                <XAxis type="number" dataKey="Count" interval={0} tickFormatter={(value) => Number.isInteger(value) ? value : ''} />
+                                <YAxis
+                                    dataKey="Status"
+                                    type="category"
+                                    tickLine={false}
+                                    tickMargin={10}
+                                    axisLine={true}
+                                />
+                                <ChartTooltip
+                                    cursor={false}
+                                    content={<ChartTooltipContent />}
+                                />
+                                <Bar dataKey="Count" fill="var(--color-bar)" radius={5} />
+                            </BarChart>
+                        </ChartContainer>
+                    </CardContent>
+                    <CardFooter className="flex-col items-start gap-2 text-sm">
+                        <div className="flex gap-2 font-medium leading-none">
+                            Total Jobs Watched: {total_jobs_watched}
+                        </div>
+                    </CardFooter>
+                </Card>
+                <Card className="w-full lg:w-1/2">
+                    <CardHeader>
+                        <CardTitle>Watched Companies Status</CardTitle>
+                        <CardDescription>Check what companies you applied to are at what stages for all jobs</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <ChartContainer config={chartConfig}>
+                            <BarChart
+                                accessibilityLayer
+                                data={companyData}
+                                layout="vertical"
+                                margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                            >
+                                <XAxis type="number" dataKey="Count" interval={0} tickFormatter={(value) => Number.isInteger(value) ? value : ''} />
+                                <YAxis
+                                    dataKey="Status"
+                                    type="category"
+                                    tickLine={false}
+                                    tickMargin={10}
+                                    axisLine={true}
+                                />
+                                <ChartTooltip
+                                    cursor={false}
+                                    content={<ChartTooltipContent />}
+                                />
+                                <Bar dataKey="Count" fill="var(--color-bar)" radius={5} />
+                            </BarChart>
+                        </ChartContainer>
+                    </CardContent>
+                </Card>
+            </div>
         </div>
     )
 }
