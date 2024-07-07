@@ -38,7 +38,7 @@ function CallbackHelper() {
 
                 login(token)
                 setIsValid(true);
-                router.push('/jobs')
+                router.push('/')
             } catch {
                 setIsValid(false);
             } finally {
