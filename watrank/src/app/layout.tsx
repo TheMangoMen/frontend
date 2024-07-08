@@ -28,10 +28,12 @@ export default function RootLayout({
                     <ThemeProvider attribute="class"
                         defaultTheme="dark"
                         disableTransitionOnChange>
-                        <div className="h-screen box-border flex flex-col overflow-auto">
-                            <Header />
-                            <div className="flex-grow flex flex-col w-full max-w-6xl px-8 py-5 mx-auto">
-                                {children}
+                        <TooltipProvider>
+                            <div className="h-screen box-border flex flex-col overflow-auto">
+                                <Header />
+                                <div className="flex-grow flex flex-col w-full max-w-6xl px-8 py-5 mx-auto">
+                                    {children}
+                                </div>
                             </div>
                         </TooltipProvider>
                     </ThemeProvider>
