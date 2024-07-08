@@ -149,13 +149,11 @@ export default function AuthenticationPage() {
     }
 
     return (
-        // <div className="container flex-col items-center justify-center grid h-full z-20 justify-self-center">
         <div className="p-8 rounded border bg-background w-96 m-auto">
             <div className="mx-auto flex w-full flex-col justify-center space-y-6 animate-fade">
                 {content}
             </div>
         </div>
-        // </div>
     )
 
 }

@@ -126,8 +126,8 @@ export function JobTable<TData, TValue>({
 
 
     return (
-        <div className="justify-self-start">
-            <div className="py-5 flex gap-5 justify-between">
+        <div>
+            <div className="pb-5 flex gap-5 justify-between">
                 <div className="flex gap-2">
                     <Input
                         className="max-w-60 bg-background"
@@ -146,7 +146,7 @@ export function JobTable<TData, TValue>({
                         <StarFilledIcon className="text-primary" />
                     </Toggle>
                 </div>
-                <div className="hidden md:block">
+                <div>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline" className="ml-auto">
@@ -221,7 +221,7 @@ export function JobTable<TData, TValue>({
                     </TableBody>
                 </Table>
             </div>
-            <div className="flex items-center justify-end space-x-2 py-4">
+            <div className="flex items-center justify-end space-x-2 pt-5">
                 <Button
                     variant="outline"
                     size="sm"

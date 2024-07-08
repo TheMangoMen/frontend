@@ -23,13 +23,13 @@ export default function RootLayout({
     return (
         <html lang="en">
             <AuthProvider>
-                <body className={cn(inter.className, "antialiased bg-stone-50 dark:bg-black")}>
+                <body className={cn(inter.className, "antialiased dark:bg-black bg-muted/70")}>
                     <ThemeProvider attribute="class"
                         defaultTheme="dark"
                         disableTransitionOnChange>
-                        <div className="min-h-screen box-border flex flex-col">
+                        <div className="h-screen box-border flex flex-col overflow-auto">
                             <Header />
-                            <div className="flex-grow flex flex-col w-full max-w-6xl px-8 mx-auto h-full">
+                            <div className="flex-grow flex flex-col w-full max-w-6xl px-8 py-5 mx-auto">
                                 {children}
                             </div>
                         </div>

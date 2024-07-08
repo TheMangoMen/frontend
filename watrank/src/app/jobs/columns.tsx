@@ -1,7 +1,7 @@
 "use client";
 import { Job } from "./job";
 import { ColumnDef, Row, Table, useReactTable } from "@tanstack/react-table";
-import { EditIcon, Link } from "lucide-react";
+import { DollarSign, EditIcon } from "lucide-react";
 import { StarFilledIcon } from "@radix-ui/react-icons";
 import Stepper from "@/components/ui/stepper";
 import { Status } from "./status";
@@ -49,7 +49,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/input";
 
 const Loading = React.forwardRef<
     HTMLDivElement,
@@ -195,7 +195,7 @@ function Contribute({ row }: { row: Row<Job> }) {
                             <AccordionItem value="OA">
                                 <AccordionTrigger className="font-bold">OA</AccordionTrigger>
                                 <AccordionContent className="px-4">
-                                    <div className="flex flex-row justify-between bg-muted-foreground/10 p-4 rounded-md">
+                                    <div className="grid grid-cols-2 bg-muted/70 p-4 rounded-md">
                                         <FormField
                                             control={form.control}
                                             name="oadifficulty"
@@ -297,7 +297,7 @@ function Contribute({ row }: { row: Row<Job> }) {
                                                 </FormItem>
                                             )}
                                         />
-                                        <div className="flex flex-row justify-between bg-muted-foreground/10 p-4 mt-4 rounded-md">
+                                        <div className="grid grid-cols-2 bg-muted/70 p-4 mt-4 rounded-md">
                                             <FormField
                                                 control={form.control}
                                                 name="interviewVibe"
@@ -376,10 +376,11 @@ function Contribute({ row }: { row: Row<Job> }) {
                                         name="compensation"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Compensation</FormLabel>
+                                                <FormLabel>Compensation (CAD / hour)</FormLabel>
                                                 <FormControl>
                                                     <Input
-                                                        type="text"
+                                                        startIcon={DollarSign}
+                                                        type="number"
                                                         onChange={(e) => {
                                                             const value = e.target.value;
                                                             if (!isNaN(Number(value))) {
