@@ -25,17 +25,17 @@ export function User() {
     }
 
     if (authIsLoading) {
-        return <Skeleton className="w-[100px] h-9 bg-zinc-100 dark:bg-muted" />
+        return <Skeleton className="w-12 h-9 bg-zinc-100 dark:bg-muted" />
     }
 
     if (token !== null) {
         return (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="outline">{jwtDecode(token).sub}</Button>
+                    <span className="text-base font-medium cursor-pointer">{jwtDecode(token).sub}</span>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                    <DropdownMenuItem className="justify-center" onClick={logout}>
+                    <DropdownMenuItem className="justify-center cursor-pointer" onClick={logout}>
                         <LogOut className="mr-2 h-4 w-4" />
                         <span>Log out</span>
                     </DropdownMenuItem>
@@ -44,9 +44,7 @@ export function User() {
         )
     }
 
-    return <Button asChild>
-        <Link href="/login">
-            Log In
-        </Link>
-    </Button>;
+    return <Link href="/login" className="text-base font-medium w-12 hover:underline">
+        Log In
+    </Link>;
 }

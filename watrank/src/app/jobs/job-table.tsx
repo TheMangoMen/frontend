@@ -54,11 +54,11 @@ function useSkipper() {
 
     // Wrap a function with this to skip a pagination reset temporarily
     const skip = React.useCallback(() => {
-      shouldSkipRef.current = false
+        shouldSkipRef.current = false
     }, [])
 
     React.useEffect(() => {
-      shouldSkipRef.current = true
+        shouldSkipRef.current = true
     })
 
     return [shouldSkip, skip] as const
@@ -127,10 +127,10 @@ export function JobTable<TData, TValue>({
 
     return (
         <div>
-            <div className="py-5 flex gap-5 justify-between">
+            <div className="pb-5 flex gap-5 justify-between">
                 <div className="flex gap-2">
                     <Input
-                        className="max-w-60"
+                        className="max-w-60 bg-background"
                         placeholder="Filter company..."
                         value={(table.getColumn("company")?.getFilterValue() as string) ?? ""}
                         onChange={(event) =>
@@ -141,11 +141,12 @@ export function JobTable<TData, TValue>({
                         variant="outline"
                         pressed={(table.getColumn("watching")?.getFilterValue() as boolean) ?? false}
                         onPressedChange={(value) => table.getColumn("watching")?.setFilterValue(value || null)}
+                        className="bg-background"
                     >
                         <StarFilledIcon className="text-primary" />
                     </Toggle>
                 </div>
-                <div className="hidden md:block px-2">
+                <div>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline" className="ml-auto">
@@ -176,7 +177,7 @@ export function JobTable<TData, TValue>({
                     </DropdownMenu>
                 </div>
             </div>
-            <div className="rounded-md border">
+            <div className="rounded-md border bg-background">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -220,7 +221,7 @@ export function JobTable<TData, TValue>({
                     </TableBody>
                 </Table>
             </div>
-            <div className="flex items-center justify-end space-x-2 py-4">
+            <div className="flex items-center justify-end space-x-2 pt-5">
                 <Button
                     variant="outline"
                     size="sm"
