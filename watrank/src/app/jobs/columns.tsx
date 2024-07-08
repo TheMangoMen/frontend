@@ -18,7 +18,6 @@ import * as React from "react";
 import {
     Tooltip,
     TooltipContent,
-    TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useToast } from "@/components/ui/use-toast";
@@ -157,28 +156,26 @@ function Contribute({ row }: { row: Row<Job> }) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger disabled={!isLoggedIn()}>
-                <TooltipProvider>
-                    <Tooltip>
-                        <TooltipContent>
-                            <p>
-                                {isLoggedIn()
-                                    ? "Contribute your status"
-                                    : "Log in to contribute"}
-                            </p>
-                        </TooltipContent>
-                        <TooltipTrigger>
-                            <Button
-                                disabled={!isLoggedIn()}
-                                onClick={() => isLoggedIn()}
-                                key={row.id}
-                                className={`text-foreground/60 hover:text-foreground h-full flex p-1`}
-                                variant="ghost"
-                            >
-                                <EditIcon className="w-5" />
-                            </Button>
-                        </TooltipTrigger>
-                    </Tooltip>
-                </TooltipProvider>
+                <Tooltip>
+                    <TooltipContent>
+                        <p>
+                            {isLoggedIn()
+                                ? "Contribute your status"
+                                : "Log in to contribute"}
+                        </p>
+                    </TooltipContent>
+                    <TooltipTrigger>
+                        <Button
+                            disabled={!isLoggedIn()}
+                            onClick={() => isLoggedIn()}
+                            key={row.id}
+                            className={`text-foreground/60 hover:text-foreground h-full flex p-1`}
+                            variant="ghost"
+                        >
+                            <EditIcon className="w-5" />
+                        </Button>
+                    </TooltipTrigger>
+                </Tooltip>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
@@ -461,28 +458,26 @@ function Watching({ row, table }: { row: Row<Job>; table: Table<Job> }) {
 
     return (
         <div className="h-full w-full flex justify-center">
-            <TooltipProvider>
-                <Tooltip>
-                    <TooltipContent>
-                        <p>
-                            {isLoggedIn()
-                                ? "Update your watch list"
-                                : "Log in to start a watch list"}
-                        </p>
-                    </TooltipContent>
-                    <TooltipTrigger>
-                        <Button
-                            disabled={!isLoggedIn()}
-                            onClick={() => toggleWatch(watching)}
-                            key={row.id}
-                            className={`text-primary ${!watching && "text-transparent"} disabled:text-foreground/50 hover:text-primary h-full flex p-1`}
-                            variant="ghost"
-                        >
-                            <StarFilledIcon />
-                        </Button>
-                    </TooltipTrigger>
-                </Tooltip>
-            </TooltipProvider>
+            <Tooltip>
+                <TooltipContent>
+                    <p>
+                        {isLoggedIn()
+                            ? "Update your watch list"
+                            : "Log in to start a watch list"}
+                    </p>
+                </TooltipContent>
+                <TooltipTrigger>
+                    <Button
+                        disabled={!isLoggedIn()}
+                        onClick={() => toggleWatch(watching)}
+                        key={row.id}
+                        className={`text-primary ${!watching && "text-transparent"} disabled:text-foreground/50 hover:text-primary h-full flex p-1`}
+                        variant="ghost"
+                    >
+                        <StarFilledIcon />
+                    </Button>
+                </TooltipTrigger>
+            </Tooltip>
         </div>
     );
 }
