@@ -1,3 +1,4 @@
 strevy
 env
 .env
+.DS_Store
