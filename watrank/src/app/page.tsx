@@ -6,6 +6,34 @@ import { JobTable } from "./jobs/job-table"
 import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "./login/components/icons";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import JobIDExtractor from "@/components/job-id-extractor";
+
+interface CommandKeyProps {
+    text: string;
+}
+
+const CommandKey: React.FC<CommandKeyProps> = ({ text }) => {
+    const [commandKey, setCommandKey] = useState('');
+
+    useEffect(() => {
+        const isMac = navigator.userAgent.includes('Mac');
+        setCommandKey(isMac ? '⌘ ' : 'Ctrl+');
+    }, []);
+
+    return (
+        <span className="bg-muted p-1 rounded-md shadow-md">
+            <code className="font-mono text-sm">{commandKey}{text}</code>
+        </span>
+    );
+};
 
 export default function JobPage() {
     const { token, authIsLoading } = useAuth()

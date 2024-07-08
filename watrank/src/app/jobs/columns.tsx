@@ -419,7 +419,7 @@ function Watching({ row, table }: { row: Row<Job>; table: Table<Job> }) {
 
     async function toggleWatch(isWatching: boolean) {
         const data = {
-            jid: row.getValue("jid"),
+            jids: [row.getValue("jid")],
             delete: isWatching,
         };
 
