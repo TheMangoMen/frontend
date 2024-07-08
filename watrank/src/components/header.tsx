@@ -5,7 +5,7 @@ import { ModeToggle } from "./ui/mode-toggle";
 import { User } from "./user-button.tsx/user-button";
 
 export function Header() {
-    return <header className="top-0 left-0 bg-background z-10 shadow sticky dark:shadow-gray-700">
+    return <header className="sticky top-0 bg-background z-10 shadow dark:shadow-gray-700">
         <div className="flex items-center justify-between h-20 select-none max-w-6xl mx-auto px-8">
             <Logo />
             <div className="flex gap-5 items-center">

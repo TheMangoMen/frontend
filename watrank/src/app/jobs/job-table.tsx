@@ -35,6 +35,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { StarFilledIcon } from "@radix-ui/react-icons"
 import { Toggle } from "@/components/ui/toggle"
+import { useAuth } from "@/context/AuthContext"
 
 declare module '@tanstack/table-core' {
     interface TableMeta<TData extends RowData> {
@@ -122,12 +123,11 @@ export function JobTable<TData, TValue>({
             }
         }
     })
-
-
+    const { isLoggedIn } = useAuth();
 
     return (
-        <div className="justify-self-start">
-            <div className="py-5 flex gap-5 justify-between">
+        <div>
+            <div className="pb-5 flex gap-5 justify-between">
                 <div className="flex gap-2">
                     <Input
                         className="max-w-60 bg-background"
@@ -141,12 +141,12 @@ export function JobTable<TData, TValue>({
                         variant="outline"
                         pressed={(table.getColumn("watching")?.getFilterValue() as boolean) ?? false}
                         onPressedChange={(value) => table.getColumn("watching")?.setFilterValue(value || null)}
-                        className="bg-background"
+                        className={`bg-background ${!isLoggedIn() && "hidden"}`}
                     >
                         <StarFilledIcon className="text-primary" />
                     </Toggle>
                 </div>
-                <div className="hidden md:block">
+                <div>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline" className="ml-auto">
@@ -221,7 +221,7 @@ export function JobTable<TData, TValue>({
                     </TableBody>
                 </Table>
             </div>
-            <div className="flex items-center justify-end space-x-2 py-4">
+            <div className="flex items-center justify-end space-x-2 pt-5">
                 <Button
                     variant="outline"
                     size="sm"

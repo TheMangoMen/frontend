@@ -1,7 +1,7 @@
 "use client";
 import { Job } from "./job";
 import { ColumnDef, Row, Table, useReactTable } from "@tanstack/react-table";
-import { EditIcon, Link } from "lucide-react";
+import { DollarSign, EditIcon } from "lucide-react";
 import { StarFilledIcon } from "@radix-ui/react-icons";
 import Stepper from "@/components/ui/stepper";
 import { Status } from "./status";
@@ -49,7 +49,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/input";
 
 const Loading = React.forwardRef<
     HTMLDivElement,
@@ -156,16 +156,9 @@ function Contribute({ row }: { row: Row<Job> }) {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <TooltipProvider>
-                <DialogTrigger disabled={!isLoggedIn()}>
+            <DialogTrigger disabled={!isLoggedIn()}>
+                <TooltipProvider>
                     <Tooltip>
-                        <TooltipTrigger asChild>
-                            {authIsLoading ? (
-                                <Loading />
-                            ) : (
-                                <EditIcon color={isLoggedIn() ? "currentColor" : "gray"} />
-                            )}
-                        </TooltipTrigger>
                         <TooltipContent>
                             <p>
                                 {isLoggedIn()
@@ -173,9 +166,20 @@ function Contribute({ row }: { row: Row<Job> }) {
                                     : "Log in to contribute"}
                             </p>
                         </TooltipContent>
+                        <TooltipTrigger>
+                            <Button
+                                disabled={!isLoggedIn()}
+                                onClick={() => isLoggedIn()}
+                                key={row.id}
+                                className={`text-foreground/60 hover:text-foreground h-full flex p-1`}
+                                variant="ghost"
+                            >
+                                <EditIcon className="w-5" />
+                            </Button>
+                        </TooltipTrigger>
                     </Tooltip>
-                </DialogTrigger>
-            </TooltipProvider>
+                </TooltipProvider>
+            </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>
@@ -195,7 +199,7 @@ function Contribute({ row }: { row: Row<Job> }) {
                             <AccordionItem value="OA">
                                 <AccordionTrigger className="font-bold">OA</AccordionTrigger>
                                 <AccordionContent className="px-4">
-                                    <div className="flex flex-row justify-between bg-muted-foreground/10 p-4 rounded-md">
+                                    <div className="grid grid-cols-2 bg-muted/70 p-4 rounded-md">
                                         <FormField
                                             control={form.control}
                                             name="oadifficulty"
@@ -297,7 +301,7 @@ function Contribute({ row }: { row: Row<Job> }) {
                                                 </FormItem>
                                             )}
                                         />
-                                        <div className="flex flex-row justify-between bg-muted-foreground/10 p-4 mt-4 rounded-md">
+                                        <div className="grid grid-cols-2 bg-muted/70 p-4 mt-4 rounded-md">
                                             <FormField
                                                 control={form.control}
                                                 name="interviewVibe"
@@ -376,10 +380,11 @@ function Contribute({ row }: { row: Row<Job> }) {
                                         name="compensation"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Compensation</FormLabel>
+                                                <FormLabel>Compensation (CAD / hour)</FormLabel>
                                                 <FormControl>
                                                     <Input
-                                                        type="text"
+                                                        startIcon={DollarSign}
+                                                        type="number"
                                                         onChange={(e) => {
                                                             const value = e.target.value;
                                                             if (!isNaN(Number(value))) {
@@ -456,29 +461,28 @@ function Watching({ row, table }: { row: Row<Job>; table: Table<Job> }) {
 
     return (
         <div className="h-full w-full flex justify-center">
-            <Button
-                disabled={!isLoggedIn()}
-                onClick={() => toggleWatch(watching)}
-                key={row.id}
-                className={`text-primary ${!watching && "text-transparent"} ${isLoggedIn() ? "hover:text-primary" : "hover:gray"
-                    } h-full flex p-1`}
-                variant="ghost"
-            >
-                <TooltipProvider>
-                    <Tooltip>
-                        <TooltipContent>
-                            <p>
-                                {isLoggedIn()
-                                    ? "Update your watch list"
-                                    : "Log in to start a watch list."}
-                            </p>
-                        </TooltipContent>
-                        <TooltipTrigger>
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipContent>
+                        <p>
+                            {isLoggedIn()
+                                ? "Update your watch list"
+                                : "Log in to start a watch list"}
+                        </p>
+                    </TooltipContent>
+                    <TooltipTrigger>
+                        <Button
+                            disabled={!isLoggedIn()}
+                            onClick={() => toggleWatch(watching)}
+                            key={row.id}
+                            className={`text-primary ${!watching && "text-transparent"} disabled:text-foreground/50 hover:text-primary h-full flex p-1`}
+                            variant="ghost"
+                        >
                             <StarFilledIcon />
-                        </TooltipTrigger>
-                    </Tooltip>
-                </TooltipProvider>
-            </Button>
+                        </Button>
+                    </TooltipTrigger>
+                </Tooltip>
+            </TooltipProvider>
         </div>
     );
 }
