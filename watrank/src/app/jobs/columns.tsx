@@ -289,7 +289,7 @@ function Contribute({ row }: { row: Row<Job> }) {
                                                             </SelectTrigger>
                                                         </FormControl>
                                                         <SelectContent>
-                                                            <SelectItem value="1">Interivew #1</SelectItem>
+                                                            <SelectItem value="1">Interview #1</SelectItem>
                                                             <SelectItem value="2">Interview #2</SelectItem>
                                                             <SelectItem value="3">Interview #3</SelectItem>
                                                         </SelectContent>
