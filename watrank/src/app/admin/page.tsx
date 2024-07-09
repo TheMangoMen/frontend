@@ -178,7 +178,7 @@ const AdminCard: React.FC<AdminCardProps> = ({
     };
 
     return (
-        <Card className="m-4 w-64">
+        <Card className="m-2 w-fit">
             <CardHeader>
                 <CardTitle>{title}</CardTitle>
                 <CardDescription>{description}</CardDescription>
@@ -305,7 +305,7 @@ export default function AdminPage() {
         return <div>Loading...</div>;
     }
     return (
-        <div className="px-10 flex flex-col gap-4">
+        <div className="px-4 flex flex-col gap-4">
             <Card className="">
                 <CardHeader>
                     <CardTitle>Status</CardTitle>
