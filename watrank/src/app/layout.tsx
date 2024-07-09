@@ -24,7 +24,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <AuthProvider>
-                <body className={cn(inter.className, "antialiased dark:bg-black bg-muted/70")}>
+                <body className={cn(inter.className, "antialiased dark:bg-black bg-muted/70 text-foreground")}>
                     <ThemeProvider attribute="class"
                         defaultTheme="dark"
                         disableTransitionOnChange>

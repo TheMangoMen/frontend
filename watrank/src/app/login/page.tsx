@@ -118,7 +118,7 @@ export default function AuthenticationPage() {
                     </div>
                 </form>
             </Form>
-            <p className="px-8 text-center text-sm text-muted-foreground">
+            {/* <p className="px-8 text-center text-sm text-muted-foreground">
                 By clicking send, you agree to our{" "}<br />
                 <Link
                     href="/terms"
@@ -134,7 +134,7 @@ export default function AuthenticationPage() {
                     Privacy Policy
                 </Link>
                 .
-            </p>
+            </p> */}
         </>
     } else {
         content =
@@ -149,7 +149,7 @@ export default function AuthenticationPage() {
     }
 
     return (
-        <div className="p-8 rounded border bg-background w-96 m-auto">
+        <div className="p-8 rounded border bg-background max-w-96 m-auto">
             <div className="mx-auto flex w-full flex-col justify-center space-y-6 animate-fade">
                 {content}
             </div>
