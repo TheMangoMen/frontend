@@ -233,7 +233,7 @@ function Contribute({ row }: { row: Row<Job> }) {
                                             name="oalength"
                                             render={({ field }) => (
                                                 <FormItem className="space-y-3">
-                                                    <FormLabel>Difficulty</FormLabel>
+                                                    <FormLabel>Length</FormLabel>
                                                     <FormControl>
                                                         <RadioGroup
                                                             onValueChange={field.onChange}
