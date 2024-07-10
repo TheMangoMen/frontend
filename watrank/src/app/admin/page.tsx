@@ -23,6 +23,8 @@ import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/components/ui/use-toast";
 import { DataTable } from "@/components/ui/data-table"
 import { ColumnDef } from "@tanstack/react-table"
+import { useRouter } from 'next/navigation'
+import { notFound } from 'next/navigation';
 
 const ADMIN_CARD_DATA = [
     {
@@ -119,6 +121,8 @@ const AdminCard: React.FC<AdminCardProps> = ({
     const { toast } = useToast()
     const [value, setValue] = useState<string>('');
     const [initialValue, setInitialValue] = useState<string>('');
+    const { isAdmin } = useAuth()
+    const router = useRouter()
 
     const showToast = () => {
         toast({
@@ -175,6 +179,10 @@ const AdminCard: React.FC<AdminCardProps> = ({
 
     const handleSelectChange = (value: string) => {
         setValue(value);
+    };
+
+    if (!isAdmin()) {
+        notFound();
     };
 
     return (

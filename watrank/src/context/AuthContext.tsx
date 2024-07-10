@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import Cookies from 'js-cookie';
-import jwtDecode from 'jwt-decode';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { useToast } from '@/components/ui/use-toast';
 
 type AuthContextType = {
@@ -11,9 +11,14 @@ type AuthContextType = {
     logout: () => void;
     isLoggedIn: () => boolean;
     authIsLoading: boolean;
+    isAdmin: () => boolean;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+interface ExtendedJwtPayload extends JwtPayload {
+    admin: boolean;
+}
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [token, setToken] = useState<string | null>(null);
@@ -49,8 +54,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const isLoggedIn = () => token !== null;
 
+    const isAdmin = () => token !== null && jwtDecode<ExtendedJwtPayload>(token)?.admin
+
     return (
-        <AuthContext.Provider value={{ token, login, logout, isLoggedIn, authIsLoading }}>
+        <AuthContext.Provider value={{ token, login, logout, isLoggedIn, authIsLoading, isAdmin }}>
             {children}
         </AuthContext.Provider>
     );

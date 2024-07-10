@@ -9,7 +9,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { ClipboardPaste, LogOut } from "lucide-react";
+import { ClipboardPaste, LineChart, LogOut, ShieldHalf } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from '@/context/AuthContext';
 import { Icons } from "@/app/login/components/icons";
@@ -46,7 +46,7 @@ const CommandKey: React.FC<CommandKeyProps> = ({ text }) => {
 
 export function User() {
     const currentUrl = usePathname();
-    const { token, logout, authIsLoading } = useAuth()
+    const { token, logout, authIsLoading, isAdmin } = useAuth()
 
     if (currentUrl == "/login") {
         return
@@ -60,15 +60,31 @@ export function User() {
         return (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <span className="text-base font-medium cursor-pointer">{jwtDecode(token).sub}</span>
+                    <span className="text-base font-medium cursor-pointer hover:underline">{jwtDecode(token).sub}</span>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
+                    <Link href="/analytics">
+                        <DropdownMenuItem className="cursor-pointer">
+                            <LineChart className="mr-2 h-4 w-4" />
+                            <span>Analytics</span>
+                        </DropdownMenuItem>
+                    </Link>
                     <DialogTrigger asChild>
                         <DropdownMenuItem className="cursor-pointer">
                             <ClipboardPaste className="mr-2 h-4 w-4" />
                             <span>Autofill watchlist</span>
                         </DropdownMenuItem>
                     </DialogTrigger>
+                    {isAdmin() &&
+                        <>
+                            <DropdownMenuSeparator />
+                            <Link href="/admin">
+                                <DropdownMenuItem className="cursor-pointer">
+                                    <ShieldHalf className="mr-2 h-4 w-4" />
+                                    <span>Admin dashboard</span>
+                                </DropdownMenuItem>
+                            </Link>
+                        </>}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem className="cursor-pointer" onClick={logout}>
                         <LogOut className="mr-2 h-4 w-4" />

@@ -14,6 +14,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import { notFound } from "next/navigation";
 
 interface WatchedStatusCount {
     Status: string;
@@ -55,6 +56,7 @@ export default function AnalyticsPage() {
     const [jobData, setJobData] = useState<WatchedStatusCount[]>([])
     const [companyData, setCompanyData] = useState<WatchedStatusCount[]>([])
     const [isLoading, setIsLoading] = useState(true);
+    const { isLoggedIn } = useAuth()
 
     const total_jobs_watched = useMemo(() => {
         return jobData.reduce((acc, cur) => acc + cur.Count, 0)
@@ -94,12 +96,15 @@ export default function AnalyticsPage() {
         }
     }, [authIsLoading])
 
+    if (!isLoggedIn()) {
+        notFound();
+    };
+
     if (isLoading) {
         return <div className="w-full h-full flex justify-center items-center">
             <Icons.spinner className="h-12 w-12 animate-spin" />
         </div>
     }
-
 
     return (
         <div className="px-10">
