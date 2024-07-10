@@ -25,29 +25,36 @@ interface AnalyticsData {
     companies: WatchedStatusCount[];
 }
 
+const chartConfig = {
+    total: {
+        label: "Total",
+    },
+    oa: {
+        label: "OA",
+        color: "hsl(var(--chart-oa))",
+    },
+    interview: {
+        label: "Interview",
+        color: "hsl(var(--chart-interview))",
+    },
+    offercall: {
+        label: "Offer Call",
+        color: "hsl(var(--primary))",
+    },
+    nothing: {
+        label: "Nothing",
+        color: "hsl(var(--chart-nothing))",
+    }
+} satisfies ChartConfig
+
+const addColors = (arr: WatchedStatusCount[]) => arr.map((cat: any) => ({ fill: `var(--color-${cat.Status.toLowerCase().replace(/\s+/g, '')})`, ...cat }));
+
 export default function AnalyticsPage() {
     const { token, authIsLoading } = useAuth()
     const { toast } = useToast()
     const [jobData, setJobData] = useState<WatchedStatusCount[]>([])
     const [companyData, setCompanyData] = useState<WatchedStatusCount[]>([])
     const [isLoading, setIsLoading] = useState(true);
-    const chartConfig = {
-        total: {
-            label: "Total"
-        },
-        oa: {
-            label: "OA"
-        },
-        interview: {
-            label: "Interview"
-        },
-        offercall: {
-            label: "Offer Call"
-        },
-        nothing: {
-            label: "Nothing"
-        }
-    } satisfies ChartConfig
 
     const total_jobs_watched = useMemo(() => {
         return jobData.reduce((acc, cur) => acc + cur.Count, 0)
@@ -72,8 +79,8 @@ export default function AnalyticsPage() {
                 showErrorToast();
             }
             const json: AnalyticsData = await response.json();
-            setJobData(json.jobs)
-            setCompanyData(json.companies)
+            setJobData(addColors(json.jobs))
+            setCompanyData(addColors(json.companies))
             setIsLoading(false)
         } catch (error) {
             console.error(error);
@@ -93,13 +100,14 @@ export default function AnalyticsPage() {
         </div>
     }
 
+
     return (
         <div className="px-10">
             <div className="flex flex-wrap lg:flex-nowrap justify-between gap-2">
                 <Card className="w-full lg:w-1/2">
                     <CardHeader>
-                        <CardTitle>Watched Jobs Status</CardTitle>
-                        <CardDescription>Check what jobs you applied to are at what stages</CardDescription>
+                        <CardTitle>Jobs</CardTitle>
+                        <CardDescription>Status of jobs in your watchlist</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <ChartContainer config={chartConfig}>
@@ -133,8 +141,8 @@ export default function AnalyticsPage() {
                 </Card>
                 <Card className="w-full lg:w-1/2">
                     <CardHeader>
-                        <CardTitle>Watched Companies Status</CardTitle>
-                        <CardDescription>Check what companies you applied to are at what stages for all their jobs</CardDescription>
+                        <CardTitle>Companies</CardTitle>
+                        <CardDescription>Status of companies in your watchlist</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <ChartContainer config={chartConfig}>

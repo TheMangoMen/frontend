@@ -177,7 +177,7 @@ function Contribute({ row }: { row: Row<Job> }) {
                     </TooltipTrigger>
                 </Tooltip>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-h-full overflow-scroll">
                 <DialogHeader>
                     <DialogTitle>
                         {row.getValue("title")}
@@ -196,7 +196,7 @@ function Contribute({ row }: { row: Row<Job> }) {
                             <AccordionItem value="OA">
                                 <AccordionTrigger className="font-bold">OA</AccordionTrigger>
                                 <AccordionContent className="px-4">
-                                    <div className="grid grid-cols-2 bg-muted/70 p-4 rounded-md">
+                                    <div className="grid sm:grid-cols-2 bg-muted/70 p-4 rounded-md space-y-4 sm:space-y-0">
                                         <FormField
                                             control={form.control}
                                             name="oadifficulty"
@@ -298,7 +298,7 @@ function Contribute({ row }: { row: Row<Job> }) {
                                                 </FormItem>
                                             )}
                                         />
-                                        <div className="grid grid-cols-2 bg-muted/70 p-4 mt-4 rounded-md">
+                                        <div className="grid sm:grid-cols-2 bg-muted/70 p-4 mt-4 rounded-md space-y-5 sm:space-y-0">
                                             <FormField
                                                 control={form.control}
                                                 name="interviewVibe"

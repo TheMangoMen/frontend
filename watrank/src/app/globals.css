@@ -24,6 +24,9 @@
     --input: 20 5.9% 90%;
     --ring: 20 14.3% 4.1%;
     --radius: 0.5rem;
+    --chart-oa: 220 70% 50%;
+    --chart-interview: 271 91% 65%;
+    --chart-nothing: 24 6% 80%;
   }
 
   .dark {
@@ -46,6 +49,10 @@
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 142.4 71.8% 29.2%;
+    --radius: 0.5rem;
+    --chart-oa: 220 70% 50%;
+    --chart-interview: 271 91% 65%;
+    --chart-nothing: 240 5% 64.9%;
   }
 }
 
