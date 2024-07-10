@@ -76,17 +76,13 @@ export default function AnalyticsPage() {
                 method: "GET",
                 headers: { ...(!!token && { 'Authorization': `Bearer ${token}` }) }
             });
-            if (!response.ok) {
-
-                showErrorToast();
-            }
             const json: AnalyticsData = await response.json();
             setJobData(addColors(json.jobs))
             setCompanyData(addColors(json.companies))
-            setIsLoading(false)
         } catch (error) {
             console.error(error);
-            showErrorToast();
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -96,15 +92,15 @@ export default function AnalyticsPage() {
         }
     }, [authIsLoading])
 
-    if (!isLoggedIn()) {
-        notFound();
-    };
-
     if (isLoading) {
         return <div className="w-full h-full flex justify-center items-center">
             <Icons.spinner className="h-12 w-12 animate-spin" />
         </div>
     }
+
+    if (!isLoggedIn()) {
+        notFound();
+    };
 
     return (
         <div className="px-10">
@@ -138,11 +134,11 @@ export default function AnalyticsPage() {
                             </BarChart>
                         </ChartContainer>
                     </CardContent>
-                    <CardFooter className="flex-col items-start gap-2 text-sm">
+                    {/* <CardFooter className="flex-col items-start gap-2 text-sm">
                         <div className="flex gap-2 font-medium leading-none">
                             Total Jobs Watched: {total_jobs_watched}
                         </div>
-                    </CardFooter>
+                    </CardFooter> */}
                 </Card>
                 <Card className="w-full lg:w-1/2">
                     <CardHeader>
