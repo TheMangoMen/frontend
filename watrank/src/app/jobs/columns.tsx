@@ -50,6 +50,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge"
 
 const Loading = React.forwardRef<
 	HTMLDivElement,
@@ -80,6 +81,7 @@ const formSchema = z.object({
 	interviewtechnical: Technical.optional(),
 	compensation: z.number().min(0).max(200).optional(),
 });
+
 
 function Contribute({ row }: { row: Row<Job> }) {
 	const { token, isLoggedIn, authIsLoading } = useAuth();
@@ -532,9 +534,8 @@ function Watching({ row, table }: { row: Row<Job>; table: Table<Job> }) {
 						disabled={!isLoggedIn()}
 						onClick={() => toggleWatch(watching)}
 						key={row.id}
-						className={`text-primary ${
-							!watching && "text-transparent"
-						} disabled:text-foreground/50 hover:text-primary h-full flex p-1`}
+						className={`text-primary ${!watching && "text-transparent"
+							} disabled:text-foreground/50 hover:text-primary h-full flex p-1`}
 						variant="ghost"
 					>
 						<StarFilledIcon />
@@ -544,6 +545,69 @@ function Watching({ row, table }: { row: Row<Job>; table: Table<Job> }) {
 		</div>
 	);
 }
+//call contributions, dipslay horizontal flex-box of badgesS
+function Tags({ row }: { row: Row<Job> }) {
+	const { token, isLoggedIn, authIsLoading } = useAuth();
+	const [tagData, setTagData] = React.useState({
+		oadifficulty: null,
+		oalength: null,
+		interviewVibe: null,
+		interviewTechnical: null,
+		compensation: null,
+	});
+	const title: string = row.getValue("title");
+	const jid: string = row.getValue("jid");
+
+	React.useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const response = await fetch(
+					`${process.env.NEXT_PUBLIC_API_URL}/contribution/${row.getValue(
+						"jid"
+					)}`,
+					{
+						method: "GET",
+						headers: {
+							Authorization: `Bearer ${token}`,
+						},
+					}
+				);
+				if (response.ok) {
+					const data = await response.json();
+			
+
+					const tagData = {
+						oadifficulty: data.oadifficulty ?? null,
+						oalength: data.oalength ?? null,
+						interviewVibe: data.interviewvibe ?? null,
+						interviewTechnical: data.interviewtechnical ?? null,
+						compensation: data.compensation ?? null,
+					};
+
+
+					setTagData(tagData);
+
+				}
+			} catch (error) {
+				console.error(error);
+			}
+		};
+
+		fetchData();
+	}, [jid]);
+
+
+	return (
+		<div>
+			<div className="flex overflow-hidden ml-2">
+				{tagData.oadifficulty && <Badge className="mr-2 flex-shrink-0">{`${tagData.oadifficulty} OA`}</Badge>}
+				{tagData.interviewVibe && <Badge className="mr-2 flex-shrink-0">{`${tagData.interviewVibe} Vibe`}</Badge>}
+				{tagData.interviewTechnical && <Badge className="mr-2 flex-shrink-0">{`${tagData.interviewTechnical} Interview`}</Badge>}
+			</div>
+		</div>
+	);
+}
+
 export const columns: ColumnDef<Job>[] = [
 	{
 		accessorKey: "watching",
@@ -565,13 +629,16 @@ export const columns: ColumnDef<Job>[] = [
 			const title: string = row.getValue("title");
 			const jid: string = row.getValue("jid");
 			return (
-				<a
-					href={`https://waterlooworks.uwaterloo.ca/myAccount/co-op/full/jobs.htm?ck_jobid=${jid}`}
-					className="hover:underline"
-					target="_blank"
-				>
-					{title}
-				</a>
+				<div>
+					<a
+						href={`https://waterlooworks.uwaterloo.ca/myAccount/co-op/full/jobs.htm?ck_jobid=${jid}`}
+						className="hover:underline"
+						target="_blank"
+					>
+						{title}
+					</a>
+					<Tags row={row} />
+				</div>
 			);
 		},
 	},
