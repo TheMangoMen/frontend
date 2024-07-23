@@ -50,7 +50,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/ui/badge";
 
 const Loading = React.forwardRef<
 	HTMLDivElement,
@@ -81,7 +81,6 @@ const formSchema = z.object({
 	interviewtechnical: Technical.optional(),
 	compensation: z.number().min(0).max(200).optional(),
 });
-
 
 function Contribute({ row }: { row: Row<Job> }) {
 	const { token, isLoggedIn, authIsLoading } = useAuth();
@@ -534,8 +533,9 @@ function Watching({ row, table }: { row: Row<Job>; table: Table<Job> }) {
 						disabled={!isLoggedIn()}
 						onClick={() => toggleWatch(watching)}
 						key={row.id}
-						className={`text-primary ${!watching && "text-transparent"
-							} disabled:text-foreground/50 hover:text-primary h-full flex p-1`}
+						className={`text-primary ${
+							!watching && "text-transparent"
+						} disabled:text-foreground/50 hover:text-primary h-full flex p-1`}
 						variant="ghost"
 					>
 						<StarFilledIcon />
@@ -574,7 +574,6 @@ function Tags({ row }: { row: Row<Job> }) {
 				);
 				if (response.ok) {
 					const data = await response.json();
-			
 
 					const tagData = {
 						oadifficulty: data.oadifficulty ?? null,
@@ -584,9 +583,7 @@ function Tags({ row }: { row: Row<Job> }) {
 						compensation: data.compensation ?? null,
 					};
 
-
 					setTagData(tagData);
-
 				}
 			} catch (error) {
 				console.error(error);
@@ -596,13 +593,22 @@ function Tags({ row }: { row: Row<Job> }) {
 		fetchData();
 	}, [jid]);
 
-
 	return (
-		<div>
-			<div className="flex overflow-hidden ml-2">
-				{tagData.oadifficulty && <Badge className="mr-2 flex-shrink-0">{`${tagData.oadifficulty} OA`}</Badge>}
-				{tagData.interviewVibe && <Badge className="mr-2 flex-shrink-0">{`${tagData.interviewVibe} Vibe`}</Badge>}
-				{tagData.interviewTechnical && <Badge className="mr-2 flex-shrink-0">{`${tagData.interviewTechnical} Interview`}</Badge>}
+		<div className="max-md:hidden">
+			<div className="flex flex-wrap flex-row gap-2">
+				{tagData.oadifficulty && <Badge>{`${tagData.oadifficulty} OA`}</Badge>}
+				{tagData.interviewVibe && (
+					<Badge>{`${tagData.interviewVibe} Vibe`}</Badge>
+				)}
+				{tagData.interviewTechnical && (
+					<Badge>{`${tagData.interviewTechnical} Interview`}</Badge>
+				)}
+				{tagData.interviewTechnical && (
+					<Badge>{`${tagData.interviewTechnical} Interview`}</Badge>
+				)}
+				{tagData.interviewTechnical && (
+					<Badge>{`${tagData.interviewTechnical} Interview`}</Badge>
+				)}
 			</div>
 		</div>
 	);
@@ -615,7 +621,6 @@ export const columns: ColumnDef<Job>[] = [
 		cell: ({ row, table }) => {
 			return <Watching row={row} table={table} />;
 		},
-		enableHiding: false,
 	},
 	{
 		accessorKey: "jid",
@@ -629,7 +634,7 @@ export const columns: ColumnDef<Job>[] = [
 			const title: string = row.getValue("title");
 			const jid: string = row.getValue("jid");
 			return (
-				<div>
+				<div className="grid grid-cols-1 gap-2 justify-items-start">
 					<a
 						href={`https://waterlooworks.uwaterloo.ca/myAccount/co-op/full/jobs.htm?ck_jobid=${jid}`}
 						className="hover:underline"
