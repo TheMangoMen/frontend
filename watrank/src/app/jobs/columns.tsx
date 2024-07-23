@@ -551,6 +551,11 @@ function TagBadges({ tags }: { tags: Tags }) {
 	if (!tags){
 		return null;
 	}
+	//to-do: systemic enum changes to not have "somewhat interview"s
+	let tech = tags.interviewtechnical
+	if (tags.interviewtechnical == "Somewhat"){
+		tech = "Mixed"
+	}
 
 	return (
 		<div className="max-md:hidden">
@@ -560,7 +565,7 @@ function TagBadges({ tags }: { tags: Tags }) {
 					<Badge>{`${tags.interviewvibe} Vibe`}</Badge>
 				)}
 				{tags.interviewtechnical && (
-					<Badge>{`${tags.interviewtechnical} Interview`}</Badge>
+					<Badge>{`${tech} Interview`}</Badge>
 				)}
 			</div>
 		</div>
