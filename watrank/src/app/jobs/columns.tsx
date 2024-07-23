@@ -1,5 +1,6 @@
 "use client";
 import { Job } from "./job";
+import { Tags } from "./tags";
 import { ColumnDef, Row, Table, useReactTable } from "@tanstack/react-table";
 import { DollarSign, EditIcon } from "lucide-react";
 import { StarFilledIcon } from "@radix-ui/react-icons";
@@ -50,6 +51,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
 
 const Loading = React.forwardRef<
 	HTMLDivElement,
@@ -544,6 +546,28 @@ function Watching({ row, table }: { row: Row<Job>; table: Table<Job> }) {
 		</div>
 	);
 }
+//call contributions, dipslay horizontal flex-box of badges
+function TagBadges({ tags }: { tags: Tags }) {
+	if (!tags){
+		return null;
+	}
+
+	return (
+		<div className="max-md:hidden">
+			<div className="flex flex-wrap flex-row gap-2">
+				{tags.oadifficulty && <Badge>{`${tags.oadifficulty} OA`}</Badge>}
+				{tags.interviewvibe && (
+					<Badge>{`${tags.interviewvibe} Vibe`}</Badge>
+				)}
+				{tags.interviewtechnical && (
+					<Badge>{`${tags.interviewtechnical} Interview`}</Badge>
+				)}
+			</div>
+		</div>
+		
+	);
+}
+
 export const columns: ColumnDef<Job>[] = [
 	{
 		accessorKey: "watching",
@@ -551,7 +575,6 @@ export const columns: ColumnDef<Job>[] = [
 		cell: ({ row, table }) => {
 			return <Watching row={row} table={table} />;
 		},
-		enableHiding: false,
 	},
 	{
 		accessorKey: "jid",
@@ -564,14 +587,18 @@ export const columns: ColumnDef<Job>[] = [
 		cell: ({ row }) => {
 			const title: string = row.getValue("title");
 			const jid: string = row.getValue("jid");
+			const tags: Tags = row.original.tags;
 			return (
-				<a
-					href={`https://waterlooworks.uwaterloo.ca/myAccount/co-op/full/jobs.htm?ck_jobid=${jid}`}
-					className="hover:underline"
-					target="_blank"
-				>
-					{title}
-				</a>
+				<div className="grid grid-cols-1 gap-2 justify-items-start">
+					<a
+						href={`https://waterlooworks.uwaterloo.ca/myAccount/co-op/full/jobs.htm?ck_jobid=${jid}`}
+						className="hover:underline"
+						target="_blank"
+					>
+						{title}
+					</a>
+					<TagBadges tags={tags} />
+				</div>
 			);
 		},
 	},

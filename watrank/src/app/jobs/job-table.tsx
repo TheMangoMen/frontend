@@ -67,6 +67,22 @@ function useSkipper() {
 	return [shouldSkip, skip] as const;
 }
 
+const useMediaQuery = (query: string): boolean => {
+	const [matches, setMatches] = React.useState<boolean>(
+		window.matchMedia(query).matches
+	);
+
+	React.useEffect(() => {
+		const mediaQueryList = window.matchMedia(query);
+		const listener = (event: MediaQueryListEvent) => setMatches(event.matches);
+
+		mediaQueryList.addEventListener("change", listener);
+		return () => mediaQueryList.removeEventListener("change", listener);
+	}, [query]);
+
+	return matches;
+};
+
 export function JobTable<TData, TValue>({
 	columns,
 	data,
@@ -79,6 +95,8 @@ export function JobTable<TData, TValue>({
 	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
 		[]
 	);
+
+	const isMobile = useMediaQuery("(max-width: 768px)");
 
 	const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
 
@@ -124,6 +142,15 @@ export function JobTable<TData, TValue>({
 	});
 	const { isLoggedIn } = useAuth();
 
+	React.useEffect(() => {
+		table
+			.getAllColumns()
+			.filter((column) => column.getCanHide())
+			.map((column) => {
+				column.toggleVisibility(isMobile ? false : true);
+			});
+	}, [isMobile, table]);
+
 	return (
 		<div>
 			<div className="pb-5 flex gap-5 justify-between">
@@ -152,7 +179,7 @@ export function JobTable<TData, TValue>({
 						<StarFilledIcon className="text-primary" />
 					</Toggle>
 				</div>
-				<div className="flex gap-2">
+				<div className="max-sm:hidden flex gap-2">
 					<Button onClick={refresh} variant="outline">
 						<RefreshCw strokeWidth={3} size={"1rem"} className="text-primary" />
 					</Button>
