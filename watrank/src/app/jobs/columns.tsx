@@ -1,5 +1,6 @@
 "use client";
 import { Job } from "./job";
+import { Tags } from "./tags";
 import { ColumnDef, Row, Table, useReactTable } from "@tanstack/react-table";
 import { DollarSign, EditIcon } from "lucide-react";
 import { StarFilledIcon } from "@radix-ui/react-icons";
@@ -545,72 +546,25 @@ function Watching({ row, table }: { row: Row<Job>; table: Table<Job> }) {
 		</div>
 	);
 }
-//call contributions, dipslay horizontal flex-box of badgesS
-function Tags({ row }: { row: Row<Job> }) {
-	const { token, isLoggedIn, authIsLoading } = useAuth();
-	const [tagData, setTagData] = React.useState({
-		oadifficulty: null,
-		oalength: null,
-		interviewVibe: null,
-		interviewTechnical: null,
-		compensation: null,
-	});
-	const title: string = row.getValue("title");
-	const jid: string = row.getValue("jid");
-
-	React.useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await fetch(
-					`${process.env.NEXT_PUBLIC_API_URL}/contribution/${row.getValue(
-						"jid"
-					)}`,
-					{
-						method: "GET",
-						headers: {
-							Authorization: `Bearer ${token}`,
-						},
-					}
-				);
-				if (response.ok) {
-					const data = await response.json();
-
-					const tagData = {
-						oadifficulty: data.oadifficulty ?? null,
-						oalength: data.oalength ?? null,
-						interviewVibe: data.interviewvibe ?? null,
-						interviewTechnical: data.interviewtechnical ?? null,
-						compensation: data.compensation ?? null,
-					};
-
-					setTagData(tagData);
-				}
-			} catch (error) {
-				console.error(error);
-			}
-		};
-
-		fetchData();
-	}, [jid]);
+//call contributions, dipslay horizontal flex-box of badges
+function TagBadges({ tags }: { tags: Tags }) {
+	if (!tags){
+		return null;
+	}
 
 	return (
 		<div className="max-md:hidden">
 			<div className="flex flex-wrap flex-row gap-2">
-				{tagData.oadifficulty && <Badge>{`${tagData.oadifficulty} OA`}</Badge>}
-				{tagData.interviewVibe && (
-					<Badge>{`${tagData.interviewVibe} Vibe`}</Badge>
+				{tags.oadifficulty && <Badge>{`${tags.oadifficulty} OA`}</Badge>}
+				{tags.interviewvibe && (
+					<Badge>{`${tags.interviewvibe} Vibe`}</Badge>
 				)}
-				{tagData.interviewTechnical && (
-					<Badge>{`${tagData.interviewTechnical} Interview`}</Badge>
-				)}
-				{tagData.interviewTechnical && (
-					<Badge>{`${tagData.interviewTechnical} Interview`}</Badge>
-				)}
-				{tagData.interviewTechnical && (
-					<Badge>{`${tagData.interviewTechnical} Interview`}</Badge>
+				{tags.interviewtechnical && (
+					<Badge>{`${tags.interviewtechnical} Interview`}</Badge>
 				)}
 			</div>
 		</div>
+		
 	);
 }
 
@@ -633,6 +587,7 @@ export const columns: ColumnDef<Job>[] = [
 		cell: ({ row }) => {
 			const title: string = row.getValue("title");
 			const jid: string = row.getValue("jid");
+			const tags: Tags = row.original.tags;
 			return (
 				<div className="grid grid-cols-1 gap-2 justify-items-start">
 					<a
@@ -642,7 +597,7 @@ export const columns: ColumnDef<Job>[] = [
 					>
 						{title}
 					</a>
-					<Tags row={row} />
+					<TagBadges tags={tags} />
 				</div>
 			);
 		},

@@ -1,5 +1,6 @@
 import { Company } from "./company";
 import { Status } from "./status";
+import { Tags } from "./tags";
 export type Job = {
 	watching: boolean;
 	jid: number;
@@ -8,4 +9,5 @@ export type Job = {
 	location: string;
 	openings: number;
 	stages: Status[];
+	tags: Tags;
 };
