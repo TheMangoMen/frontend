@@ -8,7 +8,11 @@ interface StepperProps {
 }
 
 const Stepper: React.FC<StepperProps> = ({ steps }) => {
-    const currentStep = steps ? steps.length - 1 : 0; // Always set to the last step
+    if (steps === null || steps.length === 0) {
+        return <></>
+    }
+    const isRankingStage = ["Ranked", "Taking", "Not Taking"].includes(steps[0].name);
+    const currentStep = !isRankingStage ? steps.length - 1 : -1; // Always set to the last step, dont set any for ranking stage
 
     // Define fixed icons for the first and last steps
     const preAssessmentIcon = Bot;
@@ -55,7 +59,7 @@ const Stepper: React.FC<StepperProps> = ({ steps }) => {
                                             )}
                                             <div
                                                 className={`flex items-center justify-center w-8 h-8 rounded-full ${index === currentStep ? "bg-primary/80 " : "bg-transparent outline outline-primary/80"
-                                                    } ${index < currentStep ? "opacity-75" : ""}`}
+                                                    } ${index != currentStep ? "opacity-75" : ""}`}
                                             >
                                                 <IconComponent className={`w-4 h-4 ${index === currentStep ? "text-black" : ""}`} strokeWidth={2} />{" "}
                                             </div>
