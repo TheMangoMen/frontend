@@ -562,7 +562,7 @@ function TagBadges({ tags }: { tags: Tags }) {
 			<div className="flex flex-wrap flex-row gap-2">
 				{tags.oadifficulty && <Badge>{`${tags.oadifficulty} OA`}</Badge>}
 				{tags.interviewvibe && (
-					<Badge>{`${tags.interviewvibe} Vibe`}</Badge>
+					<Badge>{`${tags.interviewvibe} Vibes`}</Badge>
 				)}
 				{tags.interviewtechnical && (
 					<Badge>{`${tech} Interview`}</Badge>
