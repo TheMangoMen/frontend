@@ -15,6 +15,7 @@ export const GlobalProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     useEffect(() => {
         setGlobalIsLoading(true);
         const fetchStage = async () => {
+            console.log("FETCH")
             const url = `${process.env.NEXT_PUBLIC_API_URL}/stage`;
             try {
                 const response = await fetch(url, {

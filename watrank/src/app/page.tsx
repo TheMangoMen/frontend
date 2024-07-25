@@ -6,15 +6,6 @@ import { JobTable } from "./jobs/job-table";
 import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "./login/components/icons";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
-import JobIDExtractor from "@/components/job-id-extractor";
 
 interface CommandKeyProps {
     text: string;
@@ -42,7 +33,6 @@ export default function JobPage() {
     const { token, authIsLoading } = useAuth();
     const { toast } = useToast();
     const [data, setData] = useState([]);
-    const [isRankingStage, setIsRankingStage] = useState<string>();
     const [isLoading, setIsLoading] = useState(true);
 
     const showErrorToast = () =>
@@ -71,30 +61,9 @@ export default function JobPage() {
         }
     };
 
-    const fetchState = async () => {
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/stage`;
-        try {
-            const response = await fetch(url, {
-                method: "GET",
-                headers: { ...(!!token && { Authorization: `Bearer ${token}` }) },
-            });
-            if (!response.ok) {
-                showErrorToast();
-            }
-            const json = await response.json();
-            setIsRankingStage(json);
-            setIsLoading(false);
-        } catch (error) {
-            console.error(error);
-            showErrorToast();
-        }
-
-    }
-
     useEffect(() => {
         if (!authIsLoading) {
             fetchJobs();
-            fetchState();
         }
     }, [authIsLoading]);
 
