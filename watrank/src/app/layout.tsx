@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { AuthProvider } from '@/context/AuthContext';
 import { Header } from "@/components/header";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { GlobalProvider } from "@/context/StageContext";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -23,23 +24,25 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <AuthProvider>
-                <body className={cn(inter.className, "antialiased dark:bg-black bg-muted/70 text-foreground")}>
-                    <ThemeProvider attribute="class"
-                        defaultTheme="dark"
-                        disableTransitionOnChange>
-                        <TooltipProvider>
-                            <div className="h-screen box-border flex flex-col overflow-auto">
-                                <Header />
-                                <div className="flex-grow flex flex-col w-full max-w-6xl px-8 py-5 mx-auto">
-                                    {children}
+            <GlobalProvider>
+                <AuthProvider>
+                    <body className={cn(inter.className, "antialiased dark:bg-black bg-muted/70 text-foreground")}>
+                        <ThemeProvider attribute="class"
+                            defaultTheme="dark"
+                            disableTransitionOnChange>
+                            <TooltipProvider>
+                                <div className="h-screen box-border flex flex-col overflow-auto">
+                                    <Header />
+                                    <div className="flex-grow flex flex-col w-full max-w-6xl px-8 py-5 mx-auto">
+                                        {children}
+                                    </div>
                                 </div>
-                            </div>
-                        </TooltipProvider>
-                    </ThemeProvider>
-                    <Toaster />
-                </body>
-            </AuthProvider>
+                            </TooltipProvider>
+                        </ThemeProvider>
+                        <Toaster />
+                    </body>
+                </AuthProvider>
+            </GlobalProvider>
         </html >
 
     );
