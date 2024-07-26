@@ -15,9 +15,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useToast } from "@/components/ui/use-toast";
 import { Badge } from "@/components/ui/badge";
-import ContributeStatus from "./contribute-status";
-import { useGlobal } from "@/context/StageContext";
-import ContributeRanking from "./contribute-ranking";
+import Contribute from "./contribute";
 
 function Watching({ row, table }: { row: Row<Job>; table: Table<Job> }) {
     const { token, isLoggedIn, authIsLoading } = useAuth();
@@ -188,8 +186,7 @@ export const columns: ColumnDef<Job>[] = [
         id: "contribute",
         header: "",
         cell: ({ row }) => {
-            const { isRankingStage } = useGlobal();
-            return isRankingStage ? <ContributeRanking row={row} /> : <ContributeStatus row={row} />;
+            return <Contribute row={row} />
         },
         enableHiding: false,
     },
