@@ -127,7 +127,7 @@ export default function ContributeStatus({ row }: { row: Row<Job> }) {
         if (open && isLoggedIn()) {
             fetchData();
         }
-    }, [open, isLoggedIn]);
+    }, [open]);
 
     const showErrorToast = () =>
         toast({ variant: "destructive", title: "An error occured." });
