@@ -142,7 +142,7 @@ export const columns: ColumnDef<Job>[] = [
             const jid: string = row.getValue("jid");
             const tags: Tags = row.original.tags;
             return (
-                <div className="grid grid-cols-1 gap-2 justify-items-start">
+                <div className="grid grid-cols-1 gap-2 justify-items-start min-w-20">
                     <a
                         href={`https://waterlooworks.uwaterloo.ca/myAccount/co-op/full/jobs.htm?ck_jobid=${jid}`}
                         className="hover:underline"
@@ -161,7 +161,7 @@ export const columns: ColumnDef<Job>[] = [
         enableHiding: false,
         cell: ({ row }) => {
             const company: string = row.getValue("company");
-            return <div className="max-w-40">{company}</div>;
+            return <div className="max-w-40 min-w-20">{company}</div>;
         },
     },
     {
