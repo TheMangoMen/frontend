@@ -37,7 +37,7 @@ const LandingPage = () => {
       </div>
       <div className="px-20 grid md:grid-cols-2 gap-5">
           {slides.map((slide, index) => (
-              <Card className="p-4">
+              <Card key={index} className="p-4">
                 <CardTitle className="mb-2 font-bold text-xl">{slide.title}</CardTitle>
                 <CardContent className="flex items-center justify-center p-2">
                 <div className="w-full">
