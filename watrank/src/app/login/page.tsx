@@ -145,6 +145,12 @@ export default function AuthenticationPage() {
                 <p className="text-sm text-muted-foreground">
                     We&apos;ve sent a link to {username}@uwaterloo.ca
                 </p>
+                <p className="text-sm text-muted-foreground">
+                    Your email may take up to 5 minutes.
+                </p>
+                <p className="text-sm text-muted-foreground italic">
+                &mdash; it&apos;s taking the scenic route :P
+                </p>
             </div>
     }
 
