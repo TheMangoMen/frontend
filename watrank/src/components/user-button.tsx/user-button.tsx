@@ -9,7 +9,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { ClipboardPaste, LineChart, LogOut, ShieldHalf } from "lucide-react";
+import { ArrowDown, ChevronDown, ClipboardPaste, LineChart, LogOut, ShieldHalf } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from '@/context/AuthContext';
 import { Icons } from "@/app/login/components/icons";
@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/dialog"
 import JobIDExtractor from "@/components/job-id-extractor";
 import { useEffect, useState } from "react";
+import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 
 interface CommandKeyProps {
     text: string;
@@ -59,9 +60,14 @@ export function User() {
     if (token !== null) {
         return (
             <DropdownMenu>
+                <Button>
                 <DropdownMenuTrigger asChild>
-                    <span className="text-base font-medium cursor-pointer hover:underline">{jwtDecode(token).sub}</span>
+                    <div className="flex flex-row gap-1 items-center">
+                        <span className="text-base font-medium cursor-pointer">{jwtDecode(token).sub}</span>
+                        <ChevronDown size={20}/>
+                    </div>
                 </DropdownMenuTrigger>
+                </Button>
                 <DropdownMenuContent>
                     <Link href="/analytics">
                         <DropdownMenuItem className="cursor-pointer">
@@ -95,7 +101,9 @@ export function User() {
         )
     }
 
-    return <Link href="/login" className="text-base font-medium w-12 hover:underline">
+    return <Button>
+        <Link href="/login" className="text-base font-medium w-12">
         Log In
-    </Link>;
+    </Link>
+    </Button>;
 }

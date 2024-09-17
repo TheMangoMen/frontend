@@ -33,7 +33,7 @@ export default function RootLayout({
                             <TooltipProvider>
                                 <div className="h-screen box-border flex flex-col overflow-auto">
                                     <Header />
-                                    <div className="flex-grow flex flex-col w-full max-w-6xl px-8 py-5 mx-auto">
+                                    <div className="flex-grow flex flex-col w-full max-w-6xl px-4 md:px-8 py-5 mx-auto">
                                         {children}
                                     </div>
                                 </div>
