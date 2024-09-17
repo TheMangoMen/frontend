@@ -14,7 +14,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: "WatRank",
-    description: "",
+    description: " Navigate your next co-op search with confidence.",
 };
 
 export default function RootLayout({
