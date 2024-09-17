@@ -9,17 +9,17 @@ import { motion, useAnimation } from 'framer-motion';
 
 const slides = [
   {
-    title: "1. Import applied jobs from WaterlooWorks",
+    title: "1. Autofill jobs from WaterlooWorks",
     description: "Share and access anonymous information about co-op job searches to make informed decisions.",
     image: "/landing/import-jobs.png"
   },
   {
-    title: "2. Track the status of postings in real-time",
+    title: "2. Track postings in real-time",
     description: "Track and view the progress of job applications, from initial submission to final interviews.",
     image: "/landing/check-status.png"
   },
   {
-    title: "3. Share your updates anonymously",
+    title: "3. Share updates anonymously",
     description: "Update/Add to the status of jobs you have applied to.",
     image: "/landing/contribute.png"
   },
@@ -29,7 +29,6 @@ const slides = [
     image: "/landing/analytics.png"
   }
 ];
-
 const LandingPage = () => {
   const controls = useAnimation();
 
@@ -42,7 +41,7 @@ const LandingPage = () => {
 
   return (
     <motion.div 
-      className="relative overflow-hidden min-h-screen"
+      className="relative overflow-hidden max-h-screen"
       initial={{ opacity: 0 }}
       animate={controls}
     >
@@ -56,7 +55,7 @@ const LandingPage = () => {
         <Image
           src="/landing/arrow-repeated.png"
           alt="Top-left arrows"
-          layout="fill"
+          fill
           objectFit="cover"
         />
       </motion.div>
@@ -71,7 +70,7 @@ const LandingPage = () => {
         <Image
           src="/landing/arrow-repeated.png"
           alt="Bottom-right arrows"
-          layout="fill"
+          fill
           objectFit="cover"
           style={{ transform: 'rotate(180deg)' }}
         />
@@ -119,7 +118,7 @@ const LandingPage = () => {
               whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
             >
               <Card className="p-2 md:p-4 h-full">
-                <CardTitle className="font-semibold p-2 text-lg md:text-xl">{slide.title}</CardTitle>
+                <CardTitle className="font-semibold p-2 text-lg md:text-xl md:mr-20">{slide.title}</CardTitle>
                 <CardContent className="flex items-center justify-center p-2">
                   <div className="w-full">
                     <AspectRatio ratio={16 / 9}>
