@@ -6,6 +6,7 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import Link from 'next/link';
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { motion, useAnimation } from 'framer-motion';
+import { useAuth } from '@/context/AuthContext';
 
 const slides = [
   {
@@ -31,6 +32,7 @@ const slides = [
 ];
 const LandingPage = () => {
   const controls = useAnimation();
+  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
     controls.start({
@@ -40,13 +42,13 @@ const LandingPage = () => {
   }, [controls]);
 
   return (
-    <motion.div 
-      className="relative overflow-hidden max-h-screen"
+    <motion.div
+      className="relative overflow-hidden"
       initial={{ opacity: 0 }}
       animate={controls}
     >
       {/* Top-left emerging arrow */}
-      <motion.div 
+      <motion.div
         className="fixed top-0 hidden md:block left-0 w-2/3 h-2/3 pointer-events-none -z-10"
         initial={{ x: '-100%' }}
         animate={{ x: '-20%' }}
@@ -61,7 +63,7 @@ const LandingPage = () => {
       </motion.div>
 
       {/* Bottom-right emerging arrow */}
-      <motion.div 
+      <motion.div
         className="fixed bottom-0 right-0 w-2/3 h-2/3 hidden md:block pointer-events-none -z-10"
         initial={{ x: '100%' }}
         animate={{ x: '20%' }}
@@ -97,11 +99,19 @@ const LandingPage = () => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          <Link href="/jobs" passHref>
-            <Button className="font-normal rounded-md text-lg">
-              Start Searching
-            </Button>
-          </Link>
+          {isLoggedIn() ? (
+            <Link href="/jobs" passHref>
+              <Button className="font-normal rounded-md text-lg">
+                Start Searching
+              </Button>
+            </Link>
+          ) : (
+            <Link href="/login" passHref>
+              <Button className="font-normal rounded-md text-lg">
+                Start Searching
+              </Button>
+            </Link>)
+          }
         </motion.div>
         <motion.div
           className="px-4 md:px-20 grid md:grid-cols-2 gap-5"
