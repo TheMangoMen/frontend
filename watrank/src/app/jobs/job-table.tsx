@@ -20,8 +20,7 @@ import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
-	DropdownMenuContent,
-	DropdownMenuTrigger,
+	DropdownMenuContent, DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
 import {
@@ -36,8 +35,9 @@ import { Input } from "@/components/ui/input";
 import { StarFilledIcon } from "@radix-ui/react-icons";
 import { Toggle } from "@/components/ui/toggle";
 import { useAuth } from "@/context/AuthContext";
-import { FolderSync, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { AutofillPopup } from "@/components/autofill-popup";
 
 declare module "@tanstack/table-core" {
 	interface TableMeta<TData extends RowData> {
@@ -51,6 +51,26 @@ interface JobTableProps<TData, TValue> {
 	setData(_: any): void;
 	refresh: any;
 }
+
+
+interface CommandKeyProps {
+	text: string;
+}
+
+const CommandKey: React.FC<CommandKeyProps> = ({ text }) => {
+	const [commandKey, setCommandKey] = React.useState('');
+
+	React.useEffect(() => {
+		const isMac = navigator.userAgent.includes('Mac');
+		setCommandKey(isMac ? '⌘ ' : 'Ctrl+');
+	}, []);
+
+	return (
+		<span className="bg-muted p-1 rounded-md shadow-md">
+			<code className="font-mono text-sm">{commandKey}{text}</code>
+		</span>
+	);
+};
 
 function useSkipper() {
 	const shouldSkipRef = React.useRef(true);
@@ -152,9 +172,9 @@ export function JobTable<TData, TValue>({
 			});
 	}, [isMobile, table]);
 
-	
+
 	React.useEffect(() => {
-		const handleKeyPress = (event : any) => {
+		const handleKeyPress = (event: any) => {
 			if ((event.key === "w" || event.key === "W") && event.shiftKey) {
 				// Get the current value of the toggle
 				const currentValue =
@@ -189,24 +209,24 @@ export function JobTable<TData, TValue>({
 						}
 					/>
 					<Tooltip>
-					<TooltipTrigger asChild>
-						<Toggle
-							variant="outline"
-							pressed={
-								(table.getColumn("watching")?.getFilterValue() as boolean) ?? false
-							}
-							onPressedChange={(value) =>
-								table.getColumn("watching")?.setFilterValue(value || null)
-							}
-							className={`bg-background ${!isLoggedIn() && "hidden"}`}
-						>
-							<StarFilledIcon className="text-primary" />
-						</Toggle>
-					</TooltipTrigger>
-					<TooltipContent>
-						You can also press <strong>Shift + W</strong> to toggle
-					</TooltipContent>
-				</Tooltip>
+						<TooltipTrigger asChild>
+							<Toggle
+								variant="outline"
+								pressed={
+									(table.getColumn("watching")?.getFilterValue() as boolean) ?? false
+								}
+								onPressedChange={(value) =>
+									table.getColumn("watching")?.setFilterValue(value || null)
+								}
+								className={`bg-background ${!isLoggedIn() && "hidden"}`}
+							>
+								<StarFilledIcon className="text-primary" />
+							</Toggle>
+						</TooltipTrigger>
+						<TooltipContent>
+							You can also press <strong>Shift + W</strong> to toggle
+						</TooltipContent>
+					</Tooltip>
 				</div>
 				<div className="max-sm:hidden flex gap-2">
 					<Button onClick={refresh} variant="outline">
@@ -251,9 +271,9 @@ export function JobTable<TData, TValue>({
 											{header.isPlaceholder
 												? null
 												: flexRender(
-														header.column.columnDef.header,
-														header.getContext()
-												  )}
+													header.column.columnDef.header,
+													header.getContext()
+												)}
 										</TableHead>
 									);
 								})}
@@ -261,7 +281,7 @@ export function JobTable<TData, TValue>({
 						))}
 					</TableHeader>
 					<TableBody>
-						{table.getRowModel().rows?.length ? (
+						{table.getRowModel().rows?.length > 0 ? (
 							table.getRowModel().rows.map((row) => (
 								<TableRow
 									key={row.id}
@@ -283,7 +303,7 @@ export function JobTable<TData, TValue>({
 									colSpan={columns.length}
 									className="h-24 text-center"
 								>
-									No results.
+									<AutofillPopup />
 								</TableCell>
 							</TableRow>
 						)}
