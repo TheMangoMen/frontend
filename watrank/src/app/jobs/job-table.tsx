@@ -21,6 +21,7 @@ import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
 	DropdownMenuContent,
+	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -36,8 +37,10 @@ import { Input } from "@/components/ui/input";
 import { StarFilledIcon } from "@radix-ui/react-icons";
 import { Toggle } from "@/components/ui/toggle";
 import { useAuth } from "@/context/AuthContext";
-import { FolderSync, RefreshCw } from "lucide-react";
+import { ClipboardPaste, FolderSync, RefreshCw } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import JobIDExtractor from "@/components/job-id-extractor";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 declare module "@tanstack/table-core" {
 	interface TableMeta<TData extends RowData> {
@@ -51,6 +54,26 @@ interface JobTableProps<TData, TValue> {
 	setData(_: any): void;
 	refresh: any;
 }
+
+
+interface CommandKeyProps {
+    text: string;
+}
+
+const CommandKey: React.FC<CommandKeyProps> = ({ text }) => {
+    const [commandKey, setCommandKey] = React.useState('');
+
+    React.useEffect(() => {
+        const isMac = navigator.userAgent.includes('Mac');
+        setCommandKey(isMac ? '⌘ ' : 'Ctrl+');
+    }, []);
+
+    return (
+        <span className="bg-muted p-1 rounded-md shadow-md">
+            <code className="font-mono text-sm">{commandKey}{text}</code>
+        </span>
+    );
+};
 
 function useSkipper() {
 	const shouldSkipRef = React.useRef(true);
@@ -261,7 +284,7 @@ export function JobTable<TData, TValue>({
 						))}
 					</TableHeader>
 					<TableBody>
-						{table.getRowModel().rows?.length ? (
+						{table.getRowModel().rows?.length > 0 ? (
 							table.getRowModel().rows.map((row) => (
 								<TableRow
 									key={row.id}
@@ -283,7 +306,30 @@ export function JobTable<TData, TValue>({
 									colSpan={columns.length}
 									className="h-24 text-center"
 								>
-									No results.
+									 <Dialog>
+										<DialogContent>
+											<DialogHeader>
+												<DialogTitle>Autofill watchlist</DialogTitle>
+											</DialogHeader>
+											<ul className="list-decimal pl-6 leading-loose">
+												<li>
+													Go to your applications table on <a href="https://waterlooworks.uwaterloo.ca/myAccount/co-op/full/applications.htm" target="_blank" className="underline">WaterlooWorks</a>
+												</li>
+												<li>
+													Select all using <CommandKey text="A" /> then copy with <CommandKey text="C" />
+												</li>
+												<li>
+													Cick the button below!
+												</li>
+											</ul>
+											<JobIDExtractor />
+											
+										</DialogContent>
+										<DialogTrigger>
+										<Button variant={"outline"}>Import Jobs</Button>
+										</DialogTrigger>
+									</Dialog>
+									 
 								</TableCell>
 							</TableRow>
 						)}
