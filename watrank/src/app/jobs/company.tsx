@@ -4,3 +4,4 @@ export type Company = {
 	name: string;
 	tags: Tags;
 };
+
