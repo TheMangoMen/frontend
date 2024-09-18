@@ -9,6 +9,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { GlobalProvider } from "@/context/StageContext";
+import { Analytics } from "@vercel/analytics/react"
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -25,6 +26,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
+            <Analytics />
             <GlobalProvider>
                 <AuthProvider>
                     <body className={cn(inter.className, "antialiased dark:bg-black bg-muted/70 text-foreground")}>
