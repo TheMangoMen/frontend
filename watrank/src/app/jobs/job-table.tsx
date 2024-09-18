@@ -20,9 +20,7 @@ import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
+	DropdownMenuContent, DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
 import {
@@ -37,10 +35,9 @@ import { Input } from "@/components/ui/input";
 import { StarFilledIcon } from "@radix-ui/react-icons";
 import { Toggle } from "@/components/ui/toggle";
 import { useAuth } from "@/context/AuthContext";
-import { ClipboardPaste, FolderSync, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import JobIDExtractor from "@/components/job-id-extractor";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AutofillPopup } from "@/components/autofill-popup";
 
 declare module "@tanstack/table-core" {
 	interface TableMeta<TData extends RowData> {
@@ -57,22 +54,22 @@ interface JobTableProps<TData, TValue> {
 
 
 interface CommandKeyProps {
-    text: string;
+	text: string;
 }
 
 const CommandKey: React.FC<CommandKeyProps> = ({ text }) => {
-    const [commandKey, setCommandKey] = React.useState('');
+	const [commandKey, setCommandKey] = React.useState('');
 
-    React.useEffect(() => {
-        const isMac = navigator.userAgent.includes('Mac');
-        setCommandKey(isMac ? '⌘ ' : 'Ctrl+');
-    }, []);
+	React.useEffect(() => {
+		const isMac = navigator.userAgent.includes('Mac');
+		setCommandKey(isMac ? '⌘ ' : 'Ctrl+');
+	}, []);
 
-    return (
-        <span className="bg-muted p-1 rounded-md shadow-md">
-            <code className="font-mono text-sm">{commandKey}{text}</code>
-        </span>
-    );
+	return (
+		<span className="bg-muted p-1 rounded-md shadow-md">
+			<code className="font-mono text-sm">{commandKey}{text}</code>
+		</span>
+	);
 };
 
 function useSkipper() {
@@ -175,9 +172,9 @@ export function JobTable<TData, TValue>({
 			});
 	}, [isMobile, table]);
 
-	
+
 	React.useEffect(() => {
-		const handleKeyPress = (event : any) => {
+		const handleKeyPress = (event: any) => {
 			if ((event.key === "w" || event.key === "W") && event.shiftKey) {
 				// Get the current value of the toggle
 				const currentValue =
@@ -212,24 +209,24 @@ export function JobTable<TData, TValue>({
 						}
 					/>
 					<Tooltip>
-					<TooltipTrigger asChild>
-						<Toggle
-							variant="outline"
-							pressed={
-								(table.getColumn("watching")?.getFilterValue() as boolean) ?? false
-							}
-							onPressedChange={(value) =>
-								table.getColumn("watching")?.setFilterValue(value || null)
-							}
-							className={`bg-background ${!isLoggedIn() && "hidden"}`}
-						>
-							<StarFilledIcon className="text-primary" />
-						</Toggle>
-					</TooltipTrigger>
-					<TooltipContent>
-						You can also press <strong>Shift + W</strong> to toggle
-					</TooltipContent>
-				</Tooltip>
+						<TooltipTrigger asChild>
+							<Toggle
+								variant="outline"
+								pressed={
+									(table.getColumn("watching")?.getFilterValue() as boolean) ?? false
+								}
+								onPressedChange={(value) =>
+									table.getColumn("watching")?.setFilterValue(value || null)
+								}
+								className={`bg-background ${!isLoggedIn() && "hidden"}`}
+							>
+								<StarFilledIcon className="text-primary" />
+							</Toggle>
+						</TooltipTrigger>
+						<TooltipContent>
+							You can also press <strong>Shift + W</strong> to toggle
+						</TooltipContent>
+					</Tooltip>
 				</div>
 				<div className="max-sm:hidden flex gap-2">
 					<Button onClick={refresh} variant="outline">
@@ -274,9 +271,9 @@ export function JobTable<TData, TValue>({
 											{header.isPlaceholder
 												? null
 												: flexRender(
-														header.column.columnDef.header,
-														header.getContext()
-												  )}
+													header.column.columnDef.header,
+													header.getContext()
+												)}
 										</TableHead>
 									);
 								})}
@@ -306,30 +303,7 @@ export function JobTable<TData, TValue>({
 									colSpan={columns.length}
 									className="h-24 text-center"
 								>
-									 <Dialog>
-										<DialogContent>
-											<DialogHeader>
-												<DialogTitle>Autofill watchlist</DialogTitle>
-											</DialogHeader>
-											<ul className="list-decimal pl-6 leading-loose">
-												<li>
-													Go to your applications table on <a href="https://waterlooworks.uwaterloo.ca/myAccount/co-op/full/applications.htm" target="_blank" className="underline">WaterlooWorks</a>
-												</li>
-												<li>
-													Select all using <CommandKey text="A" /> then copy with <CommandKey text="C" />
-												</li>
-												<li>
-													Cick the button below!
-												</li>
-											</ul>
-											<JobIDExtractor />
-											
-										</DialogContent>
-										<DialogTrigger>
-										<Button variant={"outline"}>Import Jobs</Button>
-										</DialogTrigger>
-									</Dialog>
-									 
+									<AutofillPopup />
 								</TableCell>
 							</TableRow>
 						)}
