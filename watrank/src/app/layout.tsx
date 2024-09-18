@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster"
 import { AuthProvider } from '@/context/AuthContext';
 import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { GlobalProvider } from "@/context/StageContext";
 
@@ -36,6 +37,7 @@ export default function RootLayout({
                                     <div className="flex-grow flex flex-col w-full max-w-6xl px-4 md:px-8 py-5 mx-auto">
                                         {children}
                                     </div>
+                                    <Footer />
                                 </div>
                             </TooltipProvider>
                         </ThemeProvider>
