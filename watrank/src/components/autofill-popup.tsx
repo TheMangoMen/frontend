@@ -9,6 +9,7 @@ import {
 import JobIDExtractor from "@/components/job-id-extractor";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
+import { DialogTrigger } from "@radix-ui/react-dialog";
 
 interface CommandKeyProps {
     text: string;
@@ -71,6 +72,6 @@ export function AutofillPopupWithoutButton() {
             </ul>
             <JobIDExtractor/>
         </DialogContent>
-        <Button variant={"outline"}>Import Jobs</Button>
+        <DialogTrigger> <Button variant={"outline"}>Import Jobs</Button></DialogTrigger>
     </Dialog>
 }
