@@ -16,7 +16,23 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: "WatRank",
-    description: " Navigate your next co-op search with confidence.",
+    description: "Navigate co-op with confidence.",
+    openGraph: {
+        type: "website",
+        url: "https://watrank.com",
+        title: "WatRank",
+        description: "Navigate co-op with confidence.",
+        siteName: "WatRank",
+        images: [{
+            url: "/banner.png",
+        }],
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "WatRank",
+        description: "Navigate co-op with confidence.",
+        images: "/banner.png"
+    }
 };
 
 export default function RootLayout({
