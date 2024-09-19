@@ -37,7 +37,7 @@ import { Toggle } from "@/components/ui/toggle";
 import { useAuth } from "@/context/AuthContext";
 import { RefreshCw } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { AutofillPopup } from "@/components/autofill-popup";
+import { AutofillPopup, AutofillPopupWithoutButton } from "@/components/autofill-popup";
 
 declare module "@tanstack/table-core" {
 	interface TableMeta<TData extends RowData> {
@@ -303,7 +303,7 @@ export function JobTable<TData, TValue>({
 									colSpan={columns.length}
 									className="h-24 text-center"
 								>
-									<AutofillPopup />
+									<AutofillPopupWithoutButton/>
 								</TableCell>
 							</TableRow>
 						)}

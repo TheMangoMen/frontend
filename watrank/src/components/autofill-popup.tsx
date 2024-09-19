@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import JobIDExtractor from "@/components/job-id-extractor";
 import { useEffect, useState } from "react";
+import { Button } from "./ui/button";
 
 interface CommandKeyProps {
     text: string;
@@ -48,5 +49,28 @@ export function AutofillPopup() {
             <JobIDExtractor />
         </DialogContent>
         <User />
+    </Dialog>
+}
+
+export function AutofillPopupWithoutButton() {
+    return <Dialog>
+        <DialogContent>
+            <DialogHeader>
+                <DialogTitle>Autofill watchlist</DialogTitle>
+            </DialogHeader>
+            <ul className="list-decimal pl-6 leading-loose">
+                <li>
+                    Go to your applications table on <a href="https://waterlooworks.uwaterloo.ca/myAccount/co-op/full/applications.htm" target="_blank" className="underline">WaterlooWorks</a>
+                </li>
+                <li>
+                    Select all using <CommandKey text="A" /> then copy with <CommandKey text="C" />
+                </li>
+                <li>
+                    Cick the button below!
+                </li>
+            </ul>
+            <JobIDExtractor/>
+        </DialogContent>
+        <Button variant={"outline"}>Import Jobs</Button>
     </Dialog>
 }
