@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import { columns } from "./columns";
 import { JobTable } from "./job-table";
-import { useAuth } from "@/context/AuthContext";
+import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "../login/components/icons";
+import { useRouter } from "next/navigation";
 
 interface CommandKeyProps {
     text: string;
@@ -30,10 +31,11 @@ const CommandKey: React.FC<CommandKeyProps> = ({ text }) => {
 };
 
 export default function JobPage() {
-    const { token, authIsLoading } = useAuth();
+    const { token, logout, authIsLoading } = useAuth();
     const { toast } = useToast();
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const router = useRouter();
 
     const showErrorToast = () =>
         toast({
@@ -41,6 +43,13 @@ export default function JobPage() {
             title: "An error occured fetching jobs",
             description: "Please try again later.",
         });
+    
+        const showTokenExpiredToast = () =>
+            toast({
+                variant: "destructive",
+                title: "Your session expired",
+                description: "Please login again.",
+            });
 
     const fetchJobs = async () => {
         const url = `${process.env.NEXT_PUBLIC_API_URL}/jobs`;
@@ -49,12 +58,21 @@ export default function JobPage() {
                 method: "GET",
                 headers: { ...(!!token && { Authorization: `Bearer ${token}` }) },
             });
-            if (!response.ok) {
-                showErrorToast();
+            if(!response.ok){
+                if (response.status === 401) {  
+                    
+                    logout();
+                    showTokenExpiredToast(); 
+                    router.push('/login')
+                } else {
+                   showTokenExpiredToast();
+                }
+            } else {
+                const json = await response.json();
+                setData(json);
+                setIsLoading(false);
             }
-            const json = await response.json();
-            setData(json);
-            setIsLoading(false);
+            
         } catch (error) {
             console.error(error);
             showErrorToast();
