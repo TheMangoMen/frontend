@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, ChangeEvent, FormEvent } from "react";
-import { Check, Trash, X } from "lucide-react";
+import { Check, Trash, X, Users } from "lucide-react";
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -250,6 +250,28 @@ const AdminCard: React.FC<AdminCardProps> = ({
     );
 };
 
+const StatsCard: React.FC<{ title: string; description: string; value: number | null }> = ({
+    title,
+    description,
+    value,
+}) => {
+    return (
+        <Card className="m-2 w-fit">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                    <Users className="h-6 w-6" />
+                    {title}
+                </CardTitle>
+                <CardDescription>{description}</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <p className="text-4xl font-bold">{value !== null ? value : 'Loading...'}</p>
+            </CardContent>
+        </Card>
+    );
+};
+
+
 interface ContributionLog {
     LogID: number;
     LogTime: Date;
@@ -462,6 +484,20 @@ export default function AdminPage() {
     const { token, authIsLoading } = useAuth()
     const [contributionLogs, setContributionLogs] = useState<ContributionLog[]>([])
     const [contributions, setContributions] = useState<AdminViewContribution[]>([])
+    const [userCount, setUserCount] = useState<number | null>(null);
+
+    const fetchUserCount = async () => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/contributions/user_count`, {
+                method: "GET",
+                headers: { ...(!!token && { 'Authorization': `Bearer ${token}` }) }
+            });
+            const data = await response.json();
+            setUserCount(data.count);
+        } catch (error) {
+            console.error('Error fetching user count:', error);
+        }
+    };
 
     const fetchContributionLogs = async () => {
         try {
@@ -505,6 +541,7 @@ export default function AdminPage() {
         if (!authIsLoading) {
             fetchContributionLogs();
             fetchContributions();
+            fetchUserCount();
         }
     }, [authIsLoading])
 
@@ -536,6 +573,19 @@ export default function AdminPage() {
                             dropdownOptions={card.dropdownOptions}
                         />
                     ))}
+                </CardContent>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Stats</CardTitle>
+                    <CardDescription>Key statistics about the platform</CardDescription>
+                </CardHeader>
+                <CardContent className="justify-center items-center flex flex-wrap">
+                    <StatsCard
+                        title="User Count"
+                        description="Number of users who have made contributions"
+                        value={userCount}
+                    />
                 </CardContent>
             </Card>
             <Card>
