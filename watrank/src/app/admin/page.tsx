@@ -441,7 +441,7 @@ const ContributionsAccordion: React.FC<{ contributions: AdminViewContribution[],
                                 <span className="bg-primary text-primary-foreground rounded-full px-2 py-1 text-sm font-bold min-w-[3rem] text-center">
                                     {groupContributions.length}
                                 </span>
-                                <span className={`rounded-full px-2 py-1 text-sm font-bold min-w-[3rem] text-center bg-cyan-300 ${offerCallCount === 0 ? 'invisible' : ''}`}>
+                                <span className={`text-primary-foreground rounded-full px-2 py-1 text-sm font-bold min-w-[3rem] text-center bg-cyan-300 ${offerCallCount === 0 ? 'invisible' : ''}`}>
                                     {offerCallCount}
                                 </span>
                                 <span className="text-lg font-bold w-96 text-left">{company}</span>
