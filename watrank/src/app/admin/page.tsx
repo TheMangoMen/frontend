@@ -433,7 +433,7 @@ const ContributionsAccordion: React.FC<{ contributions: AdminViewContribution[],
             </div>
             <Accordion type="single" collapsible className="w-full">
                 {sortedGroupedContributions.map(([key, groupContributions], index) => {
-                    const [company, rest] = key.split(' - ');
+                    const [company, rest] = key.split(/ - (.*)/);
                     const offerCallCount = groupContributions.filter(c => c.OfferCall).length;
                     return (
                         <AccordionItem value={`item-${index}`} key={index}>
