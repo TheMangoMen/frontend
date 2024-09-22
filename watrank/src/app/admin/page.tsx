@@ -327,47 +327,48 @@ const deleteContribution = async (jid: number, uid: string, token: string, onSuc
     }
 };
 
+const DeleteContributionButton: React.FC<{ contribution: AdminViewContribution }> = ({ contribution }) => {
+    const { toast } = useToast();
+    const { token } = useAuth();
+
+    const handleDelete = () => {
+        deleteContribution(contribution.JID, contribution.UID, token || "", () => {
+            toast({
+                title: "Contribution Deleted",
+                description: "The contribution has been successfully deleted.",
+            });
+        });
+    };
+
+    return (
+        <AlertDialog>
+            <AlertDialogTrigger asChild>
+                <Button variant="ghost" size="sm">
+                    <Trash className="h-4 w-4 text-destructive" />
+                </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        This action cannot be undone.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleDelete}>
+                        Delete
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+    );
+};
+
 const contributionColumns: ColumnDef<AdminViewContribution>[] = [
     {
         id: "actions",
-        cell: ({ row }) => {
-            const contribution = row.original;
-            const { toast } = useToast();
-            const { token } = useAuth();
-
-            const handleDelete = () => {
-                deleteContribution(contribution.JID, contribution.UID, token || "", () => {
-                    toast({
-                        title: "Contribution Deleted",
-                        description: "The contribution has been successfully deleted.",
-                    });
-                });
-            };
-
-            return (
-                <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                        <Button variant="ghost" size="sm">
-                            <Trash className="h-4 w-4 text-destructive" />
-                        </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                                This action cannot be undone.
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={handleDelete}>
-                                Delete
-                            </AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
-            );
-        },
+        cell: ({ row }) => <DeleteContributionButton contribution={row.original} />,
     },
     {
         accessorKey: "UID",

@@ -149,7 +149,7 @@ export default function AuthenticationPage() {
                     Your email may take up to 5 minutes.
                 </p>
                 <p className="text-sm text-muted-foreground italic">
-                    jk we fixed it, it's blazing fast now 🚀
+                    jk we fixed it, it&apos;s blazing fast now 🚀
                 </p>
             </div>
     }
