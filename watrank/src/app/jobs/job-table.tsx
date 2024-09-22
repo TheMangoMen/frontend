@@ -172,28 +172,6 @@ export function JobTable<TData, TValue>({
 			});
 	}, [isMobile, table]);
 
-
-	React.useEffect(() => {
-		const handleKeyPress = (event: any) => {
-			if ((event.key === "w" || event.key === "W") && event.shiftKey) {
-				// Get the current value of the toggle
-				const currentValue =
-					(table.getColumn("watching")?.getFilterValue() as boolean) ?? false;
-
-				// Toggle the value
-				table.getColumn("watching")?.setFilterValue(!currentValue || null);
-			}
-		};
-
-		// Attach the event listener
-		window.addEventListener("keydown", handleKeyPress);
-
-		// Cleanup the event listener on component unmount
-		return () => {
-			window.removeEventListener("keydown", handleKeyPress);
-		};
-	}, [table]);
-
 	return (
 		<div>
 			<div className="pb-5 flex gap-5 justify-between">
@@ -218,7 +196,7 @@ export function JobTable<TData, TValue>({
 								onPressedChange={(value) =>
 									table.getColumn("watching")?.setFilterValue(value || null)
 								}
-								className={`bg-background ${!isLoggedIn() && "hidden"}`}
+								className={`${!isLoggedIn() && "hidden"}  ${((table.getColumn("watching")?.getFilterValue() as boolean) ?? false) ? "bg-primary/30" : "bg-transparent"}`}
 							>
 								<StarFilledIcon className="text-primary" />
 							</Toggle>
