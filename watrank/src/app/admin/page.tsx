@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState, ChangeEvent, FormEvent } from "react";
+import { Check, Trash, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -25,6 +26,23 @@ import { DataTable } from "@/components/ui/data-table"
 import { ColumnDef } from "@tanstack/react-table"
 import { useRouter } from 'next/navigation'
 import { notFound } from 'next/navigation';
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 const ADMIN_CARD_DATA = [
     {
@@ -242,7 +260,7 @@ interface ContributionLog {
     OfferCall: boolean;
 }
 
-const columns: ColumnDef<ContributionLog>[] = [
+const logColumns: ColumnDef<ContributionLog>[] = [
     {
         accessorKey: "LogID",
         header: "Log ID"
@@ -261,7 +279,10 @@ const columns: ColumnDef<ContributionLog>[] = [
     },
     {
         accessorKey: "OA",
-        header: "OA"
+        header: "OA",
+        cell: ({ row }) => (
+            row.original.OA ? <Check className="text-green-500" /> : <X className="text-red-500" />
+        )
     },
     {
         accessorKey: "InterviewStage",
@@ -269,17 +290,182 @@ const columns: ColumnDef<ContributionLog>[] = [
     },
     {
         accessorKey: "OfferCall",
-        header: "Offer Call"
+        header: "Offer Call",
+        cell: ({ row }) => (
+            row.original.OfferCall ? <Check className="text-green-500" /> : <X className="text-red-500" />
+        )
     },
 ]
+
+interface AdminViewContribution {
+    UID: string;
+    JID: number;
+    OA: boolean;
+    InterviewStage: number;
+    OfferCall: boolean;
+    Company: string;
+    Title: string;
+}
+
+const deleteContribution = async (jid: number, uid: string, token: string, onSuccess: () => void) => {
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/contributions`, {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ jid, uid }),
+        });
+        if (response.ok) {
+            onSuccess();
+        } else {
+            console.error('Failed to delete contribution');
+        }
+    } catch (error) {
+        console.error('Error deleting contribution:', error);
+    }
+};
+
+const DeleteContributionButton: React.FC<{ contribution: AdminViewContribution }> = ({ contribution }) => {
+    const { toast } = useToast();
+    const { token } = useAuth();
+
+    const handleDelete = () => {
+        deleteContribution(contribution.JID, contribution.UID, token || "", () => {
+            toast({
+                title: "Contribution Deleted",
+                description: "The contribution has been successfully deleted.",
+            });
+        });
+    };
+
+    return (
+        <AlertDialog>
+            <AlertDialogTrigger asChild>
+                <Button variant="ghost" size="sm">
+                    <Trash className="h-4 w-4 text-destructive" />
+                </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        This action cannot be undone.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleDelete}>
+                        Delete
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+    );
+};
+
+const contributionColumns: ColumnDef<AdminViewContribution>[] = [
+    {
+        id: "actions",
+        cell: ({ row }) => <DeleteContributionButton contribution={row.original} />,
+    },
+    {
+        accessorKey: "UID",
+        header: "User ID"
+    },
+    {
+        accessorKey: "OA",
+        header: "OA",
+        cell: ({ row }) => (
+            row.original.OA ? <Check className="text-green-500" /> : <X className="text-red-500" />
+        )
+    },
+    {
+        accessorKey: "InterviewStage",
+        header: "Interview Stage"
+    },
+    {
+        accessorKey: "OfferCall",
+        header: "Offer Call",
+        cell: ({ row }) => (
+            row.original.OfferCall ? <Check className="text-cyan-500 bg-cyan-100 rounded-full p-1" /> : <X className="text-red-500" />
+        )
+    },
+]
+
+interface GroupedContributions {
+    [key: string]: AdminViewContribution[];
+}
+
+const ContributionsAccordion: React.FC<{ contributions: AdminViewContribution[], onDelete: (jid: number, uid: string) => void }> = ({ contributions, onDelete }) => {
+    const [sortBy, setSortBy] = useState<'contributions' | 'company'>('contributions');
+
+    const groupedContributions: GroupedContributions = contributions.reduce((acc, contribution) => {
+        const key = `${contribution.Company} - ${contribution.Title} (${contribution.JID})`;
+        if (!acc[key]) {
+            acc[key] = [];
+        }
+        acc[key].push(contribution);
+        return acc;
+    }, {} as GroupedContributions);
+
+    const sortedGroupedContributions = Object.entries(groupedContributions).sort((a, b) => {
+        if (sortBy === 'contributions') {
+            return b[1].length - a[1].length;
+        } else {
+            return a[0].localeCompare(b[0]);
+        }
+    });
+
+    return (
+        <>
+            <div className="mb-4">
+                <Select onValueChange={(value) => setSortBy(value as 'contributions' | 'company')}>
+                    <SelectTrigger className="w-56">
+                        <SelectValue placeholder="Sort by" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="contributions">Number of Contributions</SelectItem>
+                        <SelectItem value="company">Company Name</SelectItem>
+                    </SelectContent>
+                </Select>
+            </div>
+            <Accordion type="single" collapsible className="w-full">
+                {sortedGroupedContributions.map(([key, groupContributions], index) => {
+                    const [company, rest] = key.split(' - ');
+                    const offerCallCount = groupContributions.filter(c => c.OfferCall).length;
+                    return (
+                        <AccordionItem value={`item-${index}`} key={index}>
+                            <AccordionTrigger className="flex space-x-2">
+                                <span className="bg-primary text-primary-foreground rounded-full px-2 py-1 text-sm font-bold min-w-[3rem] text-center">
+                                    {groupContributions.length}
+                                </span>
+                                <span className={`rounded-full px-2 py-1 text-sm font-bold min-w-[3rem] text-center bg-cyan-300 ${offerCallCount === 0 ? 'invisible' : ''}`}>
+                                    {offerCallCount}
+                                </span>
+                                <span className="text-lg font-bold w-96 text-left">{company}</span>
+                                <span className="text-sm text-left flex-grow">{rest}</span>
+                            </AccordionTrigger>
+                            <AccordionContent>
+                                <DataTable columns={contributionColumns} data={groupContributions} />
+                            </AccordionContent>
+                        </AccordionItem>
+                    );
+                })}
+            </Accordion>
+        </>
+    );
+};
 
 export default function AdminPage() {
     const { token, authIsLoading } = useAuth()
     const [contributionLogs, setContributionLogs] = useState<ContributionLog[]>([])
+    const [contributions, setContributions] = useState<AdminViewContribution[]>([])
 
     const fetchContributionLogs = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/contributions`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/contribution_logs`, {
                 method: "GET",
                 headers: { ...(!!token && { 'Authorization': `Bearer ${token}` }) }
             });
@@ -298,23 +484,36 @@ export default function AdminPage() {
             });
             setContributionLogs(formattedData);
         } catch (error) {
-            console.error('Error fetching initial value:', error);
+            console.error('Error fetching contribution logs:', error);
+        }
+    };
+
+    const fetchContributions = async () => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/contributions`, {
+                method: "GET",
+                headers: { ...(!!token && { 'Authorization': `Bearer ${token}` }) }
+            });
+            const data = await response.json();
+            setContributions(data);
+        } catch (error) {
+            console.error('Error fetching contributions:', error);
         }
     };
 
     useEffect(() => {
         if (!authIsLoading) {
             fetchContributionLogs();
+            fetchContributions();
         }
     }, [authIsLoading])
-
 
     if (authIsLoading) {
         return <div>Loading...</div>;
     }
     return (
         <div className="px-4 flex flex-col gap-4">
-            <Card className="">
+            <Card>
                 <CardHeader>
                     <CardTitle>Status</CardTitle>
                     <CardDescription>Update current statuses of the platform</CardDescription>
@@ -339,16 +538,31 @@ export default function AdminPage() {
                     ))}
                 </CardContent>
             </Card>
-            <Card className="">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Contributions</CardTitle>
+                    <CardDescription>View and delete contributions</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <ContributionsAccordion
+                        contributions={contributions}
+                        onDelete={(jid, uid) => {
+                            deleteContribution(jid, uid, token || "", () => {
+                                fetchContributions();
+                            });
+                        }}
+                    />
+                </CardContent>
+            </Card>
+            <Card>
                 <CardHeader>
                     <CardTitle>Logs</CardTitle>
                     <CardDescription>View logs for recent contributions</CardDescription>
                 </CardHeader>
-                <CardContent className="">
-                    <DataTable columns={columns} data={contributionLogs} />
+                <CardContent>
+                    <DataTable columns={logColumns} data={contributionLogs} />
                 </CardContent>
             </Card>
         </div>
     )
 }
-
