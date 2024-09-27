@@ -7,7 +7,7 @@ const config = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
-	],
+  ],
   prefix: "",
   theme: {
     container: {
@@ -52,6 +52,14 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        gold: '#facc14',
+        'soft-grey': '#ECEDEE',
+        'dark-grey': '#595959',
+        'med-grey': '#c8c8c8',
+        'soft-yellow': '#FFFEF1',
+        'dark-blue': '#002F6D',
+        'dark-green': '#175300',
+        'dark-yellow': '#5D4B00',
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -68,14 +76,32 @@ const config = {
           to: { height: "0" },
         },
         fadeIn: {
-            from: { opacity: "0" },
-            to: { opacity: "1" },
+          from: { opacity: "0" },
+          to: { opacity: "1" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         fade: 'fadeIn .5s ease-in-out',
+      },
+      boxShadow: {
+        red: "0 0 6px 6px rgba(239,68,68,0.5)",
+        yellow: "0 0 10px 5px #5D4B00",
+        blue: "0 0 10px 5px #002F6D",
+        stats: [
+          "20px 10px 50px 6px #C421FF60",
+          "-20px 10px 50px 6px #FACC1490"
+        ]
+      },
+      dropShadow: {
+        red: "0 0 6px 6px rgba(239,68,68,0.5)",
+        yellow: "0 0 10px 5px #5D4B00",
+        blue: "0 10px 10px #002F6D",
+        stats: [
+          "20px 10px 50px 6px #C421FF60",
+          "-20px 10px 50px 6px #FACC1490"
+        ]
       },
     },
   },
