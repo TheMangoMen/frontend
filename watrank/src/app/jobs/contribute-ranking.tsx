@@ -49,7 +49,7 @@ const formSchema = z.object({
     userRanking: UserRanking
 });
 
-export default function ContributeStatus({ row }: { row: Row<Job> }) {
+export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refresh: any }) {
     const { token, isLoggedIn } = useAuth();
     const { toast } = useToast();
     const [open, setOpen] = React.useState(false);
@@ -97,27 +97,22 @@ export default function ContributeStatus({ row }: { row: Row<Job> }) {
         if (open && isLoggedIn()) {
             fetchData();
         }
-    }, [open, isLoggedIn]);
+    }, [open]);
 
     const showErrorToast = () =>
         toast({ variant: "destructive", title: "An error occured." });
 
     async function onDelete(){
-        const data = {
-            jid: row.getValue("jid"),
-        };
-        console.log("submitting");
-        console.log(data);
         try {
+            const  jid =  row.getValue("jid")
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/deleteRanking`,
+                `${process.env.NEXT_PUBLIC_API_URL}/ranking/${jid}`,
                 {
-                    method: "POST",
+                    method: "DELETE",
                     headers: {
                         Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(data),
+                    }
                 }
             );
             if (!response.ok) {
@@ -125,6 +120,7 @@ export default function ContributeStatus({ row }: { row: Row<Job> }) {
             } else {
                 toast({ title: "Your contribution has been deleted!" });
                 setOpen(false);
+                refresh();
             }
         } catch (error) {
             console.error(error);
@@ -157,11 +153,12 @@ export default function ContributeStatus({ row }: { row: Row<Job> }) {
             } else {
                 toast({ title: "Thank you for your contribution!" });
                 setOpen(false);
+                refresh();
             }
         } catch (error) {
             console.error(error);
             showErrorToast();
-        }
+        } 
     }
 
     return (

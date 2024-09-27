@@ -61,7 +61,7 @@ const formSchema = z.object({
     compensation: z.number().min(0).max(200).optional(),
 });
 
-export default function ContributeStatus({ row }: { row: Row<Job> }) {
+export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refresh: any}) {
     const { token, isLoggedIn } = useAuth();
     const { toast } = useToast();
     const [open, setOpen] = React.useState(false);
@@ -168,11 +168,12 @@ export default function ContributeStatus({ row }: { row: Row<Job> }) {
             } else {
                 toast({ title: message });
                 setOpen(false);
+                refresh();
             }
         } catch (error) {
             console.error(error);
             showErrorToast();
-        }
+        } 
     }
 
     async function onDelete() {

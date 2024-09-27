@@ -42,6 +42,7 @@ import { AutofillPopup, AutofillPopupWithoutButton } from "@/components/autofill
 declare module "@tanstack/table-core" {
 	interface TableMeta<TData extends RowData> {
 		updateData: (rowIndex: number, columnId: string, value: unknown) => void;
+		refresh: any;
 	}
 }
 
@@ -49,7 +50,7 @@ interface JobTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
 	setData(_: any): void;
-	refresh: any;
+	fetchJobs: any;
 }
 
 
@@ -108,7 +109,7 @@ export function JobTable<TData, TValue>({
 	columns,
 	data,
 	setData,
-	refresh,
+	fetchJobs,
 }: JobTableProps<TData, TValue>) {
 	const [columnVisibility, setColumnVisibility] =
 		React.useState<VisibilityState>({});
@@ -144,6 +145,7 @@ export function JobTable<TData, TValue>({
 		meta: {
 			// https://tanstack.com/table/v8/docs/framework/react/examples/editable-data
 			// https://github.com/TanStack/table/tree/241f26fc0b9e1945c996926dfc127c7f8cc97fcf/examples/react/editable-data
+			refresh: fetchJobs,
 			updateData: (rowIndex: any, columnId: any, value: any) => {
 				// Skip page index reset until after next rerender
 				skipAutoResetPageIndex();
@@ -201,7 +203,7 @@ export function JobTable<TData, TValue>({
 					</Toggle>
 				</div>
 				<div className="max-sm:hidden flex gap-2">
-					<Button onClick={refresh} variant="outline">
+					<Button onClick={fetchJobs} variant="outline">
 						<RefreshCw strokeWidth={3} size={"1rem"} className="text-primary" />
 					</Button>
 					<DropdownMenu>
