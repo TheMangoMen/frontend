@@ -183,7 +183,7 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
                     </TooltipTrigger>
                 </Tooltip>
             </DialogTrigger>
-            <DialogContent className="max-h-full overflow-scroll">
+            <DialogContent className="max-h-full">
                 <DialogHeader>
                     <DialogTitle>
                         {row.getValue("title")}
