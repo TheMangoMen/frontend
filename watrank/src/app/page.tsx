@@ -255,7 +255,7 @@ const LandingPage = () => {
 
           </div>
           <h2 className="text-3xl font-bold text-center pb-1 mt-8">Interviews</h2>
-          <p className="text-xl text-dark-grey text-center">Get updates for jobs you've applied to.</p>
+          <p className="text-xl text-dark-grey text-center">Get updates for jobs you&apos;ve applied to.</p>
         </div>
 
         <div className="bg-soft-grey py-8 px-4 lg:p-10 border-med-grey border-b">
@@ -269,7 +269,7 @@ const LandingPage = () => {
             </svg>
           </div>
           <h2 className="text-3xl font-bold text-center pb-1 mt-8">Rankings</h2>
-          <p className="text-xl text-dark-grey text-center">Let others know if you're taking a job.</p>
+          <p className="text-xl text-dark-grey text-center">Let others know if you&apos;re taking a job.</p>
         </div>
 
         <div className="bg-soft-grey p-4 lg:p-10 border-med-grey lg:border-r">
@@ -291,7 +291,7 @@ const LandingPage = () => {
             </div>
           </div>
           <h2 className="text-3xl font-bold text-center pb-1 mt-8">Analytics</h2>
-          <p className="text-xl text-dark-grey text-center">See how you've grown!</p>
+          <p className="text-xl text-dark-grey text-center">See how you&apos;ve grown!</p>
         </div>
       </div>
       <Footer />

@@ -42,7 +42,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <GlobalProvider>
                 <AuthProvider>
                     <body className={cn(inter.className, "antialiased ")}>
-                        <Main children={children} />
+                        <Main >
+                            {children}
+                        </Main>
                     </body>
                 </AuthProvider>
             </GlobalProvider>
