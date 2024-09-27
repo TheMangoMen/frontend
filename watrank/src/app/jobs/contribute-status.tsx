@@ -238,7 +238,7 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
                     </TooltipTrigger>
                 </Tooltip>
             </DialogTrigger>
-            <DialogContent className="max-h-full overflow-scroll">
+            <DialogContent className="max-h-full overflow-auto">
                 <DialogHeader>
                     <DialogTitle>
                         {row.getValue("title")}
@@ -263,7 +263,7 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
                                             name="oadifficulty"
                                             render={({ field }) => (
                                                 <FormItem className="space-y-3">
-                                                    <FormLabel>Difficulty</FormLabel>
+                                                    <FormLabel>Difficulty (optional)</FormLabel>
                                                     <FormControl>
                                                         <RadioGroup
                                                             onValueChange={field.onChange}
@@ -294,7 +294,7 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
                                             name="oalength"
                                             render={({ field }) => (
                                                 <FormItem className="space-y-3">
-                                                    <FormLabel>Length</FormLabel>
+                                                    <FormLabel>Length (optional)</FormLabel>
                                                     <FormControl>
                                                         <RadioGroup
                                                             onValueChange={field.onChange}
@@ -367,7 +367,7 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
                                                 name="interviewvibe"
                                                 render={({ field }) => (
                                                     <FormItem className="space-y-3">
-                                                        <FormLabel>What were the vibes?</FormLabel>
+                                                        <FormLabel>What were the vibes? (optional)</FormLabel>
                                                         <FormControl>
                                                             <RadioGroup
                                                                 onValueChange={field.onChange}
@@ -398,7 +398,7 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
                                                 name="interviewtechnical"
                                                 render={({ field }) => (
                                                     <FormItem className="space-y-3">
-                                                        <FormLabel>How technical was it?</FormLabel>
+                                                        <FormLabel>How technical was it? (optional)</FormLabel>
                                                         <FormControl>
                                                             <RadioGroup
                                                                 onValueChange={field.onChange}
@@ -440,7 +440,7 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
                                         name="compensation"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Compensation (CAD / hour)</FormLabel>
+                                                <FormLabel>Compensation (CAD / hour) (optional)</FormLabel>
                                                 <FormControl>
                                                     <Input
                                                         startIcon={DollarSign}
