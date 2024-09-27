@@ -203,9 +203,6 @@ export function JobTable<TData, TValue>({
 					</Toggle>
 				</div>
 				<div className="max-sm:hidden flex gap-2">
-					<Button onClick={fetchJobs} variant="outline">
-						<RefreshCw strokeWidth={3} size={"1rem"} className="text-primary" />
-					</Button>
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Button variant="outline" className="ml-auto">
