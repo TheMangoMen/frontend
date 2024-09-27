@@ -96,7 +96,7 @@ export default function JobPage() {
             columns={columns}
             data={data}
             setData={setData}
-            refresh={fetchJobs}
+            fetchJobs={fetchJobs}
         />
     );
 }

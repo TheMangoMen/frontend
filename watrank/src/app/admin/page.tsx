@@ -423,7 +423,7 @@ interface GroupedContributions {
 const ContributionsAccordion: React.FC<{ contributions: AdminViewContribution[], onDelete: (jid: number, uid: string) => void }> = ({ contributions, onDelete }) => {
     const [sortBy, setSortBy] = useState<'contributions' | 'company'>('contributions');
 
-    const groupedContributions: GroupedContributions = contributions.reduce((acc, contribution) => {
+    const groupedContributions: GroupedContributions = (contributions || []).reduce((acc, contribution) => {
         const key = `${contribution.Company} - ${contribution.Title} (${contribution.JID})`;
         if (!acc[key]) {
             acc[key] = [];

@@ -4,7 +4,7 @@ import { useGlobal } from "@/context/StageContext";
 import ContributeStatus from "./contribute-status";
 import ContributeRanking from "./contribute-ranking";
 
-export default function Contribute({ row }: { row: Row<Job> }) {
+export default function Contribute({ row, refresh }: { row: Row<Job>, refresh: any }) {
     const { isRankingStage } = useGlobal();
-    return isRankingStage ? <ContributeRanking row={row} /> : <ContributeStatus row={row} />;
+    return isRankingStage ? <ContributeRanking row={row} refresh={refresh} /> : <ContributeStatus row={row} refresh={refresh} />;
 }
