@@ -185,8 +185,9 @@ export const columns: ColumnDef<Job>[] = [
         accessorKey: "",
         id: "contribute",
         header: "",
-        cell: ({ row }) => {
-            return <Contribute row={row} />
+        cell: ({ row, table }) => {
+            const refresh = table.options.meta?.refresh;
+            return <Contribute row={row} refresh={refresh} />;
         },
         enableHiding: false,
     },

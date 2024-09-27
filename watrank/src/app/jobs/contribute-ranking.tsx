@@ -1,7 +1,7 @@
 "use client";
 
 import { Job } from "./job";
-import { EditIcon } from "lucide-react";
+import { EditIcon, Trash } from "lucide-react";
 import {
     Dialog,
     DialogContent,
@@ -49,7 +49,7 @@ const formSchema = z.object({
     userRanking: UserRanking
 });
 
-export default function ContributeStatus({ row }: { row: Row<Job> }) {
+export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refresh: any }) {
     const { token, isLoggedIn } = useAuth();
     const { toast } = useToast();
     const [open, setOpen] = React.useState(false);
@@ -97,28 +97,36 @@ export default function ContributeStatus({ row }: { row: Row<Job> }) {
         if (open && isLoggedIn()) {
             fetchData();
         }
-    }, [open, isLoggedIn]);
+    }, [open]);
 
     const showErrorToast = () =>
         toast({ variant: "destructive", title: "An error occured." });
 
-    const parseStatus = (stat: string[]) => {
-        // Initialize a boolean array to keep track of the presence of each status
-        let statusPresence = [false, false, false]; // [OA, interview, offercall]
-
-        // Iterate through the stat array and update the boolean array accordingly
-        for (const status of stat) {
-            if (status === "OA") {
-                statusPresence[0] = true;
-            } else if (status === "Interview") {
-                statusPresence[1] = true;
-            } else if (status === "OfferCall") {
-                statusPresence[2] = true;
+    async function onDelete(){
+        try {
+            const  jid =  row.getValue("jid")
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/ranking/${jid}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    }
+                }
+            );
+            if (!response.ok) {
+                showErrorToast();
+            } else {
+                toast({ title: "Your contribution has been deleted!" });
+                setOpen(false);
+                refresh();
             }
+        } catch (error) {
+            console.error(error);
+            showErrorToast();
         }
-
-        return statusPresence;
-    };
+    }
 
     async function onSubmit({ employerRanking, userRanking }: z.infer<typeof formSchema>) {
         const data = {
@@ -145,11 +153,12 @@ export default function ContributeStatus({ row }: { row: Row<Job> }) {
             } else {
                 toast({ title: "Thank you for your contribution!" });
                 setOpen(false);
+                refresh();
             }
         } catch (error) {
             console.error(error);
             showErrorToast();
-        }
+        } 
     }
 
     return (
@@ -174,7 +183,7 @@ export default function ContributeStatus({ row }: { row: Row<Job> }) {
                     </TooltipTrigger>
                 </Tooltip>
             </DialogTrigger>
-            <DialogContent className="max-h-full overflow-scroll">
+            <DialogContent className="max-h-full">
                 <DialogHeader>
                     <DialogTitle>
                         {row.getValue("title")}
@@ -230,7 +239,12 @@ export default function ContributeStatus({ row }: { row: Row<Job> }) {
                                 )}
                             />
                         </div>
-                        <Button type="submit">Contribute</Button>
+                        <div className="flex flex-row justify-between">
+                        <Button type="submit"className="font-bold">Contribute</Button>
+                        <Button type="button" variant="ghost" onClick={onDelete} size="sm">
+                            <Trash className="h-4 w-4 text-destructive" />
+                        </Button>
+                        </div>
                     </form>
                 </Form>
             </DialogContent>

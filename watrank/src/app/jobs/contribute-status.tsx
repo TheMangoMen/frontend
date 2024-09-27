@@ -1,7 +1,7 @@
 "use client";
 
 import { Job } from "./job";
-import { DollarSign, EditIcon } from "lucide-react";
+import { DollarSign, EditIcon, Trash, Trash2, Trash2Icon, TrashIcon } from "lucide-react";
 import {
     Dialog,
     DialogContent,
@@ -61,7 +61,7 @@ const formSchema = z.object({
     compensation: z.number().min(0).max(200).optional(),
 });
 
-export default function ContributeStatus({ row }: { row: Row<Job> }) {
+export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refresh: any}) {
     const { token, isLoggedIn } = useAuth();
     const { toast } = useToast();
     const [open, setOpen] = React.useState(false);
@@ -150,6 +150,52 @@ export default function ContributeStatus({ row }: { row: Row<Job> }) {
         return statusPresence;
     };
 
+    async function updateContribution(data : any, message : string){
+        try {
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/contribution`,
+                {
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                }
+            );
+            if (!response.ok) {
+                showErrorToast();
+            } else {
+                toast({ title: message });
+                setOpen(false);
+                refresh();
+            }
+        } catch (error) {
+            console.error(error);
+            showErrorToast();
+        } 
+    }
+
+    async function onDelete() {
+        const data = {
+            jid: row.getValue("jid"),
+            oa: null,
+            interview: null,
+            offercall: null,
+            interviewcount: null,
+            oadifficulty: null,
+            oalength: null,
+            interviewVibe: null,
+            interviewTechnical: null,
+            compensation: null,
+        };
+        console.log("deleting");
+        console.log(data);
+        await updateContribution(data, "Your contribution has been deleted!");
+        
+    }
+
+
     async function onSubmit(values: z.infer<typeof formSchema>) {
         const parsedStatus = parseStatus(status);
         console.log(parsedStatus);
@@ -167,28 +213,7 @@ export default function ContributeStatus({ row }: { row: Row<Job> }) {
         };
         console.log("submitting");
         console.log(data);
-        try {
-            const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/contribution`,
-                {
-                    method: "POST",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(data),
-                }
-            );
-            if (!response.ok) {
-                showErrorToast();
-            } else {
-                toast({ title: "Thank you for your contribution!" });
-                setOpen(false);
-            }
-        } catch (error) {
-            console.error(error);
-            showErrorToast();
-        }
+        await updateContribution(data, "Thank you for your contribution!")
     }
 
     return (
@@ -213,7 +238,7 @@ export default function ContributeStatus({ row }: { row: Row<Job> }) {
                     </TooltipTrigger>
                 </Tooltip>
             </DialogTrigger>
-            <DialogContent className="max-h-full overflow-scroll">
+            <DialogContent className="max-h-full overflow-auto">
                 <DialogHeader>
                     <DialogTitle>
                         {row.getValue("title")}
@@ -238,7 +263,7 @@ export default function ContributeStatus({ row }: { row: Row<Job> }) {
                                             name="oadifficulty"
                                             render={({ field }) => (
                                                 <FormItem className="space-y-3">
-                                                    <FormLabel>Difficulty</FormLabel>
+                                                    <FormLabel>Difficulty (optional)</FormLabel>
                                                     <FormControl>
                                                         <RadioGroup
                                                             onValueChange={field.onChange}
@@ -269,7 +294,7 @@ export default function ContributeStatus({ row }: { row: Row<Job> }) {
                                             name="oalength"
                                             render={({ field }) => (
                                                 <FormItem className="space-y-3">
-                                                    <FormLabel>Length</FormLabel>
+                                                    <FormLabel>Length (optional)</FormLabel>
                                                     <FormControl>
                                                         <RadioGroup
                                                             onValueChange={field.onChange}
@@ -342,7 +367,7 @@ export default function ContributeStatus({ row }: { row: Row<Job> }) {
                                                 name="interviewvibe"
                                                 render={({ field }) => (
                                                     <FormItem className="space-y-3">
-                                                        <FormLabel>What were the vibes?</FormLabel>
+                                                        <FormLabel>What were the vibes? (optional)</FormLabel>
                                                         <FormControl>
                                                             <RadioGroup
                                                                 onValueChange={field.onChange}
@@ -373,7 +398,7 @@ export default function ContributeStatus({ row }: { row: Row<Job> }) {
                                                 name="interviewtechnical"
                                                 render={({ field }) => (
                                                     <FormItem className="space-y-3">
-                                                        <FormLabel>How technical was it?</FormLabel>
+                                                        <FormLabel>How technical was it? (optional)</FormLabel>
                                                         <FormControl>
                                                             <RadioGroup
                                                                 onValueChange={field.onChange}
@@ -415,7 +440,7 @@ export default function ContributeStatus({ row }: { row: Row<Job> }) {
                                         name="compensation"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Compensation (CAD / hour)</FormLabel>
+                                                <FormLabel>Compensation (CAD / hour) (optional)</FormLabel>
                                                 <FormControl>
                                                     <Input
                                                         startIcon={DollarSign}
@@ -438,7 +463,12 @@ export default function ContributeStatus({ row }: { row: Row<Job> }) {
                                 </AccordionContent>
                             </AccordionItem>
                         </Accordion>
-                        <Button type="submit">Contribute</Button>
+                        <div className="flex flex-row justify-between">
+                        <Button type="submit"className="font-bold">Contribute</Button>
+                        <Button type="button" variant="ghost" onClick={onDelete} size="sm">
+                            <Trash className="h-4 w-4 text-destructive" />
+                        </Button>
+                        </div>
                     </form>
                 </Form>
             </DialogContent>

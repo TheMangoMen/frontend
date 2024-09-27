@@ -42,6 +42,7 @@ import { AutofillPopup, AutofillPopupWithoutButton } from "@/components/autofill
 declare module "@tanstack/table-core" {
 	interface TableMeta<TData extends RowData> {
 		updateData: (rowIndex: number, columnId: string, value: unknown) => void;
+		refresh: any;
 	}
 }
 
@@ -49,7 +50,7 @@ interface JobTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
 	setData(_: any): void;
-	refresh: any;
+	fetchJobs: any;
 }
 
 
@@ -108,7 +109,7 @@ export function JobTable<TData, TValue>({
 	columns,
 	data,
 	setData,
-	refresh,
+	fetchJobs,
 }: JobTableProps<TData, TValue>) {
 	const [columnVisibility, setColumnVisibility] =
 		React.useState<VisibilityState>({});
@@ -136,7 +137,7 @@ export function JobTable<TData, TValue>({
 		},
 		initialState: {
 			pagination: {
-				pageSize: 50,
+				pageSize: 100,
 			},
 		},
 
@@ -144,6 +145,7 @@ export function JobTable<TData, TValue>({
 		meta: {
 			// https://tanstack.com/table/v8/docs/framework/react/examples/editable-data
 			// https://github.com/TanStack/table/tree/241f26fc0b9e1945c996926dfc127c7f8cc97fcf/examples/react/editable-data
+			refresh: fetchJobs,
 			updateData: (rowIndex: any, columnId: any, value: any) => {
 				// Skip page index reset until after next rerender
 				skipAutoResetPageIndex();
@@ -173,27 +175,6 @@ export function JobTable<TData, TValue>({
 	}, [isMobile, table]);
 
 
-	React.useEffect(() => {
-		const handleKeyPress = (event: any) => {
-			if ((event.key === "w" || event.key === "W") && event.shiftKey) {
-				// Get the current value of the toggle
-				const currentValue =
-					(table.getColumn("watching")?.getFilterValue() as boolean) ?? false;
-
-				// Toggle the value
-				table.getColumn("watching")?.setFilterValue(!currentValue || null);
-			}
-		};
-
-		// Attach the event listener
-		window.addEventListener("keydown", handleKeyPress);
-
-		// Cleanup the event listener on component unmount
-		return () => {
-			window.removeEventListener("keydown", handleKeyPress);
-		};
-	}, [table]);
-
 	return (
 		<div>
 			<div className="pb-5 flex gap-5 justify-between">
@@ -208,30 +189,20 @@ export function JobTable<TData, TValue>({
 							table.getColumn("company")?.setFilterValue(event.target.value)
 						}
 					/>
-					<Tooltip>
-						<TooltipTrigger asChild>
-							<Toggle
-								variant="outline"
-								pressed={
-									(table.getColumn("watching")?.getFilterValue() as boolean) ?? false
-								}
-								onPressedChange={(value) =>
-									table.getColumn("watching")?.setFilterValue(value || null)
-								}
-								className={`bg-background ${!isLoggedIn() && "hidden"}`}
-							>
-								<StarFilledIcon className="text-primary" />
-							</Toggle>
-						</TooltipTrigger>
-						<TooltipContent>
-							You can also press <strong>Shift + W</strong> to toggle
-						</TooltipContent>
-					</Tooltip>
+					<Toggle
+						variant="outline"
+						pressed={
+							(table.getColumn("watching")?.getFilterValue() as boolean) ?? false
+						}
+						onPressedChange={(value) =>
+							table.getColumn("watching")?.setFilterValue(value || null)
+						}
+						className={`bg-background ${!isLoggedIn() && "hidden"}`}
+					>
+						<StarFilledIcon className="text-primary" />
+					</Toggle>
 				</div>
 				<div className="max-sm:hidden flex gap-2">
-					<Button onClick={refresh} variant="outline">
-						<RefreshCw strokeWidth={3} size={"1rem"} className="text-primary" />
-					</Button>
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Button variant="outline" className="ml-auto">
