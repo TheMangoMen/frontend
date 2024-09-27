@@ -1,7 +1,7 @@
 "use client";
 
 import { Job } from "./job";
-import { EditIcon } from "lucide-react";
+import { EditIcon, Trash } from "lucide-react";
 import {
     Dialog,
     DialogContent,
@@ -102,23 +102,35 @@ export default function ContributeStatus({ row }: { row: Row<Job> }) {
     const showErrorToast = () =>
         toast({ variant: "destructive", title: "An error occured." });
 
-    const parseStatus = (stat: string[]) => {
-        // Initialize a boolean array to keep track of the presence of each status
-        let statusPresence = [false, false, false]; // [OA, interview, offercall]
-
-        // Iterate through the stat array and update the boolean array accordingly
-        for (const status of stat) {
-            if (status === "OA") {
-                statusPresence[0] = true;
-            } else if (status === "Interview") {
-                statusPresence[1] = true;
-            } else if (status === "OfferCall") {
-                statusPresence[2] = true;
+    async function onDelete(){
+        const data = {
+            jid: row.getValue("jid"),
+        };
+        console.log("submitting");
+        console.log(data);
+        try {
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/deleteRanking`,
+                {
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                }
+            );
+            if (!response.ok) {
+                showErrorToast();
+            } else {
+                toast({ title: "Your contribution has been deleted!" });
+                setOpen(false);
             }
+        } catch (error) {
+            console.error(error);
+            showErrorToast();
         }
-
-        return statusPresence;
-    };
+    }
 
     async function onSubmit({ employerRanking, userRanking }: z.infer<typeof formSchema>) {
         const data = {
@@ -230,7 +242,12 @@ export default function ContributeStatus({ row }: { row: Row<Job> }) {
                                 )}
                             />
                         </div>
-                        <Button type="submit">Contribute</Button>
+                        <div className="flex flex-row justify-between">
+                        <Button type="submit"className="font-bold">Contribute</Button>
+                        <Button type="button" variant="ghost" onClick={onDelete} size="sm">
+                            <Trash className="h-4 w-4 text-destructive" />
+                        </Button>
+                        </div>
                     </form>
                 </Form>
             </DialogContent>
