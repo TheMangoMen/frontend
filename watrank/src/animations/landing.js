@@ -30,7 +30,7 @@ export async function animateRankings(container, baseRanker, baseLine) {
     const rankers = rankerCircle(baseRanker, 40, colors.length);
     const lines = linesCircle(baseLine, 30, colors.length);
 
-    const senderIdx = anime.random(0, colors.length);
+    const senderIdx = anime.random(0, colors.length - 1);
 
     colors.forEach((color, idx) => {
         const ranker = rankers[idx];
@@ -53,14 +53,7 @@ export async function animateRankings(container, baseRanker, baseLine) {
     playAnimationWhenInView(animation, container);
 }
 
-export async function animateHeart(container, heart) {
-    heart.classList.remove('hidden')
-    heart.querySelector('path').classList.add('stroke-red-500')
-    heart.classList.add(`drop-shadow-[0_0_3px_red]`);
-    heart.classList.add('w-32')
-
-    container.appendChild(heart)
-
+export async function animateHeart(heart) {
     let tl = anime.timeline({
         loop: true,
         easing: 'easeInOutSine',
@@ -72,8 +65,7 @@ export async function animateHeart(container, heart) {
         strokeDashoffset: [anime.setDashoffset, 0]
     }).add({
         targets: heart,
-        width: ['7rem', '9rem'],
-        height: ['7rem', '9rem']
+        scale: 1.5
     }).add({
         targets: heart,
         opacity: 0
@@ -229,12 +221,6 @@ function playAnimationWhenInView(animation, target) {
     observer.observe(target);
 }
 
-function createElementFromHTML(htmlString) {
-    var div = document.createElement('div');
-    div.innerHTML = htmlString.trim();
-    return div;
-}
-
 export async function animateRankers(container, baseRanker) {
     const colors = ['#FA7014', '#14FA27', '#8314FA', '#269DF3'];
 
@@ -247,8 +233,8 @@ function continuouslySpawnRanker(container, baseRanker, color) {
 }
 
 function spawnRanker(container, baseRanker, color, callback) {
-    const top = anime.random(1, 100);
-    const left = anime.random(1, 100);
+    const top = anime.random(10, 90);
+    const left = anime.random(10, 90);
     const initialRotation = anime.random(0, 359);
     const rotationDelta = anime.random(-90, 90);
     const movement = anime.random(30, 80);
