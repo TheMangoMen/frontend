@@ -8,9 +8,10 @@ import {
 	animateContributions,
 	animateAnalytics,
 } from "@/animations/landing";
-import { ArrowRight, Heart } from "lucide-react";
+import { ArrowRight, CheckIcon, Heart, XIcon } from "lucide-react";
 import { Footer } from "@/components/footer";
 import { useAuth } from "@/context/AuthContext";
+import { cn } from "@/lib/utils";
 
 const LandingPage = () => {
 	const { isLoggedIn } = useAuth();
@@ -45,7 +46,7 @@ const LandingPage = () => {
 			);
 			animateContributions(contributionsTableRef.current);
 			animateAnalytics(analyticsRef.current);
-		} catch {}
+		} catch { }
 	}, []);
 
 	// dynamically import and initialize countUp, sets value of `countUpAnim`
@@ -146,202 +147,40 @@ const LandingPage = () => {
 						ref={contributionsTableRef}
 						className="max-w-lg mx-auto bg-secondary rounded-lg border border-med-grey overflow-hidden shadow-xl divide-y divide-med-grey"
 					>
-						<div className="bg-secondary p-2 flex justify-left text-secondary-foreground font-medium text-center">
-							<span className="w-14">OA</span>
-							<span className="w-20">Interview</span>
-							<span className="w-14">Offer</span>
-							<span className="ml-6">Company</span>
-						</div>
-
-						<div className="p-2 flex justify-left">
-							<div className="w-14 flex justify-center">
-								<div className="bg-gold/50 w-10 h-10 rounded-lg flex items-center justify-center">
-									<span className="text-dark-yellow dark:text-yellow-200 font-bold">
-										42
-									</span>
-								</div>
-							</div>
-
-							<div className="w-20 flex justify-center">
-								<div className="bg-[#72eb45]/50 w-10 h-10 rounded-lg flex items-center justify-center">
-									<span className="text-dark-green dark:text-green-200 font-bold">
-										2
-									</span>
-								</div>
-							</div>
-
-							<div className="w-14 flex justify-center">
-								<div className="bg-[#269df3]/50 w-10 h-10 rounded-lg flex items-center justify-center">
-									<span className="text-dark-blue dark:text-blue-200 font-bold">
-										23
-									</span>
-								</div>
-							</div>
-
-							<div className="ml-6">
-								<p className="font-semibold">Apple</p>
-								<p className="text-sm text-secondary-foreground">
-									Software Engineering Intern
-								</p>
-							</div>
-						</div>
-
-						<div className="p-2 flex justify-left">
-							<div className="w-14 flex justify-center">
-								<div className="bg-gold/50 w-10 h-10 rounded-lg flex items-center justify-center">
-									<span className="text-dark-yellow dark:text-yellow-200 font-bold">
-										42
-									</span>
-								</div>
-							</div>
-
-							<div className="w-20 flex justify-center">
-								<div className="bg-[#72eb45]/50 w-10 h-10 rounded-lg flex items-center justify-center">
-									<span className="text-dark-green dark:text-green-200 font-bold">
-										2
-									</span>
-								</div>
-							</div>
-
-							<div className="w-14 flex justify-center">
-								<div className="bg-[#269df3]/50 w-10 h-10 rounded-lg flex items-center justify-center">
-									<span className="text-dark-blue dark:text-blue-200 font-bold">
-										23
-									</span>
-								</div>
-							</div>
-
-							<div className="ml-6">
-								<p className="font-semibold">Google</p>
-								<p className="text-sm text-secondary-foreground">
-									Software Engineering Intern
-								</p>
-							</div>
-						</div>
-
-						<div className="p-2 flex justify-left bg-soft-yellow dark:bg-dark-grey">
-							<div className="w-14 flex justify-center items-center">
-								<svg
-									width="24"
-									height="24"
-									viewBox="0 0 24 24"
-									fill="none"
-									xmlns="http://www.w3.org/2000/svg"
-								>
-									<path
-										d="M20 6L9 17L4 12"
-										stroke="#22C55E"
-										stroke-width="2"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-								</svg>
-							</div>
-
-							<div className="w-20 flex justify-center items-center">
-								<svg
-									width="24"
-									height="24"
-									viewBox="0 0 24 24"
-									fill="none"
-									xmlns="http://www.w3.org/2000/svg"
-								>
-									<path
-										d="M18 6L6 18"
-										stroke="#EF4444"
-										stroke-width="2"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-									<path
-										d="M6 6L18 18"
-										stroke="#EF4444"
-										stroke-width="2"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-								</svg>
-							</div>
-
-							<div className="w-14 flex justify-center items-center">
-								<svg
-									width="24"
-									height="24"
-									viewBox="0 0 24 24"
-									fill="none"
-									xmlns="http://www.w3.org/2000/svg"
-								>
-									<path
-										d="M18 6L6 18"
-										stroke="#EF4444"
-										stroke-width="2"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-									<path
-										d="M6 6L18 18"
-										stroke="#EF4444"
-										stroke-width="2"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-								</svg>
-							</div>
-
-							<div className="ml-6 text-sm text-secondary-foreground italic">
-								<p className="font-semibold">Anonymous User</p>
-								<p>on Sept. 22</p>
-							</div>
-						</div>
-
-						<div className="p-2 flex justify-left bg-soft-yellow dark:bg-black/20">
-							<div className="w-14 flex justify-center items-center">
-								<svg
-									width="24"
-									height="24"
-									viewBox="0 0 24 24"
-									fill="none"
-									xmlns="http://www.w3.org/2000/svg"
-								>
-									<path
-										d="M20 6L9 17L4 12"
-										stroke="#22C55E"
-										stroke-width="2"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-								</svg>
-							</div>
-
-							<div className="w-20 flex justify-center items-center">
-								<p className="text-dark-green dark:text-green-200 font-bold">
-									#2
-								</p>
-							</div>
-
-							<div className="w-14 flex justify-center items-center">
-								<svg
-									width="24"
-									height="24"
-									viewBox="0 0 24 24"
-									fill="none"
-									xmlns="http://www.w3.org/2000/svg"
-								>
-									<path
-										d="M20 6L9 17L4 12"
-										stroke="#22C55E"
-										stroke-width="2"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-								</svg>
-							</div>
-
-							<div className="ml-6 text-sm text-secondary-foreground italic">
-								<p className="font-semibold">Anonymous User</p>
-								<p>on Sept. 22</p>
-							</div>
-						</div>
+						<RowLayout className="bg-background">
+							<span>OA</span>
+							<span>Interview</span>
+							<span>Offer</span>
+							<span className="ml-6 text-left">Job</span>
+						</RowLayout>
+						<JobEntryMain
+							OAs={42}
+							interviews={2}
+							offers={1}
+							company="Apple"
+							title="Software Engineer"
+						/>
+						<JobEntryExpanded
+							gotOA={true}
+							interviewRound={2}
+							gotOffer={true}
+							user="Anonymous"
+							date={formatDate(new Date())}
+						/>
+						<JobEntryExpanded
+							gotOA={true}
+							interviewRound={1}
+							gotOffer={false}
+							user="Anonymous"
+							date={formatDate(new Date(Date.now() - 86400000))}
+						/>
+						<JobEntryMain
+							OAs={2}
+							interviews={0}
+							offers={0}
+							company="Deloitte"
+							title="Junior Accountant"
+						/>
 					</div>
 					<h2 className="text-3xl font-bold text-center pb-1 mt-8">
 						Interviews
@@ -419,3 +258,101 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
+
+function formatDate(date: Date) {
+	return date.toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
+}
+
+function RowLayout({ children, className }: { children: React.ReactNode[]; className?: string }) {
+	return (
+		<div className={cn("p-2 flex flex-row justify-left", className)}>
+			<div className="w-14 shrink-0 flex justify-center">
+				{children[0]}
+			</div>
+			<div className="w-20 shrink-0 flex justify-center">
+				{children[1]}
+			</div>
+			<div className="w-14 shrink-0 flex justify-center">
+				{children[2]}
+			</div>
+			{children[3]}
+		</div>
+	);
+}
+
+function JobCell({ value, className }: {
+	value: number;
+	className?: string
+}) {
+	let styles = "w-10 h-10 rounded-lg flex items-center justify-center font-bold text-dark-grey"
+	if (value > 0) {
+		styles = cn(styles, className)
+	}
+	return (
+		<div className={styles}>
+			<span>
+				{value}
+			</span>
+		</div>
+	);
+}
+
+function JobEntryMain({ OAs, interviews, offers, company, title }: {
+	OAs: number;
+	interviews: number;
+	offers: number;
+	company: string;
+	title: string;
+}) {
+	return (
+		<RowLayout>
+			<JobCell
+				value={OAs}
+				className="text-dark-yellow dark:text-yellow-200 bg-yellow-400/30" />
+			<JobCell
+				value={interviews}
+				className="text-dark-green dark:text-green-200 bg-green-400/30" />
+			<JobCell
+				value={offers}
+				className="text-dark-blue dark:text-blue-200 bg-blue-400/30" />
+			<div className="ml-6">
+				<p className="font-semibold">
+					{company}
+				</p>
+				<p className="text-xs lg:text-sm text-secondary-foreground">
+					{title}
+				</p>
+			</div>
+		</RowLayout>
+	);
+}
+
+function JobEntryExpanded({ gotOA, interviewRound, gotOffer, user, date }: {
+	gotOA: boolean;
+	interviewRound: number;
+	gotOffer: boolean;
+	user: string;
+	date: string;
+}) {
+	return (
+		<RowLayout className="p-2 flex justify-left items-center bg-soft-yellow dark:bg-black/20">
+			{gotOA
+				? <CheckIcon className="text-green-500" />
+				: <XIcon className="text-dark-grey" />}
+			{interviewRound !== 0
+				? <div className="text-dark-green dark:text-green-200" >
+					#{interviewRound}
+				</div>
+				: <XIcon className="text-dark-grey" />}
+			{gotOffer
+				? <div className="bg-blue-400/30 rounded-lg p-1">
+					<CheckIcon className="text-blue-400" />
+				</div>
+				: <XIcon className="text-dark-grey" />}
+			<div className="ml-6 text-sm text-secondary-foreground italic">
+				<p className="font-semibold">{user}</p>
+				<p>on {date}</p>
+			</div>
+		</RowLayout>
+	);
+}

@@ -42,7 +42,8 @@ export async function animateRankings(container, baseRanker, baseLine) {
         ranker.querySelector('path').setAttribute('fill', color);
 
         const lineColor = idx === senderIdx ? `${color}` : 'gold';
-        line.classList.add(`border-${lineColor}`, `bg-${lineColor}`, `drop-shadow-[0_0_10px_${lineColor}]`)
+        line.style.borderColor = lineColor;
+        line.style.backgroundColor = lineColor;
 
         container.appendChild(ranker);
         container.appendChild(line);
