@@ -60,13 +60,13 @@ export default function JobPage() {
                 headers: { ...(!!token && { Authorization: `Bearer ${token}` }) },
             });
             if (!response.ok) {
-                if (response.status === 401) {
+                if (response.status === 401 || response.status === 403) {
 
                     logout();
                     showTokenExpiredToast();
-                    router.push('/login')
+                    router.replace('/login')
                 } else {
-                    showTokenExpiredToast();
+                    showErrorToast();
                 }
             } else {
                 const json = await response.json();

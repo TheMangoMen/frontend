@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { jwtDecode } from 'jwt-decode';
 import {
     DropdownMenu,
@@ -48,6 +48,11 @@ const CommandKey: React.FC<CommandKeyProps> = ({ text }) => {
 export function User() {
     const currentUrl = usePathname();
     const { token, logout, authIsLoading, isAdmin } = useAuth()
+    const router = useRouter();
+    const logoutAndRedirect = () => {
+        logout()
+        router.replace('/')
+    }
 
     if (currentUrl == "/login") {
         return
@@ -92,7 +97,7 @@ export function User() {
                             </Link>
                         </>}
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem className="cursor-pointer" onClick={logout}>
+                    <DropdownMenuItem className="cursor-pointer" onClick={logoutAndRedirect}>
                         <LogOut className="mr-2 h-4 w-4" />
                         <span>Log out</span>
                     </DropdownMenuItem>
