@@ -71,6 +71,7 @@ export default function JobPage() {
             } else {
                 const json = await response.json();
                 setData(json);
+                console.log("stuff", json);
                 setIsLoading(false);
             }
 

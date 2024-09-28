@@ -16,6 +16,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { Badge } from "@/components/ui/badge";
 import Contribute from "./contribute";
+import JobCell from "./table-v2/job-cell";
 
 function Watching({ row, table }: { row: Row<Job>; table: Table<Job> }) {
     const { token, isLoggedIn, authIsLoading } = useAuth();
@@ -130,40 +131,54 @@ export const columns: ColumnDef<Job>[] = [
         },
     },
     {
-        accessorKey: "jid",
-        header: "ID",
-    },
-    {
-        accessorKey: "title",
-        header: "Title",
+        accessorKey: "job",
+        header: "Job",
         enableHiding: false,
         cell: ({ row }) => {
-            const title: string = row.getValue("title");
-            const jid: string = row.getValue("jid");
-            const tags: Tags = row.original.tags;
+            console.log(row.original.company)
             return (
-                <div className="grid grid-cols-1 gap-2 justify-items-start min-w-20">
-                    <a
-                        href={`https://waterlooworks.uwaterloo.ca/myAccount/co-op/full/jobs.htm?ck_jobid=${jid}`}
-                        className="hover:underline"
-                        target="_blank"
-                    >
-                        {title}
-                    </a>
-                    <TagBadges tags={tags} />
-                </div>
+                <JobCell
+                    title={row.original.title}
+                    company={row.original.company}
+                    jid={row.original.jid}
+                />
+                // <div className="grid grid-cols-1 gap-2 justify-items-start min-w-20">
+                //     <TagBadges tags={tags} />
+                // </div>
             );
         },
     },
-    {
-        accessorKey: "company",
-        header: "Company",
-        enableHiding: false,
-        cell: ({ row }) => {
-            const company: string = row.getValue("company");
-            return <div className="max-w-40 min-w-20">{company}</div>;
-        },
-    },
+    // {
+    //     accessorKey: "title",
+    //     header: "Title",
+    //     enableHiding: false,
+    //     cell: ({ row }) => {
+    //         const title: string = row.getValue("title");
+    //         const jid: string = row.getValue("jid");
+    //         const tags: Tags = row.original.tags;
+    //         return (
+    //             <div className="grid grid-cols-1 gap-2 justify-items-start min-w-20">
+    //                 <a
+    //                     href={`https://waterlooworks.uwaterloo.ca/myAccount/co-op/full/jobs.htm?ck_jobid=${jid}`}
+    //                     className="hover:underline"
+    //                     target="_blank"
+    //                 >
+    //                     {title}
+    //                 </a>
+    //                 <TagBadges tags={tags} />
+    //             </div>
+    //         );
+    //     },
+    // },
+    // {
+    //     accessorKey: "company",
+    //     header: "Company",
+    //     enableHiding: false,
+    //     cell: ({ row }) => {
+    //         const company: string = row.getValue("company");
+    //         return <div className="max-w-40 min-w-20">{company}</div>;
+    //     },
+    // },
     {
         accessorKey: "location",
         header: "Location",
@@ -172,15 +187,19 @@ export const columns: ColumnDef<Job>[] = [
         accessorKey: "openings",
         header: "Openings",
     },
-    {
-        accessorKey: "stages",
-        header: "Status",
-        enableHiding: false,
-        cell: ({ row }) => {
-            const stages: Status[] = row.getValue("stages");
-            return <Stepper key={row.id} steps={stages} />;
-        },
-    },
+    // {
+    //     accessorKey: "stages",
+    //     header: "Status",
+    //     enableHiding: false,
+    //     cell: ({ row }) => {
+    //         const stages: Status[] = row.getValue("stages");
+    //         return <Stepper key={row.id} steps={stages} />;
+    //     },
+    // },
+    // {
+    //     accessorKey: "jid",
+    //     header: "ID",
+    // },
     {
         accessorKey: "",
         id: "contribute",

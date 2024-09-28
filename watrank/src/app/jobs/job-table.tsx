@@ -122,7 +122,7 @@ export function JobTable<TData, TValue>({
 	const isMobile = useMediaQuery("(max-width: 768px)");
 
 	const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
-
+	const [globalFilter, setGlobalFilter] = React.useState<any>("")
 	const [sorting, setSorting] = React.useState<SortingState>([])
 
 	const table = useReactTable({
@@ -134,10 +134,17 @@ export function JobTable<TData, TValue>({
 		onColumnVisibilityChange: setColumnVisibility,
 		onColumnFiltersChange: setColumnFilters,
 		getFilteredRowModel: getFilteredRowModel(),
+		globalFilterFn: (row, columnId, filterValue) => {
+			console.log("filter", row, filterValue)
+
+			return true;
+		},
+		onGlobalFilterChange: setGlobalFilter,
 		onSortingChange: setSorting,
 		state: {
 			columnVisibility,
 			columnFilters,
+			globalFilter,
 			sorting
 		},
 		initialState: {
@@ -188,11 +195,11 @@ export function JobTable<TData, TValue>({
 					<Input
 						className="max-w-60 bg-background"
 						placeholder="Filter by company..."
-						value={
-							(table.getColumn("company")?.getFilterValue() as string) ?? ""
+						onChange={(event) => {
+							console.log(event.target.value)
+							table.setGlobalFilter(String(event.target.value))
 						}
-						onChange={(event) =>
-							table.getColumn("company")?.setFilterValue(event.target.value)
+							// table.getColumn("company")?.setFilterValue(event.target.value)
 						}
 					/>
 					<Toggle

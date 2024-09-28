@@ -2,12 +2,14 @@ import { Company } from "./company";
 import { Status } from "./status";
 import { Tags } from "./tags";
 export type Job = {
-	watching: boolean;
+	archived: boolean;
+	inprogress: boolean
 	jid: number;
 	title: string;
-	company: Company;
+	company: string;
 	location: string;
 	openings: number;
-	stages: Status[];
-	tags: Tags;
+	oa: number;
+	interview: number[];
+	offer: number;
 };
