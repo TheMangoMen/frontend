@@ -13,6 +13,7 @@ import {
 	getSortedRowModel,
 	VisibilityState,
 	RowData,
+	SortingState,
 } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
@@ -122,6 +123,8 @@ export function JobTable<TData, TValue>({
 
 	const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
 
+	const [sorting, setSorting] = React.useState<SortingState>([])
+
 	const table = useReactTable({
 		data,
 		columns,
@@ -131,9 +134,11 @@ export function JobTable<TData, TValue>({
 		onColumnVisibilityChange: setColumnVisibility,
 		onColumnFiltersChange: setColumnFilters,
 		getFilteredRowModel: getFilteredRowModel(),
+		onSortingChange: setSorting,
 		state: {
 			columnVisibility,
 			columnFilters,
+			sorting
 		},
 		initialState: {
 			pagination: {
@@ -163,6 +168,7 @@ export function JobTable<TData, TValue>({
 			},
 		},
 	});
+
 	const { isLoggedIn } = useAuth();
 
 	React.useEffect(() => {
@@ -238,13 +244,22 @@ export function JobTable<TData, TValue>({
 							<TableRow key={headerGroup.id}>
 								{headerGroup.headers.map((header) => {
 									return (
-										<TableHead key={header.id}>
+										<TableHead key={header.id}
+											onClick={
+												header.column.getToggleSortingHandler()
+											}
+											style={{ cursor: 'pointer' }}
+										>
 											{header.isPlaceholder
 												? null
 												: flexRender(
 													header.column.columnDef.header,
 													header.getContext()
 												)}
+											{{
+												asc: ' 🔼',
+												desc: ' 🔽',
+											}[header.column.getIsSorted() as string] ?? null}
 										</TableHead>
 									);
 								})}
@@ -274,7 +289,7 @@ export function JobTable<TData, TValue>({
 									colSpan={columns.length}
 									className="h-24 text-center"
 								>
-									<AutofillPopupWithoutButton/>
+									<AutofillPopupWithoutButton />
 								</TableCell>
 							</TableRow>
 						)}

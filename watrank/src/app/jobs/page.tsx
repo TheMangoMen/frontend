@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "../login/components/icons";
 import { useRouter } from "next/navigation";
+import SortableTable from "./table-v2/sample";
 
 interface CommandKeyProps {
     text: string;
@@ -43,13 +44,13 @@ export default function JobPage() {
             title: "An error occured fetching jobs",
             description: "Please try again later.",
         });
-    
-        const showTokenExpiredToast = () =>
-            toast({
-                variant: "destructive",
-                title: "Your session expired",
-                description: "Please login again.",
-            });
+
+    const showTokenExpiredToast = () =>
+        toast({
+            variant: "destructive",
+            title: "Your session expired",
+            description: "Please login again.",
+        });
 
     const fetchJobs = async () => {
         const url = `${process.env.NEXT_PUBLIC_API_URL}/jobs`;
@@ -58,21 +59,21 @@ export default function JobPage() {
                 method: "GET",
                 headers: { ...(!!token && { Authorization: `Bearer ${token}` }) },
             });
-            if(!response.ok){
-                if (response.status === 401) {  
-                    
+            if (!response.ok) {
+                if (response.status === 401) {
+
                     logout();
-                    showTokenExpiredToast(); 
+                    showTokenExpiredToast();
                     router.push('/login')
                 } else {
-                   showTokenExpiredToast();
+                    showTokenExpiredToast();
                 }
             } else {
                 const json = await response.json();
                 setData(json);
                 setIsLoading(false);
             }
-            
+
         } catch (error) {
             console.error(error);
             showErrorToast();
@@ -92,11 +93,14 @@ export default function JobPage() {
     }
 
     return (
-        <JobTable
-            columns={columns}
-            data={data}
-            setData={setData}
-            fetchJobs={fetchJobs}
-        />
+        <div>
+            <JobTable
+                columns={columns}
+                data={data}
+                setData={setData}
+                fetchJobs={fetchJobs}
+            />
+            <SortableTable />
+        </div>
     );
 }
