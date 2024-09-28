@@ -4,6 +4,9 @@ import { ChevronDown, ChevronRight } from "lucide-react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/context/AuthContext";
+import { useEffect, useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
+
 
 
 interface ExpandableRowProps<TData> {
@@ -11,8 +14,10 @@ interface ExpandableRowProps<TData> {
 }
 
 const ExpandableRow = <TData,>({ row }: ExpandableRowProps<TData>) => {
+    const { toast } = useToast();
     const { token, isLoggedIn } = useAuth();
 	const [isExpanded, setIsExpanded] = React.useState(false);
+    const [contributionData, setContributionData] = useState([]);
 
 	// Simulated API cal
     const fetchExpandedData = async (id: string )=>{
@@ -29,32 +34,23 @@ const ExpandableRow = <TData,>({ row }: ExpandableRowProps<TData>) => {
 				);
 				if (response.ok) {
 					const data = await response.json();
-
-					const formData: any = {
-						interviewcount: data.interviewcount == 0 ? 1 : data.interviewcount,
-						compensation: data.compensation,
-					};
-	
-
+					
+					setContributionData(data)
+					console.log("contributt", data);
 		
 			
-				}} catch{
-                    
-                }
-			
-			
+				}else {
+					toast({ variant: "destructive", title: "Failed to fetch data." });
+				}
+			} catch (error){
+                    console.error(error);
+					toast({ variant: "destructive", title: "Failed to fetch data." });
+                }	
     }
-	const fetchExpandedDataMock = async (id: string) => {
-
-	
-
-		await new Promise((resolve) => setTimeout(resolve, 500));
-		return `Hello ${id}`;
-	};
 
 	const { data, isLoading } = useQuery({
 		queryKey: ["expandedData", row.id],
-		queryFn: () => fetchExpandedDataMock(row.id as string),
+		queryFn: () => fetchExpandedData(row.id as string),
 		enabled: isExpanded,
 	});
 
@@ -85,7 +81,17 @@ const ExpandableRow = <TData,>({ row }: ExpandableRowProps<TData>) => {
 						{isLoading ? (
 							<div className="h-8 w-full animate-pulse bg-muted"></div>
 						) : (
-							<div className="p-2">{data}</div>
+							contributionData.map((contribution) => (
+								<TableRow key={contribution.logtime} className="bg-muted/30">
+								  <TableCell colSpan={row.getVisibleCells().length + 1}>
+									<div className="p-2">
+									  {/* Replace this with the actual properties of your Contribution object */}
+									  <p>Contribution ID: {contribution.logtime}</p>
+									  {/* Add more properties here */}
+									</div>
+								  </TableCell>
+								</TableRow>
+							  ))
 						)}
 					</TableCell>
 				</TableRow>
