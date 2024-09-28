@@ -21,7 +21,8 @@ import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
-	DropdownMenuContent, DropdownMenuTrigger
+	DropdownMenuContent,
+	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 import {
@@ -37,8 +38,16 @@ import { StarFilledIcon } from "@radix-ui/react-icons";
 import { Toggle } from "@/components/ui/toggle";
 import { useAuth } from "@/context/AuthContext";
 import { RefreshCw } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { AutofillPopup, AutofillPopupWithoutButton } from "@/components/autofill-popup";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+	AutofillPopup,
+	AutofillPopupWithoutButton,
+} from "@/components/autofill-popup";
+import ExpandableRow from "./table-v2/ExpandableRow";
 
 declare module "@tanstack/table-core" {
 	interface TableMeta<TData extends RowData> {
@@ -54,22 +63,24 @@ interface JobTableProps<TData, TValue> {
 	fetchJobs: any;
 }
 
-
 interface CommandKeyProps {
 	text: string;
 }
 
 const CommandKey: React.FC<CommandKeyProps> = ({ text }) => {
-	const [commandKey, setCommandKey] = React.useState('');
+	const [commandKey, setCommandKey] = React.useState("");
 
 	React.useEffect(() => {
-		const isMac = navigator.userAgent.includes('Mac');
-		setCommandKey(isMac ? '⌘ ' : 'Ctrl+');
+		const isMac = navigator.userAgent.includes("Mac");
+		setCommandKey(isMac ? "⌘ " : "Ctrl+");
 	}, []);
 
 	return (
 		<span className="bg-muted p-1 rounded-md shadow-md">
-			<code className="font-mono text-sm">{commandKey}{text}</code>
+			<code className="font-mono text-sm">
+				{commandKey}
+				{text}
+			</code>
 		</span>
 	);
 };
@@ -122,8 +133,8 @@ export function JobTable<TData, TValue>({
 	const isMobile = useMediaQuery("(max-width: 768px)");
 
 	const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
-	const [globalFilter, setGlobalFilter] = React.useState<any>("")
-	const [sorting, setSorting] = React.useState<SortingState>([])
+	const [globalFilter, setGlobalFilter] = React.useState<any>("");
+	const [sorting, setSorting] = React.useState<SortingState>([]);
 
 	const table = useReactTable({
 		data,
@@ -135,9 +146,10 @@ export function JobTable<TData, TValue>({
 		onColumnFiltersChange: setColumnFilters,
 		getFilteredRowModel: getFilteredRowModel(),
 		globalFilterFn: (row, columnId, filterValue) => {
-			console.log("filter", row, filterValue)
-
-			return true;
+			const { company, title, jid } = row.original;
+			return (company + title + jid)
+				.toLowerCase()
+				.includes(filterValue.toLowerCase());
 		},
 		onGlobalFilterChange: setGlobalFilter,
 		onSortingChange: setSorting,
@@ -145,7 +157,7 @@ export function JobTable<TData, TValue>({
 			columnVisibility,
 			columnFilters,
 			globalFilter,
-			sorting
+			sorting,
 		},
 		initialState: {
 			pagination: {
@@ -187,25 +199,26 @@ export function JobTable<TData, TValue>({
 			});
 	}, [isMobile, table]);
 
-
 	return (
 		<div>
 			<div className="pb-5 flex gap-5 justify-between">
 				<div className="flex gap-2">
 					<Input
-						className="max-w-60 bg-background"
-						placeholder="Filter by company..."
-						onChange={(event) => {
-							console.log(event.target.value)
-							table.setGlobalFilter(String(event.target.value))
-						}
+						className="w-60 bg-background"
+						placeholder="Search for..."
+						onChange={
+							(event) => {
+								console.log(event.target.value);
+								table.setGlobalFilter(String(event.target.value));
+							}
 							// table.getColumn("company")?.setFilterValue(event.target.value)
 						}
 					/>
 					<Toggle
 						variant="outline"
 						pressed={
-							(table.getColumn("watching")?.getFilterValue() as boolean) ?? false
+							(table.getColumn("watching")?.getFilterValue() as boolean) ??
+							false
 						}
 						onPressedChange={(value) =>
 							table.getColumn("watching")?.setFilterValue(value || null)
@@ -251,21 +264,20 @@ export function JobTable<TData, TValue>({
 							<TableRow key={headerGroup.id}>
 								{headerGroup.headers.map((header) => {
 									return (
-										<TableHead key={header.id}
-											onClick={
-												header.column.getToggleSortingHandler()
-											}
-											style={{ cursor: 'pointer' }}
+										<TableHead
+											key={header.id}
+											onClick={header.column.getToggleSortingHandler()}
+											style={{ cursor: "pointer" }}
 										>
 											{header.isPlaceholder
 												? null
 												: flexRender(
-													header.column.columnDef.header,
-													header.getContext()
-												)}
+														header.column.columnDef.header,
+														header.getContext()
+												  )}
 											{{
-												asc: ' 🔼',
-												desc: ' 🔽',
+												asc: " 🔼",
+												desc: " 🔽",
 											}[header.column.getIsSorted() as string] ?? null}
 										</TableHead>
 									);
@@ -275,21 +287,9 @@ export function JobTable<TData, TValue>({
 					</TableHeader>
 					<TableBody>
 						{table.getRowModel().rows?.length > 0 ? (
-							table.getRowModel().rows.map((row) => (
-								<TableRow
-									key={row.id}
-									data-state={row.getIsSelected() && "selected"}
-								>
-									{row.getVisibleCells().map((cell) => (
-										<TableCell key={cell.id}>
-											{flexRender(
-												cell.column.columnDef.cell,
-												cell.getContext()
-											)}
-										</TableCell>
-									))}
-								</TableRow>
-							))
+							table
+								.getRowModel()
+								.rows.map((row) => <ExpandableRow key={row.id} row={row} />)
 						) : (
 							<TableRow>
 								<TableCell

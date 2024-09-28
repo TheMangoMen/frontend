@@ -50,6 +50,7 @@ const SortableTable: React.FC = () => {
         },
         onSortingChange: setSorting,
         getCoreRowModel: getCoreRowModel(),
+        getRowCanExpand: (row) => true,
         getSortedRowModel: getSortedRowModel(),
     })
 

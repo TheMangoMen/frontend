@@ -80,6 +80,7 @@ export default function JobPage() {
             showErrorToast();
         }
     };
+    
 
     useEffect(() => {
         if (!authIsLoading) {
