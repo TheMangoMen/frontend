@@ -81,7 +81,7 @@ const ExpandableRow = <TData,>({ row }: ExpandableRowProps<TData>) => {
 						{isLoading ? (
 							<div className="h-8 w-full animate-pulse bg-muted"></div>
 						) : (
-							contributionData.map((contribution) => (
+							contributionData.map((contribution : any) => (
 								<TableRow key={contribution.logtime} className="bg-muted/30">
 								  <TableCell colSpan={row.getVisibleCells().length + 1}>
 									<div className="p-2">

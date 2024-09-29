@@ -48,6 +48,7 @@ import {
 	AutofillPopupWithoutButton,
 } from "@/components/autofill-popup";
 import ExpandableRow from "./table-v2/ExpandableRow";
+import AnimatedTabs from "./table-v2/animatedtabs";
 
 declare module "@tanstack/table-core" {
 	interface TableMeta<TData extends RowData> {
@@ -133,7 +134,10 @@ export function JobTable<TData, TValue>({
 	const isMobile = useMediaQuery("(max-width: 768px)");
 
 	const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
-	const [globalFilter, setGlobalFilter] = React.useState<any>("");
+	const [globalFilter, setGlobalFilter] = React.useState<{ search: string, tab: 'all' | 'inProgress' | 'pending' }>({
+		search: '',
+		tab: 'all'
+	});
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 
 	const table = useReactTable({
@@ -145,11 +149,20 @@ export function JobTable<TData, TValue>({
 		onColumnVisibilityChange: setColumnVisibility,
 		onColumnFiltersChange: setColumnFilters,
 		getFilteredRowModel: getFilteredRowModel(),
-		globalFilterFn: (row, columnId, filterValue) => {
-			const { company, title, jid } = row.original;
-			return (company + title + jid)
+		globalFilterFn: (row, columnId, filterValue: {search: string, tab: 'all' | 'inProgress' | 'pending'}) => {
+			const { company, title, jid, inprogress } : any = row.original;
+			
+			const matchesSearchFilter = 
+				(company + title + jid)
 				.toLowerCase()
-				.includes(filterValue.toLowerCase());
+				.includes(filterValue.search.toLowerCase());
+
+			const matchesTabFilter = 
+				filterValue.tab === 'all' ||
+				(filterValue.tab === 'inProgress' && inprogress === true) ||
+				(filterValue.tab === 'pending' && inprogress === false);
+	  
+			return (matchesSearchFilter && matchesTabFilter);
 		},
 		onGlobalFilterChange: setGlobalFilter,
 		onSortingChange: setSorting,
@@ -187,7 +200,13 @@ export function JobTable<TData, TValue>({
 			},
 		},
 	});
+	const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setGlobalFilter(prev => ({ ...prev, search: event.target.value }));
+	};
 
+	const handleTabChange = (newTab: 'all' | 'inProgress' | 'pending') => {
+		setGlobalFilter(prev => ({ ...prev, tab: newTab }));
+	};
 	const { isLoggedIn } = useAuth();
 
 	React.useEffect(() => {
@@ -202,31 +221,15 @@ export function JobTable<TData, TValue>({
 	return (
 		<div>
 			<div className="pb-5 flex gap-5 justify-between">
-				<div className="flex gap-2">
+				<div className="flex gap-8">
 					<Input
 						className="w-60 bg-background"
 						placeholder="Search for..."
 						onChange={
-							(event) => {
-								console.log(event.target.value);
-								table.setGlobalFilter(String(event.target.value));
-							}
-							// table.getColumn("company")?.setFilterValue(event.target.value)
+							handleSearchChange
 						}
 					/>
-					<Toggle
-						variant="outline"
-						pressed={
-							(table.getColumn("watching")?.getFilterValue() as boolean) ??
-							false
-						}
-						onPressedChange={(value) =>
-							table.getColumn("watching")?.setFilterValue(value || null)
-						}
-						className={`bg-background ${!isLoggedIn() && "hidden"}`}
-					>
-						<StarFilledIcon className="text-primary" />
-					</Toggle>
+					<AnimatedTabs setTabFilter={handleTabChange}/>
 				</div>
 				<div className="max-sm:hidden flex gap-2">
 					<DropdownMenu>

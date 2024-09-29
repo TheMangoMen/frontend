@@ -3,7 +3,7 @@ import { Status } from "./status";
 import { Tags } from "./tags";
 export type Job = {
 	archived: boolean;
-	inprogress: boolean
+	inprogress: boolean;
 	jid: number;
 	title: string;
 	company: string;
