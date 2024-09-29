@@ -188,7 +188,7 @@ const LandingPage = () => {
 					<h2 className="text-3xl font-bold text-center pb-1 mt-8">
 						Interviews
 					</h2>
-					<p className="text-xl text-secondary-foreground text-center">
+					<p className="text-lg lg:text-xl text-secondary-foreground text-center">
 						Get updates for jobs you&apos;ve applied to.
 					</p>
 				</div>
@@ -215,7 +215,7 @@ const LandingPage = () => {
 						</svg>
 					</div>
 					<h2 className="text-3xl font-bold text-center pb-1 mt-8">Rankings</h2>
-					<p className="text-xl text-secondary-foreground text-center">
+					<p className="text-lg lg:text-xl text-secondary-foreground text-center">
 						Let others know if you&apos;re taking a job.
 					</p>
 				</div>
@@ -230,7 +230,7 @@ const LandingPage = () => {
 					<h2 className="text-3xl font-bold text-center pb-1 mt-8">
 						Contribute
 					</h2>
-					<p className="text-xl text-secondary-foreground text-center">
+					<p className="text-lg lg:text-xl text-secondary-foreground text-center">
 						To the success of your peers.
 					</p>
 				</div>
@@ -250,7 +250,7 @@ const LandingPage = () => {
 					<h2 className="text-3xl font-bold text-center pb-1 mt-8">
 						Analytics
 					</h2>
-					<p className="text-xl text-secondary-foreground text-center">
+					<p className="text-lg lg:text-xl text-secondary-foreground text-center">
 						See how you&apos;ve grown!
 					</p>
 				</div>
