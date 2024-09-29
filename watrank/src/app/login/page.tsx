@@ -161,7 +161,8 @@ export default function AuthenticationPage() {
                 alt="Background Image"
                 layout="fill"
                 objectFit="cover"
-                className="rounded blur-[3px] dark:saturate-50"
+                className="rounded dark:saturate-50"
+                priority
             />
             <div className="p-8 rounded border max-w-96 m-auto shadow-xl bg-background/90 z-50">
                 <div className="mx-auto flex w-full flex-col justify-center space-y-6 animate-fade">
