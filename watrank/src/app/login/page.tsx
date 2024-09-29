@@ -155,36 +155,11 @@ export default function AuthenticationPage() {
     }
 
     return (
-        <>
-            <Image
-                src="/alberta.png" // Replace with your image path
-                alt="Background Image"
-                layout="fill"
-                objectFit="cover"
-                className="rounded dark:saturate-50"
-                priority
-            />
-            <div className="p-8 rounded border max-w-96 m-auto shadow-xl bg-background/90 z-50">
-                <div className="mx-auto flex w-full flex-col justify-center space-y-6 animate-fade">
-                    {content}
-                </div>
+        <div className="p-8 rounded border max-w-96 m-auto border-gold shadow-stats">
+            <div className="mx-auto flex w-full flex-col justify-center space-y-6 animate-fade">
+                {content}
             </div>
-        </>
+        </div>
     )
 
 }
-
-
-// return (
-//     <div className="relative max-w-96 m-auto">
-//         <Image
-//             src="/path/to/your/image.jpg" // Replace with your image path
-//             alt="Background Image"
-//             layout="fill"
-//             objectFit="cover"
-//             className="rounded border bg-background"
-//         />
-//         <div className="relative p-8 flex w-full flex-col justify-center space-y-6 animate-fade">
-//             {content}
-//         </div>
-//     </div>
