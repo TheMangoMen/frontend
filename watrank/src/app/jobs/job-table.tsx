@@ -222,7 +222,7 @@ export function JobTable<TData, TValue>({
 						}
 					/>
 				</div>
-				<div className="max-sm:hidden flex gap-2">
+				{/* <div className="max-sm:hidden flex gap-2">
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Button variant="outline" className="ml-auto">
@@ -249,7 +249,7 @@ export function JobTable<TData, TValue>({
 								})}
 						</DropdownMenuContent>
 					</DropdownMenu>
-				</div>
+				</div> */}
 			</div>
 			<AnimatedTabs setTabFilter={handleTabChange} />
 			<div className="rounded-md border bg-background flex flex-col mt-2">
