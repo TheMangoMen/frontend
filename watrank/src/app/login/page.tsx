@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-
+import Image from 'next/image';
 import Link from "next/link"
 
 import { Input } from "@/components/ui/input"
@@ -155,11 +155,35 @@ export default function AuthenticationPage() {
     }
 
     return (
-        <div className="p-8 rounded border bg-background max-w-96 m-auto">
-            <div className="mx-auto flex w-full flex-col justify-center space-y-6 animate-fade">
-                {content}
+        <>
+            <Image
+                src="/alberta.png" // Replace with your image path
+                alt="Background Image"
+                layout="fill"
+                objectFit="cover"
+                className="rounded blur-[3px] dark:saturate-50"
+            />
+            <div className="p-8 rounded border max-w-96 m-auto shadow-xl bg-background/90 z-50">
+                <div className="mx-auto flex w-full flex-col justify-center space-y-6 animate-fade">
+                    {content}
+                </div>
             </div>
-        </div>
+        </>
     )
 
 }
+
+
+// return (
+//     <div className="relative max-w-96 m-auto">
+//         <Image
+//             src="/path/to/your/image.jpg" // Replace with your image path
+//             alt="Background Image"
+//             layout="fill"
+//             objectFit="cover"
+//             className="rounded border bg-background"
+//         />
+//         <div className="relative p-8 flex w-full flex-col justify-center space-y-6 animate-fade">
+//             {content}
+//         </div>
+//     </div>

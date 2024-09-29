@@ -20,22 +20,6 @@ export function Header() {
             </div>
             <div className="flex gap-2 items-center">
                 <div className="hidden md:block justify-end"><ModeToggle /></div>
-                <div className="hidden md:block">
-                    {!isLoggedIn() && (
-                        <Tooltip>
-                            <TooltipTrigger className="cursor-not-allowed self-end">
-                                <Button variant="outline" className="text-gray-400" disabled asChild>
-                                    <div className="flex font-medium text-xs md:text-base gap-2 md:justify-start ">
-                                        View Jobs
-                                    </div>
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>Please log in to view jobs</p>
-                            </TooltipContent>
-                        </Tooltip>
-                    )}
-                </div>
                 <AutofillPopup />
             </div>
         </div>
