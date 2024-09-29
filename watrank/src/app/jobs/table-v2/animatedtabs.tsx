@@ -34,7 +34,7 @@ const AnimatedTabs: React.FC<AnimatedTabsProps> = ({ setTabFilter }) => {
         <Button
           key={tab.value}
           variant="ghost"
-          className={`relative z-10 transition-colors duration-50 px-2 text-muted-foreground dark:text-muted-foreground hover:bg-primary/30 ${activeTab === tab.value ? 'bg-primary/50 text-foreground' : ''
+          className={`relative z-10 transition-colors duration-50 px-2 text-muted-foreground hover:bg-primary/30 ${activeTab === tab.value ? 'bg-primary/50 text-foreground' : ''
             }`}
           onClick={() => handleTabChange(tab.value)}
         >
