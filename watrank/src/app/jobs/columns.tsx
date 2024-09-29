@@ -1,6 +1,6 @@
 "use client";
 import { Job } from "./job";
-import CountCell, { InterviewCountCell, OACountCell, OfferCountCell } from "./table-v2/count-cell";
+import { InterviewCountCell, OACountCell, OfferCountCell } from "./table-v2/count-cell";
 import { Tags } from "./tags";
 import { ColumnDef, Row, Table, useReactTable } from "@tanstack/react-table";
 import { StarFilledIcon } from "@radix-ui/react-icons";

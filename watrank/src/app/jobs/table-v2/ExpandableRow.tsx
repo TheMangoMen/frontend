@@ -83,14 +83,14 @@ function parseContribution(contribution: any) {
 	};
 }
 
-const ExpandableRow = <TData,>({ row }: ExpandableRowProps<TData>) => {
+const ExpandableRow = ({ row }: any) => {
 	const { toast } = useToast();
 	const { token, isLoggedIn } = useAuth();
 	const [isExpanded, setIsExpanded] = React.useState(false);
 	const [contributionData, setContributionData] = useState([]);
 
 	const disabled = ["OA", "Interview", "Offer"]
-		.map(s => row.original[s])
+		.map((s: any) => row.original[s])
 		.every(i => i === 0)
 
 	// Simulated API cal
@@ -134,7 +134,7 @@ const ExpandableRow = <TData,>({ row }: ExpandableRowProps<TData>) => {
 				data-state={row.getIsSelected() && "selected"}
 				onClick={() => !disabled && setIsExpanded(!isExpanded)}
 			>
-				{row.getVisibleCells().map((cell) =>
+				{row.getVisibleCells().map((cell: any) =>
 					<TableCell
 						key={cell.id}
 						className={`flex items-center grow-0 shrink-0 ${cell.column.columnDef.meta?.className}`}
@@ -154,9 +154,10 @@ const ExpandableRow = <TData,>({ row }: ExpandableRowProps<TData>) => {
 					const { gotOA, interviewRound, gotOffer, tags, contributionTime } = parseContribution(contribution);
 
 					return <TableRow
+						key={contributionTime.toDateString()}
 						className="flex bg-secondary hover:bg-secondary"
 					>
-						{row.getVisibleCells().map((cell) => {
+						{row.getVisibleCells().map((cell: any) => {
 							const DefaultCell = ({ children }: { children?: React.ReactNode[] | React.ReactNode }) =>
 								<TableCell
 									key={cell.id}

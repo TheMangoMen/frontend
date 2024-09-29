@@ -34,18 +34,10 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
-import { StarFilledIcon } from "@radix-ui/react-icons";
-import { Toggle } from "@/components/ui/toggle";
 import { useAuth } from "@/context/AuthContext";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-	AutofillPopup,
-	AutofillPopupWithoutButton,
+	AutofillPopupWithoutButton
 } from "@/components/autofill-popup";
 import ExpandableRow from "./table-v2/ExpandableRow";
 import AnimatedTabs from "./table-v2/animatedtabs";
@@ -270,7 +262,7 @@ export function JobTable<TData, TValue>({
 										<TableHead
 											key={header.id}
 											onClick={header.column.getToggleSortingHandler()}
-											className={`cursor-pointer select-none flex items-center grow-0 shrink-0 ${header.column.columnDef.meta?.className}`}
+											className={`cursor-pointer select-none flex items-center grow-0 shrink-0 ${header.column.columnDef.meta && (header.column.columnDef.meta as { className?: string }).className}`}
 										>
 											{header.isPlaceholder
 												? null
