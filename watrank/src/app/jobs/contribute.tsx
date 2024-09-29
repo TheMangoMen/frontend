@@ -6,5 +6,14 @@ import ContributeRanking from "./contribute-ranking";
 
 export default function Contribute({ row, refresh }: { row: Row<Job>, refresh: any }) {
     const { isRankingStage } = useGlobal();
-    return isRankingStage ? <ContributeRanking row={row} refresh={refresh} /> : <ContributeStatus row={row} refresh={refresh} />;
+
+    const handleChildClick = (event: React.MouseEvent) => {
+        event.stopPropagation(); // This will prevent the parent's onClick from being triggered
+    };
+
+    return (
+        <div onClick={handleChildClick}>
+            {isRankingStage ? <ContributeRanking row={row} refresh={refresh} /> : <ContributeStatus row={row} refresh={refresh} />}
+        </div>
+    );
 }

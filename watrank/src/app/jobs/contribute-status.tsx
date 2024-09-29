@@ -241,9 +241,9 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
             <DialogContent className="max-h-full overflow-auto">
                 <DialogHeader>
                     <DialogTitle>
-                        {row.getValue("title")}
+                        {row.original.title}
                         <span className="text-primary"> @ </span>
-                        {row.getValue("company")}
+                        {row.original.company}
                     </DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
