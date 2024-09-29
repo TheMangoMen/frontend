@@ -11,11 +11,11 @@ interface JobCellProps {
 
 const JobCell: React.FC<JobCellProps> = ({ company, title, jid }) => {
     return (
-        <div className="">
+        <div>
             <p className="font-semibold">{company}</p>
             <a
+                className="hover:underline text-xs lg:text-sm text-secondary-foreground"
                 href={`https://waterlooworks.uwaterloo.ca/myAccount/co-op/full/jobs.htm?ck_jobid=${jid}`}
-                className="hover:underline text-sm text-[#585858]"
                 target="_blank"
                 title="Open in WaterlooWorks"
             >

@@ -65,13 +65,13 @@ export function User() {
     if (token !== null) {
         return (
             <DropdownMenu>
-                <Button>
-                <DropdownMenuTrigger asChild>
-                    <div className="flex flex-row gap-1 items-center">
-                        <span className="text-base font-medium cursor-pointer">{jwtDecode(token).sub}</span>
-                        <ChevronDown size={20}/>
-                    </div>
-                </DropdownMenuTrigger>
+                <Button variant="ghost">
+                    <DropdownMenuTrigger asChild>
+                        <div className="flex flex-row gap-1 items-center">
+                            <span className="text-base font-medium cursor-pointer">{jwtDecode(token).sub}</span>
+                            <ChevronDown size={20} />
+                        </div>
+                    </DropdownMenuTrigger>
                 </Button>
                 <DropdownMenuContent>
                     <Link href="/analytics">
@@ -108,7 +108,7 @@ export function User() {
 
     return <Button>
         <Link href="/login" className="text-base font-medium w-12">
-        Log In
-    </Link>
+            Log In
+        </Link>
     </Button>;
 }

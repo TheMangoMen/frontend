@@ -12,6 +12,9 @@ import { ArrowRight, CheckIcon, Heart, XIcon } from "lucide-react";
 import { Footer } from "@/components/footer";
 import { useAuth } from "@/context/AuthContext";
 import { cn } from "@/lib/utils";
+import { InterviewCountCell, OACountCell, OfferCountCell } from "./jobs/table-v2/count-cell";
+import { InterviewRound, OACheck, OfferCheck } from "./jobs/table-v2/expanded-count-cell";
+import { formatDate } from "@/utils/utils";
 
 const LandingPage = () => {
 	const { isLoggedIn } = useAuth();
@@ -100,7 +103,7 @@ const LandingPage = () => {
 							<span className="font-black">Rank</span>
 						</div>
 					</h1>
-					<p className="text-2xl my-6">Navigate co-op with confidence.</p>
+					<p className="text-xl lg:text-2xl my-6">Navigate co-op with confidence.</p>
 
 					<Link href={nextpage} passHref>
 						<button className="bg-primary hover:bg-primary/90 text-black text-xl font-semibold px-6 py-2 rounded-xl hover:shadow-md dark:shadow-secondary-foreground">
@@ -259,10 +262,6 @@ const LandingPage = () => {
 
 export default LandingPage;
 
-function formatDate(date: Date) {
-	return date.toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
-}
-
 function RowLayout({ children, className }: { children: React.ReactNode[]; className?: string }) {
 	return (
 		<div className={cn("p-2 flex flex-row justify-left", className)}>
@@ -280,23 +279,6 @@ function RowLayout({ children, className }: { children: React.ReactNode[]; class
 	);
 }
 
-function JobCell({ value, className }: {
-	value: number;
-	className?: string
-}) {
-	let styles = "w-10 h-10 rounded-lg flex items-center justify-center font-bold text-dark-grey"
-	if (value > 0) {
-		styles = cn(styles, className)
-	}
-	return (
-		<div className={styles}>
-			<span>
-				{value}
-			</span>
-		</div>
-	);
-}
-
 function JobEntryMain({ OAs, interviews, offers, company, title }: {
 	OAs: number;
 	interviews: number;
@@ -306,15 +288,9 @@ function JobEntryMain({ OAs, interviews, offers, company, title }: {
 }) {
 	return (
 		<RowLayout>
-			<JobCell
-				value={OAs}
-				className="text-dark-yellow dark:text-yellow-200 bg-yellow-400/30" />
-			<JobCell
-				value={interviews}
-				className="text-dark-green dark:text-green-200 bg-green-400/30" />
-			<JobCell
-				value={offers}
-				className="text-dark-blue dark:text-blue-200 bg-blue-400/30" />
+			<OACountCell value={OAs} />
+			<InterviewCountCell value={interviews} />
+			<OfferCountCell value={offers} />
 			<div className="ml-6">
 				<p className="font-semibold">
 					{company}
@@ -336,19 +312,9 @@ function JobEntryExpanded({ gotOA, interviewRound, gotOffer, user, date }: {
 }) {
 	return (
 		<RowLayout className="p-2 flex justify-left items-center bg-soft-yellow dark:bg-black/20">
-			{gotOA
-				? <CheckIcon className="text-green-500" />
-				: <XIcon className="text-dark-grey" />}
-			{interviewRound !== 0
-				? <div className="text-dark-green dark:text-green-200" >
-					#{interviewRound}
-				</div>
-				: <XIcon className="text-dark-grey" />}
-			{gotOffer
-				? <div className="bg-blue-400/30 rounded-lg p-1">
-					<CheckIcon className="text-blue-400" />
-				</div>
-				: <XIcon className="text-dark-grey" />}
+			{gotOA && <OACheck />}
+			{interviewRound && <InterviewRound round={interviewRound} />}
+			{gotOffer && <OfferCheck />}
 			<div className="ml-6 text-sm text-secondary-foreground italic">
 				<p className="font-semibold">{user}</p>
 				<p>on {date}</p>

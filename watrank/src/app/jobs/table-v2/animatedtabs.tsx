@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 type FilterOption = 'all' | 'inProgress' | 'pending';
 
 interface AnimatedTabsProps {
-    setTabFilter: (tab: FilterOption) => void;
+  setTabFilter: (tab: FilterOption) => void;
 }
 
 const AnimatedTabs: React.FC<AnimatedTabsProps> = ({ setTabFilter }) => {
@@ -25,18 +25,17 @@ const AnimatedTabs: React.FC<AnimatedTabsProps> = ({ setTabFilter }) => {
   };
 
   return (
-    <div 
+    <div
       ref={containerRef}
-      className="relative flex bg-muted dark:bg-background rounded-lg gap-2"
+      className="relative flex rounded-lg gap-2"
 
     >
       {tabs.map((tab) => (
         <Button
           key={tab.value}
           variant="ghost"
-          className={`relative z-10 transition-colors  duration-200 px-2${
-            activeTab === tab.value ? 'bg-primary text-primary' : 'text-muted-foreground dark:text-muted-foreground'
-          }`}
+          className={`relative z-10 transition-colors duration-50 px-2 text-muted-foreground dark:text-muted-foreground hover:bg-primary/30 ${activeTab === tab.value ? 'bg-primary/50 text-foreground' : ''
+            }`}
           onClick={() => handleTabChange(tab.value)}
         >
           {tab.label}

@@ -37,7 +37,7 @@ import { Input } from "@/components/ui/input";
 import { StarFilledIcon } from "@radix-ui/react-icons";
 import { Toggle } from "@/components/ui/toggle";
 import { useAuth } from "@/context/AuthContext";
-import { RefreshCw } from "lucide-react";
+import { ChevronUp, ChevronDown } from "lucide-react";
 import {
 	Tooltip,
 	TooltipContent,
@@ -149,19 +149,19 @@ export function JobTable<TData, TValue>({
 		onColumnVisibilityChange: setColumnVisibility,
 		onColumnFiltersChange: setColumnFilters,
 		getFilteredRowModel: getFilteredRowModel(),
-		globalFilterFn: (row, columnId, filterValue: {search: string, tab: 'all' | 'inProgress' | 'pending'}) => {
-			const { company, title, jid, inprogress } : any = row.original;
-			
-			const matchesSearchFilter = 
-				(company + title + jid)
-				.toLowerCase()
-				.includes(filterValue.search.toLowerCase());
+		globalFilterFn: (row, columnId, filterValue: { search: string, tab: 'all' | 'inProgress' | 'pending' }) => {
+			const { company, title, jid, inprogress }: any = row.original;
 
-			const matchesTabFilter = 
+			const matchesSearchFilter =
+				(company + title + jid)
+					.toLowerCase()
+					.includes(filterValue.search.toLowerCase());
+
+			const matchesTabFilter =
 				filterValue.tab === 'all' ||
 				(filterValue.tab === 'inProgress' && inprogress === true) ||
 				(filterValue.tab === 'pending' && inprogress === false);
-	  
+
 			return (matchesSearchFilter && matchesTabFilter);
 		},
 		onGlobalFilterChange: setGlobalFilter,
@@ -220,7 +220,7 @@ export function JobTable<TData, TValue>({
 
 	return (
 		<div>
-			<div className="pb-5 flex gap-5 justify-between">
+			<div className="pb-2 flex gap-5 justify-between">
 				<div className="flex gap-8">
 					<Input
 						className="w-60 bg-background"
@@ -229,7 +229,6 @@ export function JobTable<TData, TValue>({
 							handleSearchChange
 						}
 					/>
-					<AnimatedTabs setTabFilter={handleTabChange}/>
 				</div>
 				<div className="max-sm:hidden flex gap-2">
 					<DropdownMenu>
@@ -260,28 +259,34 @@ export function JobTable<TData, TValue>({
 					</DropdownMenu>
 				</div>
 			</div>
-			<div className="rounded-md border bg-background">
-				<Table>
+			<AnimatedTabs setTabFilter={handleTabChange} />
+			<div className="rounded-md border bg-background flex flex-col mt-2">
+				<Table className="flex-1">
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (
-							<TableRow key={headerGroup.id}>
+							<TableRow key={headerGroup.id} className="flex">
 								{headerGroup.headers.map((header) => {
 									return (
 										<TableHead
 											key={header.id}
 											onClick={header.column.getToggleSortingHandler()}
-											style={{ cursor: "pointer" }}
+											className={`cursor-pointer select-none flex items-center grow-0 shrink-0 ${header.column.columnDef.meta?.className}`}
 										>
 											{header.isPlaceholder
 												? null
 												: flexRender(
-														header.column.columnDef.header,
-														header.getContext()
-												  )}
-											{{
-												asc: " 🔼",
-												desc: " 🔽",
-											}[header.column.getIsSorted() as string] ?? null}
+													<p>{header.column.columnDef.header?.toString()}</p>,
+													header.getContext()
+												)}
+											{header.column.getIsSorted() as string
+												&& <div className="ml-1 w-4 h-4 flex items-center text-secondary-foreground">
+													{{
+														asc: <ChevronUp />,
+														desc: <ChevronDown />,
+													}[header.column.getIsSorted() as string] ?? null}
+												</div>
+
+											}
 										</TableHead>
 									);
 								})}
@@ -290,15 +295,12 @@ export function JobTable<TData, TValue>({
 					</TableHeader>
 					<TableBody>
 						{table.getRowModel().rows?.length > 0 ? (
-							table
-								.getRowModel()
-								.rows.map((row) => <ExpandableRow key={row.id} row={row} />)
+							table.getRowModel().rows.map((row) => (
+								<ExpandableRow key={row.id} row={row} />
+							))
 						) : (
 							<TableRow>
-								<TableCell
-									colSpan={columns.length}
-									className="h-24 text-center"
-								>
+								<TableCell colSpan={columns.length} className="h-24 text-center">
 									<AutofillPopupWithoutButton />
 								</TableCell>
 							</TableRow>

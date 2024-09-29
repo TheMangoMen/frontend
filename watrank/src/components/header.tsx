@@ -18,15 +18,10 @@ export function Header() {
             <div className="flex items-center gap-1 md:gap-4">
                 <Logo />
             </div>
-            <div className="flex md:gap-5 items-center">
+            <div className="flex gap-2 items-center">
+                <div className="hidden md:block justify-end"><ModeToggle /></div>
                 <div className="hidden md:block">
-                    {isLoggedIn() ? (
-                        <Link href="/jobs" className={buttonVariants({ variant: "outline" })}>
-                            <div className="flex font-medium text-xs md:text-base gap-2 md:justify-start ">
-                                View Jobs
-                            </div>
-                        </Link>
-                    ) : (
+                    {!isLoggedIn() && (
                         <Tooltip>
                             <TooltipTrigger className="cursor-not-allowed self-end">
                                 <Button variant="outline" className="text-gray-400" disabled asChild>
@@ -42,7 +37,6 @@ export function Header() {
                     )}
                 </div>
                 <AutofillPopup />
-                <div className="hidden md:block justify-end"><ModeToggle /></div>
             </div>
         </div>
     </header>

@@ -8,6 +8,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "../login/components/icons";
 import { useRouter } from "next/navigation";
 import SortableTable from "./table-v2/sample";
+import { stageCountFn } from "@/utils/utils";
 
 interface CommandKeyProps {
     text: string;
@@ -30,6 +31,57 @@ const CommandKey: React.FC<CommandKeyProps> = ({ text }) => {
         </span>
     );
 };
+
+// {
+//     "archived": false,
+//     "jid": 382693,
+//     "title": "Analytics Engineering",
+//     "company": "Faire",
+//     "location": "Waterloo",
+//     "openings": 1,
+//     "stages": [
+//         {
+//             "name": "OA",
+//             "count": 0
+//         },
+//         {
+//             "name": "Interview 1",
+//             "count": 1
+//         },
+//         {
+//             "name": "Interview 2",
+//             "count": 0
+//         },
+//         {
+//             "name": "Interview 3",
+//             "count": 0
+//         },
+//         {
+//             "name": "Offer Call",
+//             "count": 0
+//         }
+//     ],
+//     "tags": {
+//         "oadifficulty": "",
+//         "oalength": "",
+//         "interviewvibe": "",
+//         "interviewtechnical": "",
+//         "compensation": 0
+//     },
+//     "inprogress": true
+// }
+
+function parseJson(json: any) {
+    const stageCount = stageCountFn(json.stages);
+
+    return {
+        ...json,
+        OA: stageCount("OA")?.count,
+        Interview: stageCount("Interview 1")?.count,
+        Offer: stageCount("Offer Call")?.count,
+    };
+}
+
 
 export default function JobPage() {
     const { token, logout, authIsLoading } = useAuth();
@@ -70,8 +122,9 @@ export default function JobPage() {
                 }
             } else {
                 const json = await response.json();
-                setData(json);
-                console.log("stuff", json);
+                const data = json.map(parseJson);
+                setData(data);
+                console.log("stuff", data);
                 setIsLoading(false);
             }
 
@@ -80,7 +133,7 @@ export default function JobPage() {
             showErrorToast();
         }
     };
-    
+
 
     useEffect(() => {
         if (!authIsLoading) {
@@ -95,14 +148,11 @@ export default function JobPage() {
     }
 
     return (
-        <div>
-            <JobTable
-                columns={columns}
-                data={data}
-                setData={setData}
-                fetchJobs={fetchJobs}
-            />
-            <SortableTable />
-        </div>
+        <JobTable
+            columns={columns}
+            data={data}
+            setData={setData}
+            fetchJobs={fetchJobs}
+        />
     );
 }
