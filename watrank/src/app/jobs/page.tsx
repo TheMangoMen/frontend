@@ -7,6 +7,8 @@ import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "../login/components/icons";
 import { useRouter } from "next/navigation";
+import SortableTable from "./table-v2/sample";
+import { stageCountFn } from "@/utils/utils";
 
 interface CommandKeyProps {
     text: string;
@@ -30,6 +32,57 @@ const CommandKey: React.FC<CommandKeyProps> = ({ text }) => {
     );
 };
 
+// {
+//     "archived": false,
+//     "jid": 382693,
+//     "title": "Analytics Engineering",
+//     "company": "Faire",
+//     "location": "Waterloo",
+//     "openings": 1,
+//     "stages": [
+//         {
+//             "name": "OA",
+//             "count": 0
+//         },
+//         {
+//             "name": "Interview 1",
+//             "count": 1
+//         },
+//         {
+//             "name": "Interview 2",
+//             "count": 0
+//         },
+//         {
+//             "name": "Interview 3",
+//             "count": 0
+//         },
+//         {
+//             "name": "Offer Call",
+//             "count": 0
+//         }
+//     ],
+//     "tags": {
+//         "oadifficulty": "",
+//         "oalength": "",
+//         "interviewvibe": "",
+//         "interviewtechnical": "",
+//         "compensation": 0
+//     },
+//     "inprogress": true
+// }
+
+function parseJson(json: any) {
+    const stageCount = stageCountFn(json.stages);
+
+    return {
+        ...json,
+        OA: stageCount("OA")?.count,
+        Interview: stageCount("Interview 1")?.count,
+        Offer: stageCount("Offer Call")?.count,
+    };
+}
+
+
 export default function JobPage() {
     const { token, logout, authIsLoading } = useAuth();
     const { toast } = useToast();
@@ -43,13 +96,13 @@ export default function JobPage() {
             title: "An error occured fetching jobs",
             description: "Please try again later.",
         });
-    
-        const showTokenExpiredToast = () =>
-            toast({
-                variant: "destructive",
-                title: "Your session expired",
-                description: "Please login again.",
-            });
+
+    const showTokenExpiredToast = () =>
+        toast({
+            variant: "destructive",
+            title: "Your session expired",
+            description: "Please login again.",
+        });
 
     const fetchJobs = async () => {
         const url = `${process.env.NEXT_PUBLIC_API_URL}/jobs`;
@@ -58,26 +111,29 @@ export default function JobPage() {
                 method: "GET",
                 headers: { ...(!!token && { Authorization: `Bearer ${token}` }) },
             });
-            if(!response.ok){
-                if (response.status === 401) {  
-                    
+            if (!response.ok) {
+                if (response.status === 401 || response.status === 403) {
+
                     logout();
-                    showTokenExpiredToast(); 
-                    router.push('/login')
+                    showTokenExpiredToast();
+                    router.replace('/login')
                 } else {
-                   showTokenExpiredToast();
+                    showErrorToast();
                 }
             } else {
                 const json = await response.json();
-                setData(json);
+                const data = json.map(parseJson);
+                setData(data);
+                console.log("stuff", data);
                 setIsLoading(false);
             }
-            
+
         } catch (error) {
             console.error(error);
             showErrorToast();
         }
     };
+
 
     useEffect(() => {
         if (!authIsLoading) {

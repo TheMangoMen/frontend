@@ -1,5 +1,6 @@
 "use client";
 import { Job } from "./job";
+import { InterviewCountCell, OACountCell, OfferCountCell } from "./table-v2/count-cell";
 import { Tags } from "./tags";
 import { ColumnDef, Row, Table, useReactTable } from "@tanstack/react-table";
 import { StarFilledIcon } from "@radix-ui/react-icons";
@@ -16,6 +17,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { Badge } from "@/components/ui/badge";
 import Contribute from "./contribute";
+import JobCell from "./table-v2/job-cell";
 
 function Watching({ row, table }: { row: Row<Job>; table: Table<Job> }) {
     const { token, isLoggedIn, authIsLoading } = useAuth();
@@ -94,92 +96,47 @@ function Watching({ row, table }: { row: Row<Job>; table: Table<Job> }) {
     );
 }
 
-//call contributions, dipslay horizontal flex-box of badges
-function TagBadges({ tags }: { tags: Tags }) {
-    if (!tags) {
-        return null;
-    }
-    //to-do: systemic enum changes to not have "somewhat interview"s
-    let tech = tags.interviewtechnical
-    if (tags.interviewtechnical == "Somewhat") {
-        tech = "Mixed"
-    }
-
-    return (
-        <div className="max-md:hidden">
-            <div className="flex flex-wrap flex-row gap-2">
-                {tags.oadifficulty && <Badge>{`${tags.oadifficulty} OA`}</Badge>}
-                {tags.interviewvibe && (
-                    <Badge>{`${tags.interviewvibe} Vibes`}</Badge>
-                )}
-                {tags.interviewtechnical && (
-                    <Badge>{`${tech} Interview`}</Badge>
-                )}
-            </div>
-        </div>
-
-    );
-}
-
 export const columns: ColumnDef<Job>[] = [
     {
-        accessorKey: "watching",
+        accessorKey: "isOpen",
         header: "",
-        cell: ({ row, table }) => {
-            return <Watching row={row} table={table} />;
-        },
-    },
-    {
-        accessorKey: "jid",
-        header: "ID",
-    },
-    {
-        accessorKey: "title",
-        header: "Title",
         enableHiding: false,
-        cell: ({ row }) => {
-            const title: string = row.getValue("title");
-            const jid: string = row.getValue("jid");
-            const tags: Tags = row.original.tags;
-            return (
-                <div className="grid grid-cols-1 gap-2 justify-items-start min-w-20">
-                    <a
-                        href={`https://waterlooworks.uwaterloo.ca/myAccount/co-op/full/jobs.htm?ck_jobid=${jid}`}
-                        className="hover:underline"
-                        target="_blank"
-                    >
-                        {title}
-                    </a>
-                    <TagBadges tags={tags} />
-                </div>
-            );
-        },
+        meta: { className: "w-8 justify-center" }, // Fixed width and no flexing
     },
     {
-        accessorKey: "company",
-        header: "Company",
+        accessorKey: "OA",
+        header: "OA",
         enableHiding: false,
-        cell: ({ row }) => {
-            const company: string = row.getValue("company");
-            return <div className="max-w-40 min-w-20">{company}</div>;
-        },
+        cell: ({ row, table }) => <OACountCell value={row.getValue("OA")} />,
+        meta: { className: "w-14 justify-center" }, // Fixed width and no flexing
     },
     {
-        accessorKey: "location",
-        header: "Location",
-    },
-    {
-        accessorKey: "openings",
-        header: "Openings",
-    },
-    {
-        accessorKey: "stages",
-        header: "Status",
+        accessorKey: "Interview",
+        header: "Interview",
         enableHiding: false,
-        cell: ({ row }) => {
-            const stages: Status[] = row.getValue("stages");
-            return <Stepper key={row.id} steps={stages} />;
-        },
+        cell: ({ row, table }) => <InterviewCountCell value={row.getValue("Interview")} />,
+        meta: { className: "w-20 justify-center" },
+    },
+    {
+        accessorKey: "Offer",
+        header: "Offer",
+        enableHiding: false,
+        cell: ({ row, table }) => <OfferCountCell value={row.getValue("Offer")} />,
+        meta: { className: "w-14 justify-center" },
+    },
+    {
+        accessorKey: "job",
+        header: "Job",
+        enableHiding: false,
+        cell: ({ row }) => (
+            <JobCell
+                title={row.original.title}
+                company={row.original.company}
+                jid={row.original.jid}
+            />
+        ),
+        meta: { className: "flex-1 justify-start" },
+        sortingFn: (rowA, rowB) => rowA.original.company.localeCompare(rowB.original.company)
     },
     {
         accessorKey: "",
@@ -190,5 +147,21 @@ export const columns: ColumnDef<Job>[] = [
             return <Contribute row={row} refresh={refresh} />;
         },
         enableHiding: false,
+        meta: { className: "w-12 flex-none" },
+    },
+    {
+        accessorKey: "location",
+        header: "Location",
+        meta: { className: "w-32" },
+    },
+    {
+        accessorKey: "openings",
+        header: "Openings",
+        meta: { className: "w-20" },
+    },
+    {
+        accessorKey: "jid",
+        header: "ID",
+        meta: { className: "w-20" },
     },
 ];

@@ -13,6 +13,7 @@ import {
 	getSortedRowModel,
 	VisibilityState,
 	RowData,
+	SortingState,
 } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
@@ -20,7 +21,8 @@ import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
-	DropdownMenuContent, DropdownMenuTrigger
+	DropdownMenuContent,
+	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 import {
@@ -32,12 +34,13 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
-import { StarFilledIcon } from "@radix-ui/react-icons";
-import { Toggle } from "@/components/ui/toggle";
 import { useAuth } from "@/context/AuthContext";
-import { RefreshCw } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { AutofillPopup, AutofillPopupWithoutButton } from "@/components/autofill-popup";
+import { ChevronUp, ChevronDown } from "lucide-react";
+import {
+	AutofillPopupWithoutButton
+} from "@/components/autofill-popup";
+import ExpandableRow from "./table-v2/ExpandableRow";
+import AnimatedTabs from "./table-v2/animatedtabs";
 
 declare module "@tanstack/table-core" {
 	interface TableMeta<TData extends RowData> {
@@ -53,22 +56,24 @@ interface JobTableProps<TData, TValue> {
 	fetchJobs: any;
 }
 
-
 interface CommandKeyProps {
 	text: string;
 }
 
 const CommandKey: React.FC<CommandKeyProps> = ({ text }) => {
-	const [commandKey, setCommandKey] = React.useState('');
+	const [commandKey, setCommandKey] = React.useState("");
 
 	React.useEffect(() => {
-		const isMac = navigator.userAgent.includes('Mac');
-		setCommandKey(isMac ? '⌘ ' : 'Ctrl+');
+		const isMac = navigator.userAgent.includes("Mac");
+		setCommandKey(isMac ? "⌘ " : "Ctrl+");
 	}, []);
 
 	return (
 		<span className="bg-muted p-1 rounded-md shadow-md">
-			<code className="font-mono text-sm">{commandKey}{text}</code>
+			<code className="font-mono text-sm">
+				{commandKey}
+				{text}
+			</code>
 		</span>
 	);
 };
@@ -121,6 +126,11 @@ export function JobTable<TData, TValue>({
 	const isMobile = useMediaQuery("(max-width: 768px)");
 
 	const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
+	const [globalFilter, setGlobalFilter] = React.useState<{ search: string, tab: 'all' | 'inProgress' | 'pending' }>({
+		search: '',
+		tab: 'all'
+	});
+	const [sorting, setSorting] = React.useState<SortingState>([]);
 
 	const table = useReactTable({
 		data,
@@ -131,9 +141,28 @@ export function JobTable<TData, TValue>({
 		onColumnVisibilityChange: setColumnVisibility,
 		onColumnFiltersChange: setColumnFilters,
 		getFilteredRowModel: getFilteredRowModel(),
+		globalFilterFn: (row, columnId, filterValue: { search: string, tab: 'all' | 'inProgress' | 'pending' }) => {
+			const { company, title, jid, inprogress }: any = row.original;
+
+			const matchesSearchFilter =
+				(company + title + jid)
+					.toLowerCase()
+					.includes(filterValue.search.toLowerCase());
+
+			const matchesTabFilter =
+				filterValue.tab === 'all' ||
+				(filterValue.tab === 'inProgress' && inprogress === true) ||
+				(filterValue.tab === 'pending' && inprogress === false);
+
+			return (matchesSearchFilter && matchesTabFilter);
+		},
+		onGlobalFilterChange: setGlobalFilter,
+		onSortingChange: setSorting,
 		state: {
 			columnVisibility,
 			columnFilters,
+			globalFilter,
+			sorting,
 		},
 		initialState: {
 			pagination: {
@@ -163,6 +192,13 @@ export function JobTable<TData, TValue>({
 			},
 		},
 	});
+	const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setGlobalFilter(prev => ({ ...prev, search: event.target.value }));
+	};
+
+	const handleTabChange = (newTab: 'all' | 'inProgress' | 'pending') => {
+		setGlobalFilter(prev => ({ ...prev, tab: newTab }));
+	};
 	const { isLoggedIn } = useAuth();
 
 	React.useEffect(() => {
@@ -174,35 +210,19 @@ export function JobTable<TData, TValue>({
 			});
 	}, [isMobile, table]);
 
-
 	return (
 		<div>
-			<div className="pb-5 flex gap-5 justify-between">
-				<div className="flex gap-2">
+			<div className="pb-2 flex gap-5 justify-between">
+				<div className="flex gap-8">
 					<Input
-						className="max-w-60 bg-background"
-						placeholder="Filter by company..."
-						value={
-							(table.getColumn("company")?.getFilterValue() as string) ?? ""
-						}
-						onChange={(event) =>
-							table.getColumn("company")?.setFilterValue(event.target.value)
+						className="w-60 bg-background"
+						placeholder="Search for..."
+						onChange={
+							handleSearchChange
 						}
 					/>
-					<Toggle
-						variant="outline"
-						pressed={
-							(table.getColumn("watching")?.getFilterValue() as boolean) ?? false
-						}
-						onPressedChange={(value) =>
-							table.getColumn("watching")?.setFilterValue(value || null)
-						}
-						className={`bg-background ${!isLoggedIn() && "hidden"}`}
-					>
-						<StarFilledIcon className="text-primary" />
-					</Toggle>
 				</div>
-				<div className="max-sm:hidden flex gap-2">
+				{/* <div className="max-sm:hidden flex gap-2">
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Button variant="outline" className="ml-auto">
@@ -229,22 +249,36 @@ export function JobTable<TData, TValue>({
 								})}
 						</DropdownMenuContent>
 					</DropdownMenu>
-				</div>
+				</div> */}
 			</div>
-			<div className="rounded-md border bg-background">
-				<Table>
+			<AnimatedTabs setTabFilter={handleTabChange} />
+			<div className="rounded-md border bg-background flex flex-col mt-2">
+				<Table className="flex-1">
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (
-							<TableRow key={headerGroup.id}>
+							<TableRow key={headerGroup.id} className="flex">
 								{headerGroup.headers.map((header) => {
 									return (
-										<TableHead key={header.id}>
+										<TableHead
+											key={header.id}
+											onClick={header.column.getToggleSortingHandler()}
+											className={`cursor-pointer select-none flex items-center grow-0 shrink-0 ${header.column.columnDef.meta && (header.column.columnDef.meta as { className?: string }).className}`}
+										>
 											{header.isPlaceholder
 												? null
 												: flexRender(
-													header.column.columnDef.header,
+													<p>{header.column.columnDef.header?.toString()}</p>,
 													header.getContext()
 												)}
+											{header.column.getIsSorted() as string
+												&& <div className="ml-1 w-4 h-4 flex items-center text-secondary-foreground">
+													{{
+														asc: <ChevronUp />,
+														desc: <ChevronDown />,
+													}[header.column.getIsSorted() as string] ?? null}
+												</div>
+
+											}
 										</TableHead>
 									);
 								})}
@@ -254,27 +288,12 @@ export function JobTable<TData, TValue>({
 					<TableBody>
 						{table.getRowModel().rows?.length > 0 ? (
 							table.getRowModel().rows.map((row) => (
-								<TableRow
-									key={row.id}
-									data-state={row.getIsSelected() && "selected"}
-								>
-									{row.getVisibleCells().map((cell) => (
-										<TableCell key={cell.id}>
-											{flexRender(
-												cell.column.columnDef.cell,
-												cell.getContext()
-											)}
-										</TableCell>
-									))}
-								</TableRow>
+								<ExpandableRow key={row.id} row={row} />
 							))
 						) : (
 							<TableRow>
-								<TableCell
-									colSpan={columns.length}
-									className="h-24 text-center"
-								>
-									<AutofillPopupWithoutButton/>
+								<TableCell colSpan={columns.length} className="h-24 text-center">
+									<AutofillPopupWithoutButton />
 								</TableCell>
 							</TableRow>
 						)}

@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-
+import Image from 'next/image';
 import Link from "next/link"
 
 import { Input } from "@/components/ui/input"
@@ -155,7 +155,7 @@ export default function AuthenticationPage() {
     }
 
     return (
-        <div className="p-8 rounded border bg-background max-w-96 m-auto">
+        <div className="p-8 rounded border max-w-96 m-auto border-gold shadow-stats">
             <div className="mx-auto flex w-full flex-col justify-center space-y-6 animate-fade">
                 {content}
             </div>
