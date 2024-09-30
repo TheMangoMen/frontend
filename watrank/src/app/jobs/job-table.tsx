@@ -222,6 +222,7 @@ export function JobTable<TData, TValue>({
 						}
 					/>
 				</div>
+				<div className="hidden md:block"><AutofillPopupWithoutButton/></div>
 				{/* <div className="max-sm:hidden flex gap-2">
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>

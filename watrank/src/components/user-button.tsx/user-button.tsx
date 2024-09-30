@@ -83,7 +83,7 @@ export function User() {
                     <DialogTrigger asChild>
                         <DropdownMenuItem className="cursor-pointer">
                             <ClipboardPaste className="mr-2 h-4 w-4" />
-                            <span>Autofill watchlist</span>
+                            <span>Import jobs</span>
                         </DropdownMenuItem>
                     </DialogTrigger>
                     {isAdmin() &&
