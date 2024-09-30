@@ -72,7 +72,7 @@ const LandingPage = () => {
 
 	return (
 		<>
-			<div ref={rankerSVGRef} className="hidden absolute w-12 opacity-40">
+			<div ref={rankerSVGRef} className="hidden absolute w-12 -z-10 opacity-40">
 				<svg
 					viewBox="0 0 298 180"
 					fill="none"
