@@ -252,7 +252,7 @@ export function JobTable<TData, TValue>({
 					</DropdownMenu>
 				</div> */}
 			</div>
-			<AnimatedTabs setTabFilter={handleTabChange} />
+			<div className="py-2"><AnimatedTabs setTabFilter={handleTabChange} /></div>
 			<div className="rounded-md border bg-background flex flex-col mt-2">
 				<Table className="flex-1">
 					<TableHeader>
