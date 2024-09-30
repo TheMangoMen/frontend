@@ -34,7 +34,7 @@ export function AutofillPopup() {
     return <Dialog>
         <DialogContent>
             <DialogHeader>
-                <DialogTitle>Autofill watchlist</DialogTitle>
+                <DialogTitle>Import jobs</DialogTitle>
             </DialogHeader>
             <ul className="list-decimal pl-6 leading-loose">
                 <li>
@@ -57,7 +57,7 @@ export function AutofillPopupWithoutButton() {
     return <Dialog>
         <DialogContent>
             <DialogHeader>
-                <DialogTitle>Autofill watchlist</DialogTitle>
+                <DialogTitle>Import jobs</DialogTitle>
             </DialogHeader>
             <ul className="list-decimal pl-6 leading-loose">
                 <li>
