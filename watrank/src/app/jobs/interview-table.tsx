@@ -39,7 +39,7 @@ import { ChevronUp, ChevronDown } from "lucide-react";
 import {
 	AutofillPopupWithoutButton
 } from "@/components/autofill-popup";
-import ExpandableRow from "./table-v2/ExpandableRow";
+import ExpandableRow from "./table-v2/ExpandableInterviewRow";
 import AnimatedTabs from "./table-v2/animatedtabs";
 
 declare module "@tanstack/table-core" {
@@ -49,7 +49,7 @@ declare module "@tanstack/table-core" {
 	}
 }
 
-interface JobTableProps<TData, TValue> {
+interface InterviewTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
 	setData(_: any): void;
@@ -110,12 +110,12 @@ const useMediaQuery = (query: string): boolean => {
 	return matches;
 };
 
-export function JobTable<TData, TValue>({
+export function InterviewTable<TData, TValue>({
 	columns,
 	data,
 	setData,
 	fetchJobs,
-}: JobTableProps<TData, TValue>) {
+}: InterviewTableProps<TData, TValue>) {
 	const [columnVisibility, setColumnVisibility] =
 		React.useState<VisibilityState>({});
 

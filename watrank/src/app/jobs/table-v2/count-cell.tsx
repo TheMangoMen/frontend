@@ -30,6 +30,10 @@ export const cellStyles = {
 	offer: {
 		text: "text-dark-blue dark:text-blue-200",
 		bg: "bg-blue-400/30"
+	},
+	notTaking: {
+		text: "text-dark-red dark:text-red-200",
+		bg: "bg-red-400/30"
 	}
 }
 
@@ -56,6 +60,15 @@ export function OfferCountCell({ value }: { value: number }) {
 		<CountCell
 			value={value}
 			className={cn(Object.values(cellStyles.offer))}
+		/>
+	);
+}
+
+export function NotTakingCountCell({ value }: { value: number }) {
+	return (
+		<CountCell
+			value={value}
+			className={cn(Object.values(cellStyles.notTaking))}
 		/>
 	);
 }

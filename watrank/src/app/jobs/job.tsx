@@ -12,4 +12,7 @@ export type Job = {
 	oa: number;
 	interview: number[];
 	offer: number;
+	ranking: number,
+	taking: number,
+	notTaking: number
 };

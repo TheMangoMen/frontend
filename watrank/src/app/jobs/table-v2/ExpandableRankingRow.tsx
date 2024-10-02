@@ -6,14 +6,14 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { InterviewRound, OACheck, OfferCheck } from "./expanded-count-cell";
+import { EmployerRanking, InterviewRound, OACheck, OfferCheck, UserRanking } from "./expanded-count-cell";
 import { formatDate, stageCountFn } from "@/utils/utils";
 import { Tags } from "../tags";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { cellStyles } from "./count-cell";
 
-interface ExpandableRowProps<TData> {
+interface ExpandableRankingRowProps<TData> {
 	row: Row<TData>;
 }
 
@@ -71,25 +71,13 @@ function TagBadges({ tags }: { tags: Tags }) {
 // 	"logtime": "2024-09-23T14:45:23.948568Z"
 // }
 
-function parseContribution(contribution: any) {
-	const stageCount = stageCountFn(contribution.stages)
-
-	return {
-		gotOA: stageCount("OA")?.count === 1,
-		interviewRound: stageCount("Interview Stage")?.count,
-		gotOffer: stageCount("Offer Call")?.count === 1,
-		tags: contribution.tags,
-		contributionTime: new Date(contribution.logtime)
-	};
-}
-
-const ExpandableRow = ({ row }: any) => {
+const ExpandableRankingRow = ({ row }: any) => {
 	const { toast } = useToast();
 	const { token, isLoggedIn } = useAuth();
 	const [isExpanded, setIsExpanded] = React.useState(false);
 	const [contributionData, setContributionData] = useState([]);
 
-	const disabled = ["OA", "Interview", "Offer"]
+	const disabled = ["userranking", "employerranking"]
 		.map((s: any) => row.original[s])
 		.every(i => i === 0)
 
@@ -97,7 +85,7 @@ const ExpandableRow = ({ row }: any) => {
 	const fetchExpandedData = async (id: string) => {
 		try {
 			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/jobs/specific/${row.getValue("jid")}`,
+				`${process.env.NEXT_PUBLIC_API_URL}/jobs/specific/ranking/${row.getValue("jid")}`,
 				{
 					method: "GET",
 					headers: {
@@ -150,53 +138,21 @@ const ExpandableRow = ({ row }: any) => {
 				)}
 			</TableRow >
 			{isExpanded && (
-				contributionData.map((contribution: any) => {
-					const { gotOA, interviewRound, gotOffer, tags, contributionTime } = parseContribution(contribution);
+				contributionData.map((contribution: any, index: number) => {
+					const { employerRanking, userRanking } = contribution;
 
 					return <TableRow
-						key={contributionTime.toDateString()}
+						key={index}
 						className="flex bg-secondary hover:bg-secondary"
 					>
-						{row.getVisibleCells().map((cell: any) => {
-							const DefaultCell = ({ children }: { children?: React.ReactNode[] | React.ReactNode }) =>
-								<TableCell
-									key={cell.id}
-									className={`flex items-center grow-0 shrink-0 ${cell.column.columnDef.meta?.className}`}
-								>
-									{children}
-								</TableCell>
-
-							let render;
-							switch (cell.column.id) {
-								case "isOpen":
-									render = <DefaultCell />
-									break;
-								case "OA":
-									render = <DefaultCell>
-										{gotOA && <OACheck />}
-									</DefaultCell>
-									break;
-								case "Interview":
-									render = <DefaultCell>
-										{interviewRound && <InterviewRound round={interviewRound} />}
-									</DefaultCell>
-									break;
-								case "Offer":
-									render = <DefaultCell>
-										{gotOffer && <OfferCheck />}
-									</DefaultCell>
-									break;
-								case "job":
-									render = <DefaultCell>
-										<div className="text-secondary-foreground mr-2">
-											{formatDate(contributionTime)}
-										</div>
-										<TagBadges tags={tags} />
-									</DefaultCell>
-									break;
-							}
-							return render
-						})}
+						
+						<EmployerRanking rank={employerRanking} />
+						<UserRanking rank={userRanking} />
+						
+						
+								
+							
+					
 					</TableRow>
 				}))
 			}
@@ -204,4 +160,4 @@ const ExpandableRow = ({ row }: any) => {
 	);
 };
 
-export default ExpandableRow;
+export default ExpandableRankingRow;
