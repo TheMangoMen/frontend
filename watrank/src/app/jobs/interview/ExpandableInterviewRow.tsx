@@ -6,14 +6,14 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { EmployerRanking, InterviewRound, OACheck, OfferCheck, UserRanking } from "./expanded-count-cell";
+import { InterviewRound, OACheck, OfferCheck } from "../table-shared/expanded-count-cell";
 import { formatDate, stageCountFn } from "@/utils/utils";
-import { Tags } from "../tags";
+import { Tags } from "../table-shared/tags";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { cellStyles } from "./count-cell";
+import { cellStyles } from "../table-shared/count-cell";
 
-interface ExpandableRankingRowProps<TData> {
+interface ExpandableInterviewRowProps<TData> {
 	row: Row<TData>;
 }
 
@@ -71,13 +71,25 @@ function TagBadges({ tags }: { tags: Tags }) {
 // 	"logtime": "2024-09-23T14:45:23.948568Z"
 // }
 
-const ExpandableRankingRow = ({ row }: any) => {
+function parseContribution(contribution: any) {
+	const stageCount = stageCountFn(contribution.stages)
+
+	return {
+		gotOA: stageCount("OA")?.count === 1,
+		interviewRound: stageCount("Interview Stage")?.count,
+		gotOffer: stageCount("Offer Call")?.count === 1,
+		tags: contribution.tags,
+		contributionTime: new Date(contribution.logtime)
+	};
+}
+
+const ExpandableInterviewRow = ({ row }: any) => {
 	const { toast } = useToast();
 	const { token, isLoggedIn } = useAuth();
 	const [isExpanded, setIsExpanded] = React.useState(false);
 	const [contributionData, setContributionData] = useState([]);
 
-	const disabled = ["userranking", "employerranking"]
+	const disabled = ["OA", "Interview", "Offer"]
 		.map((s: any) => row.original[s])
 		.every(i => i === 0)
 
@@ -85,7 +97,7 @@ const ExpandableRankingRow = ({ row }: any) => {
 	const fetchExpandedData = async (id: string) => {
 		try {
 			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/jobs/specific/ranking/${row.getValue("jid")}`,
+				`${process.env.NEXT_PUBLIC_API_URL}/jobs/specific/interview/${row.getValue("jid")}`,
 				{
 					method: "GET",
 					headers: {
@@ -138,21 +150,53 @@ const ExpandableRankingRow = ({ row }: any) => {
 				)}
 			</TableRow >
 			{isExpanded && (
-				contributionData.map((contribution: any, index: number) => {
-					const { employerRanking, userRanking } = contribution;
+				contributionData.map((contribution: any) => {
+					const { gotOA, interviewRound, gotOffer, tags, contributionTime } = parseContribution(contribution);
 
 					return <TableRow
-						key={index}
+						key={contributionTime.toDateString()}
 						className="flex bg-secondary hover:bg-secondary"
 					>
-						
-						<EmployerRanking rank={employerRanking} />
-						<UserRanking rank={userRanking} />
-						
-						
-								
-							
-					
+						{row.getVisibleCells().map((cell: any) => {
+							const DefaultCell = ({ children }: { children?: React.ReactNode[] | React.ReactNode }) =>
+								<TableCell
+									key={cell.id}
+									className={`flex items-center grow-0 shrink-0 ${cell.column.columnDef.meta?.className}`}
+								>
+									{children}
+								</TableCell>
+
+							let render;
+							switch (cell.column.id) {
+								case "isOpen":
+									render = <DefaultCell />
+									break;
+								case "OA":
+									render = <DefaultCell>
+										{gotOA && <OACheck />}
+									</DefaultCell>
+									break;
+								case "Interview":
+									render = <DefaultCell>
+										{interviewRound && <InterviewRound round={interviewRound} />}
+									</DefaultCell>
+									break;
+								case "Offer":
+									render = <DefaultCell>
+										{gotOffer && <OfferCheck />}
+									</DefaultCell>
+									break;
+								case "job":
+									render = <DefaultCell>
+										<div className="text-secondary-foreground mr-2">
+											{formatDate(contributionTime)}
+										</div>
+										<TagBadges tags={tags} />
+									</DefaultCell>
+									break;
+							}
+							return render
+						})}
 					</TableRow>
 				}))
 			}
@@ -160,4 +204,4 @@ const ExpandableRankingRow = ({ row }: any) => {
 	);
 };
 
-export default ExpandableRankingRow;
+export default ExpandableInterviewRow;

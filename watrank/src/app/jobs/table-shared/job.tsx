@@ -1,6 +1,3 @@
-import { Company } from "./company";
-import { Status } from "./status";
-import { Tags } from "./tags";
 export type Job = {
 	archived: boolean;
 	inprogress: boolean;

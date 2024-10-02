@@ -1,12 +1,11 @@
 "use client";
-import { Job } from "./job";
-import { InterviewCountCell, NotTakingCountCell, OACountCell, OfferCountCell } from "./table-v2/count-cell";
-import { ColumnDef } from "@tanstack/react-table";
+import { Job } from "../table-shared/job";
+import { InterviewCountCell, OACountCell, OfferCountCell } from "../table-shared/count-cell";
+import { ColumnDef} from "@tanstack/react-table";
 import * as React from "react";
-import Contribute from "./contribute";
-import JobCell from "./table-v2/job-cell";
-
-export const rankingColumns: ColumnDef<Job>[] = [
+import Contribute from "../table-shared/contribute";
+import JobCell from "../table-shared/job-cell";
+export const interviewColumns: ColumnDef<Job>[] = [
     {
         accessorKey: "isOpen",
         header: "",
@@ -14,25 +13,25 @@ export const rankingColumns: ColumnDef<Job>[] = [
         meta: { className: "w-8 justify-center" }, // Fixed width and no flexing
     },
     {
-        accessorKey: "Ranked",
-        header: "Ranked",
+        accessorKey: "OA",
+        header: "OA",
         enableHiding: false,
-        cell: ({ row, table }) => <OACountCell value={row.getValue("Ranked")} />,
-        meta: { className: "w-24 justify-center" }, // Fixed width and no flexing
+        cell: ({ row, table }) => <OACountCell value={row.getValue("OA")} />,
+        meta: { className: "w-14 justify-center" }, // Fixed width and no flexing
     },
     {
-        accessorKey: "NotTaking",
-        header: "Not Taking",
+        accessorKey: "Interview",
+        header: "Interview",
         enableHiding: false,
-        cell: ({ row, table }) => <NotTakingCountCell value={row.getValue("NotTaking")} />,
-        meta: { className: "w-24 justify-center" },
+        cell: ({ row, table }) => <InterviewCountCell value={row.getValue("Interview")} />,
+        meta: { className: "w-20 justify-center" },
     },
     {
-        accessorKey: "Taking",
-        header: "Taking",
+        accessorKey: "Offer",
+        header: "Offer",
         enableHiding: false,
-        cell: ({ row, table }) => <InterviewCountCell value={row.getValue("Taking")} />,
-        meta: { className: "w-24 justify-center" },
+        cell: ({ row, table }) => <OfferCountCell value={row.getValue("Offer")} />,
+        meta: { className: "w-14 justify-center" },
     },
     {
         accessorKey: "job",

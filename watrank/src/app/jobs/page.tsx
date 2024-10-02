@@ -1,15 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { interviewColumns } from "./interview-columns";
-import { InterviewTable } from "./interview-table";
-import { RankingTable } from "./ranking-table";
+import { interviewColumns } from "./interview/interview-columns";
+import { InterviewTable } from "./interview/interview-table";
+import { RankingTable } from "./ranking/ranking-table";
 import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "../login/components/icons";
 import { useRouter } from "next/navigation";
 import { stageCountFn } from "@/utils/utils";
-import { rankingColumns } from "./ranking-columns";
+import { rankingColumns } from "./ranking/ranking-columns";
 
 function parseJson(json: any) {
     const stageCount = stageCountFn(json.stages);

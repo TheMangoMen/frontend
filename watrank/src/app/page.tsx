@@ -12,8 +12,8 @@ import { ArrowRight, CheckIcon, Heart, XIcon } from "lucide-react";
 import { Footer } from "@/components/footer";
 import { useAuth } from "@/context/AuthContext";
 import { cn } from "@/lib/utils";
-import { InterviewCountCell, OACountCell, OfferCountCell } from "./jobs/table-v2/count-cell";
-import { InterviewRound, OACheck, OfferCheck } from "./jobs/table-v2/expanded-count-cell";
+import { InterviewCountCell, OACountCell, OfferCountCell } from "./jobs/table-shared/count-cell";
+import { InterviewRound, OACheck, OfferCheck } from "./jobs/table-shared/expanded-count-cell";
 import { formatDate } from "@/utils/utils";
 
 const LandingPage = () => {

@@ -17,6 +17,14 @@ import {
 } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
+
+import {
+	DropdownMenu,
+	DropdownMenuCheckboxItem,
+	DropdownMenuContent,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 import {
 	Table,
 	TableBody,
@@ -31,8 +39,8 @@ import { ChevronUp, ChevronDown } from "lucide-react";
 import {
 	AutofillPopupWithoutButton
 } from "@/components/autofill-popup";
-import ExpandableRankingRow from "./table-v2/ExpandableRankingRow";
-import AnimatedTabs from "./table-v2/animatedtabs";
+import ExpandableRow from "./ExpandableInterviewRow";
+import AnimatedTabs from "../table-shared/animatedtabs";
 
 declare module "@tanstack/table-core" {
 	interface TableMeta<TData extends RowData> {
@@ -41,13 +49,34 @@ declare module "@tanstack/table-core" {
 	}
 }
 
-interface RankingTableProps<TData, TValue> {
+interface InterviewTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
 	setData(_: any): void;
 	fetchJobs: any;
 }
 
+interface CommandKeyProps {
+	text: string;
+}
+
+const CommandKey: React.FC<CommandKeyProps> = ({ text }) => {
+	const [commandKey, setCommandKey] = React.useState("");
+
+	React.useEffect(() => {
+		const isMac = navigator.userAgent.includes("Mac");
+		setCommandKey(isMac ? "⌘ " : "Ctrl+");
+	}, []);
+
+	return (
+		<span className="bg-muted p-1 rounded-md shadow-md">
+			<code className="font-mono text-sm">
+				{commandKey}
+				{text}
+			</code>
+		</span>
+	);
+};
 
 function useSkipper() {
 	const shouldSkipRef = React.useRef(true);
@@ -81,12 +110,12 @@ const useMediaQuery = (query: string): boolean => {
 	return matches;
 };
 
-export function RankingTable<TData, TValue>({
+export function InterviewTable<TData, TValue>({
 	columns,
 	data,
 	setData,
 	fetchJobs,
-}: RankingTableProps<TData, TValue>) {
+}: InterviewTableProps<TData, TValue>) {
 	const [columnVisibility, setColumnVisibility] =
 		React.useState<VisibilityState>({});
 
@@ -260,7 +289,7 @@ export function RankingTable<TData, TValue>({
 					<TableBody>
 						{table.getRowModel().rows?.length > 0 ? (
 							table.getRowModel().rows.map((row) => (
-								<ExpandableRankingRow key={row.id} row={row} />
+								<ExpandableRow key={row.id} row={row} />
 							))
 						) : (
 							<TableRow>

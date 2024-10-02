@@ -1,5 +1,3 @@
-import { OpenInNewWindowIcon } from "@radix-ui/react-icons";
-import { Company } from "../company";
 import React from 'react';
 import { ExternalLink } from "lucide-react";
 

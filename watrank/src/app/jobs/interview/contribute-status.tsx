@@ -1,6 +1,6 @@
 "use client";
 
-import { Job } from "./job";
+import { Job } from "../table-shared/job";
 import { DollarSign, EditIcon, Trash, Trash2, Trash2Icon, TrashIcon } from "lucide-react";
 import {
     Dialog,
