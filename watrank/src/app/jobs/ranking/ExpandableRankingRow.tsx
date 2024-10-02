@@ -109,7 +109,7 @@ const ExpandableRankingRow = ({ row }: any) => {
 										<EmployerRanking rank={employerranking} />
 									</DefaultCell>
 									break;
-								case "Not Taking":
+								case "NotTaking":
 									render = <DefaultCell>
 										<UserRanking rank={userranking} />
 									</DefaultCell>
