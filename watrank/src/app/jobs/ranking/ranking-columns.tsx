@@ -18,7 +18,7 @@ export const rankingColumns: ColumnDef<Job>[] = [
         header: "Ranked",
         enableHiding: false,
         cell: ({ row, table }) => <OACountCell value={row.getValue("Ranked")} />,
-        meta: { className: "w-24 justify-center" }, // Fixed width and no flexing
+        meta: { className: "w-16 justify-center" }, // Fixed width and no flexing
     },
     {
         accessorKey: "NotTaking",
@@ -32,7 +32,7 @@ export const rankingColumns: ColumnDef<Job>[] = [
         header: "Taking",
         enableHiding: false,
         cell: ({ row, table }) => <InterviewCountCell value={row.getValue("Taking")} />,
-        meta: { className: "w-24 justify-center" },
+        meta: { className: "w-16 justify-center" },
     },
     {
         accessorKey: "job",

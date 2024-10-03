@@ -1,6 +1,6 @@
 import React from "react";
 import { Row, flexRender } from "@tanstack/react-table";
-import {ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/context/AuthContext";
@@ -14,6 +14,11 @@ import { cellStyles } from "../table-shared/count-cell";
 
 interface ExpandableRankingRowProps<TData> {
 	row: Row<TData>;
+}
+
+interface Contribution {
+	userranking: number,
+	employerranking: "Ranked" | "Offer"
 }
 
 const ExpandableRankingRow = ({ row }: any) => {
@@ -42,7 +47,20 @@ const ExpandableRankingRow = ({ row }: any) => {
 			if (response.ok) {
 				const data = await response.json();
 
-				setContributionData(data)
+				const sortedData = data.sort((a: Contribution, b: Contribution) => {
+					const employerRankingToNum = {
+						"Ranked": 1,
+						"Offer": 0
+					}
+
+					const employerDiff = employerRankingToNum[a.employerranking] - employerRankingToNum[b.employerranking]
+					if (employerDiff !== 0) {
+						return employerDiff;
+					}
+
+					return a.userranking - b.userranking;
+				});
+				setContributionData(sortedData)
 				console.log("contributt", data);
 			} else {
 				toast({ variant: "destructive", title: "Failed to fetch data." });
@@ -83,7 +101,41 @@ const ExpandableRankingRow = ({ row }: any) => {
 				)}
 			</TableRow >
 			{isExpanded && (
-				contributionData.map((contribution: any, index : number) => {
+				<TableRow
+					className="flex bg-secondary/80 hover:bg-secondary/80 border-b-muted-foreground/20"
+				>
+					{row.getVisibleCells().map((cell: any) => {
+						const DefaultCell = ({ children }: { children?: React.ReactNode[] | React.ReactNode }) =>
+							<TableCell
+								key={cell.id}
+								className={`flex items-center grow-0 shrink-0 font-bold ${cell.column.columnDef.meta?.className}`}
+							>
+								{children}
+							</TableCell>
+
+						let render;
+						switch (cell.column.id) {
+							case "isOpen":
+								render = <DefaultCell />
+								break;
+							case "Ranked":
+								render = <DefaultCell>
+									{"Employer"}
+								</DefaultCell>
+								break;
+							case "NotTaking":
+								render = <DefaultCell>
+									{"User"}
+								</DefaultCell>
+								break;
+						}
+						return render
+					})}
+				</TableRow>
+			)}
+
+			{isExpanded && (
+				contributionData.map((contribution: Contribution, index: number) => {
 					const { employerranking, userranking } = contribution;
 
 					return <TableRow
