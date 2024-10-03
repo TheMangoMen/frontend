@@ -53,12 +53,14 @@ const ExpandableRankingRow = ({ row }: any) => {
 						"Offer": 0
 					}
 
+					const userrRankingToNum = (x: number) => x === -1 ? 99 : x
+
 					const employerDiff = employerRankingToNum[a.employerranking] - employerRankingToNum[b.employerranking]
 					if (employerDiff !== 0) {
 						return employerDiff;
 					}
 
-					return a.userranking - b.userranking;
+					return userrRankingToNum(a.userranking) - userrRankingToNum(b.userranking);
 				});
 				setContributionData(sortedData)
 				console.log("contributt", data);
