@@ -19,7 +19,7 @@ export function Header() {
                 <Logo />
             </div>
             <div className="flex gap-2 items-center">
-                <div className="hidden md:block justify-end"><ModeToggle /></div>
+                <div className="justify-end"><ModeToggle /></div>
                 <AutofillPopup />
             </div>
         </div>
