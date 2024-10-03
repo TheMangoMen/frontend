@@ -92,6 +92,10 @@ const config = {
         stats: [
           "20px 10px 50px 6px #C421FF60",
           "-20px 10px 50px 6px #FACC1490"
+        ],
+        banner: [
+          "-20px 0px 40px 0px #208cfb60",
+          "20px 0px 40px 0px #e129a490"
         ]
       },
       dropShadow: {
