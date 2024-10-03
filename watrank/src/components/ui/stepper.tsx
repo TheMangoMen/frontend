@@ -1,6 +1,6 @@
 import React from "react";
 import { Bot, ContactRoundIcon, DollarSign, Minus, ListOrdered, Ban, Trophy, LucideProps } from "lucide-react"; // Import specific icons
-import { Status } from "@/app/jobs/status";
+import { Status } from "@/app/jobs/table-shared/status";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
 
 interface StepperProps {

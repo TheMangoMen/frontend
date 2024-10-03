@@ -1,95 +1,33 @@
 import React from "react";
 import { Row, flexRender } from "@tanstack/react-table";
-import { CheckIcon, ChevronDown, ChevronRight, XIcon } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/context/AuthContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { InterviewRound, OACheck, OfferCheck } from "./expanded-count-cell";
-import { formatDate, stageCountFn } from "@/utils/utils";
-import { Tags } from "../tags";
+import { EmployerRanking, UserRanking } from "../table-shared/expanded-count-cell";
+import { Tags } from "../table-shared/tags";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { cellStyles } from "./count-cell";
+import { cellStyles } from "../table-shared/count-cell";
 
-interface ExpandableRowProps<TData> {
+interface ExpandableRankingRowProps<TData> {
 	row: Row<TData>;
 }
 
-//call contributions, dipslay horizontal flex-box of badges
-function TagBadges({ tags }: { tags: Tags }) {
-	if (!tags) {
-		return null;
-	}
-	//to-do: systemic enum changes to not have "somewhat interview"s
-	let tech = tags.interviewtechnical;
-	if (tags.interviewtechnical == "Somewhat") {
-		tech = "Mixed";
-	}
-
-	return (
-		<div className="flex flex-wrap flex-row gap-2">
-			{tags.oadifficulty &&
-				<Badge className={cn(Object.values(cellStyles.OA))}>
-					{`${tags.oadifficulty} OA`}
-				</Badge>}
-			{tags.interviewvibe &&
-				<Badge className={cn(Object.values(cellStyles.interview))}>
-					{`${tags.interviewvibe} Vibes`}
-				</Badge>}
-			{tags.interviewtechnical &&
-				<Badge className={cn(Object.values(cellStyles.interview))}>
-					{`${tech} Interview`}</Badge>
-			}
-		</div>
-	);
+interface Contribution {
+	userranking: number,
+	employerranking: "Ranked" | "Offer"
 }
 
-// {
-// 	"stages": [
-// 		{
-// 			"name": "OA",
-// 			"count": 0
-// 		},
-// 		{
-// 			"name": "Interview Stage",
-// 			"count": 1
-// 		},
-// 		{
-// 			"name": "Offer Call",
-// 			"count": 0
-// 		}
-// 	],
-// 		"tags": {
-// 		"oadifficulty": "",
-// 			"oalength": "",
-// 				"interviewvibe": "",
-// 					"interviewtechnical": "",
-// 						"compensation": 0
-// 	},
-// 	"logtime": "2024-09-23T14:45:23.948568Z"
-// }
-
-function parseContribution(contribution: any) {
-	const stageCount = stageCountFn(contribution.stages)
-
-	return {
-		gotOA: stageCount("OA")?.count === 1,
-		interviewRound: stageCount("Interview Stage")?.count,
-		gotOffer: stageCount("Offer Call")?.count === 1,
-		tags: contribution.tags,
-		contributionTime: new Date(contribution.logtime)
-	};
-}
-
-const ExpandableRow = ({ row }: any) => {
+const ExpandableRankingRow = ({ row }: any) => {
 	const { toast } = useToast();
 	const { token, isLoggedIn } = useAuth();
 	const [isExpanded, setIsExpanded] = React.useState(false);
 	const [contributionData, setContributionData] = useState([]);
 
-	const disabled = ["OA", "Interview", "Offer"]
+	const disabled = ["Ranked", "Taking", "NotTaking"]
 		.map((s: any) => row.original[s])
 		.every(i => i === 0)
 
@@ -97,7 +35,7 @@ const ExpandableRow = ({ row }: any) => {
 	const fetchExpandedData = async (id: string) => {
 		try {
 			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/jobs/specific/${row.getValue("jid")}`,
+				`${process.env.NEXT_PUBLIC_API_URL}/jobs/specific/ranking/${row.getValue("jid")}`,
 				{
 					method: "GET",
 					headers: {
@@ -109,7 +47,20 @@ const ExpandableRow = ({ row }: any) => {
 			if (response.ok) {
 				const data = await response.json();
 
-				setContributionData(data)
+				const sortedData = data.sort((a: Contribution, b: Contribution) => {
+					const employerRankingToNum = {
+						"Ranked": 1,
+						"Offer": 0
+					}
+
+					const employerDiff = employerRankingToNum[a.employerranking] - employerRankingToNum[b.employerranking]
+					if (employerDiff !== 0) {
+						return employerDiff;
+					}
+
+					return a.userranking - b.userranking;
+				});
+				setContributionData(sortedData)
 				console.log("contributt", data);
 			} else {
 				toast({ variant: "destructive", title: "Failed to fetch data." });
@@ -150,11 +101,45 @@ const ExpandableRow = ({ row }: any) => {
 				)}
 			</TableRow >
 			{isExpanded && (
-				contributionData.map((contribution: any) => {
-					const { gotOA, interviewRound, gotOffer, tags, contributionTime } = parseContribution(contribution);
+				<TableRow
+					className="flex bg-secondary/80 hover:bg-secondary/80 border-b-muted-foreground/20"
+				>
+					{row.getVisibleCells().map((cell: any) => {
+						const DefaultCell = ({ children }: { children?: React.ReactNode[] | React.ReactNode }) =>
+							<TableCell
+								key={cell.id}
+								className={`flex items-center grow-0 shrink-0 font-bold ${cell.column.columnDef.meta?.className}`}
+							>
+								{children}
+							</TableCell>
+
+						let render;
+						switch (cell.column.id) {
+							case "isOpen":
+								render = <DefaultCell />
+								break;
+							case "Ranked":
+								render = <DefaultCell>
+									{"Employer"}
+								</DefaultCell>
+								break;
+							case "NotTaking":
+								render = <DefaultCell>
+									{"User"}
+								</DefaultCell>
+								break;
+						}
+						return render
+					})}
+				</TableRow>
+			)}
+
+			{isExpanded && (
+				contributionData.map((contribution: Contribution, index: number) => {
+					const { employerranking, userranking } = contribution;
 
 					return <TableRow
-						key={contributionTime.toDateString()}
+						key={index}
 						className="flex bg-secondary hover:bg-secondary"
 					>
 						{row.getVisibleCells().map((cell: any) => {
@@ -171,27 +156,14 @@ const ExpandableRow = ({ row }: any) => {
 								case "isOpen":
 									render = <DefaultCell />
 									break;
-								case "OA":
+								case "Ranked":
 									render = <DefaultCell>
-										{gotOA && <OACheck />}
+										<EmployerRanking rank={employerranking} />
 									</DefaultCell>
 									break;
-								case "Interview":
+								case "NotTaking":
 									render = <DefaultCell>
-										{interviewRound && <InterviewRound round={interviewRound} />}
-									</DefaultCell>
-									break;
-								case "Offer":
-									render = <DefaultCell>
-										{gotOffer && <OfferCheck />}
-									</DefaultCell>
-									break;
-								case "job":
-									render = <DefaultCell>
-										<div className="text-secondary-foreground mr-2">
-											{formatDate(contributionTime)}
-										</div>
-										<TagBadges tags={tags} />
+										<UserRanking rank={userranking} />
 									</DefaultCell>
 									break;
 							}
@@ -204,4 +176,4 @@ const ExpandableRow = ({ row }: any) => {
 	);
 };
 
-export default ExpandableRow;
+export default ExpandableRankingRow;

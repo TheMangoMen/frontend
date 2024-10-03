@@ -1,75 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { columns } from "./columns";
-import { JobTable } from "./job-table";
-import { AuthProvider, useAuth } from "@/context/AuthContext";
+import { interviewColumns } from "./interview/interview-columns";
+import { InterviewTable } from "./interview/interview-table";
+import { RankingTable } from "./ranking/ranking-table";
+import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "../login/components/icons";
 import { useRouter } from "next/navigation";
-import SortableTable from "./table-v2/sample";
 import { stageCountFn } from "@/utils/utils";
-
-interface CommandKeyProps {
-    text: string;
-}
-
-const CommandKey: React.FC<CommandKeyProps> = ({ text }) => {
-    const [commandKey, setCommandKey] = useState("");
-
-    useEffect(() => {
-        const isMac = navigator.userAgent.includes("Mac");
-        setCommandKey(isMac ? "⌘ " : "Ctrl+");
-    }, []);
-
-    return (
-        <span className="bg-muted p-1 rounded-md shadow-md">
-            <code className="font-mono text-sm">
-                {commandKey}
-                {text}
-            </code>
-        </span>
-    );
-};
-
-// {
-//     "archived": false,
-//     "jid": 382693,
-//     "title": "Analytics Engineering",
-//     "company": "Faire",
-//     "location": "Waterloo",
-//     "openings": 1,
-//     "stages": [
-//         {
-//             "name": "OA",
-//             "count": 0
-//         },
-//         {
-//             "name": "Interview 1",
-//             "count": 1
-//         },
-//         {
-//             "name": "Interview 2",
-//             "count": 0
-//         },
-//         {
-//             "name": "Interview 3",
-//             "count": 0
-//         },
-//         {
-//             "name": "Offer Call",
-//             "count": 0
-//         }
-//     ],
-//     "tags": {
-//         "oadifficulty": "",
-//         "oalength": "",
-//         "interviewvibe": "",
-//         "interviewtechnical": "",
-//         "compensation": 0
-//     },
-//     "inprogress": true
-// }
+import { rankingColumns } from "./ranking/ranking-columns";
 
 function parseJson(json: any) {
     const stageCount = stageCountFn(json.stages);
@@ -79,22 +19,25 @@ function parseJson(json: any) {
         OA: stageCount("OA")?.count,
         Interview: stageCount("Interview 1")?.count,
         Offer: stageCount("Offer Call")?.count,
+        Ranked: stageCount("Ranked")?.count,
+        Taking: stageCount("Taking")?.count,
+        NotTaking: stageCount("Not Taking")?.count
     };
 }
-
 
 export default function JobPage() {
     const { token, logout, authIsLoading } = useAuth();
     const { toast } = useToast();
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [showRankingTable, setShowRankingTable] = useState(false);
     const router = useRouter();
 
-    const showErrorToast = () =>
+    const showErrorToast = (message: string) =>
         toast({
             variant: "destructive",
-            title: "An error occured fetching jobs",
-            description: "Please try again later.",
+            title: "An error occurred",
+            description: message,
         });
 
     const showTokenExpiredToast = () =>
@@ -104,42 +47,51 @@ export default function JobPage() {
             description: "Please login again.",
         });
 
-    const fetchJobs = async () => {
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/jobs`;
+    const fetchStageAndJobs = async () => {
+        setIsLoading(true);
         try {
-            const response = await fetch(url, {
-                method: "GET",
-                headers: { ...(!!token && { Authorization: `Bearer ${token}` }) },
-            });
-            if (!response.ok) {
-                if (response.status === 401 || response.status === 403) {
+            const [stageResponse, jobsResponse] = await Promise.all([
+                fetch(`${process.env.NEXT_PUBLIC_API_URL}/stage`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                }),
+                fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs`, {
+                    method: "GET",
+                    headers: { Authorization: `Bearer ${token}` },
+                })
+            ]);
 
+            if (!stageResponse.ok || !jobsResponse.ok) {
+                if (stageResponse.status === 401 || jobsResponse.status === 401 ||
+                    stageResponse.status === 403 || jobsResponse.status === 403) {
                     logout();
                     showTokenExpiredToast();
-                    router.replace('/login')
-                } else {
-                    showErrorToast();
+                    router.replace('/login');
+                    return;
                 }
-            } else {
-                const json = await response.json();
-                const data = json.map(parseJson);
-                setData(data);
-                console.log("stuff", data);
-                setIsLoading(false);
+                throw new Error("Failed to fetch data");
             }
 
+            const [stageValue, jobsJson] = await Promise.all([
+                stageResponse.json(),
+                jobsResponse.json()
+            ]);
+            console.log(stageValue === true)
+            setShowRankingTable(stageValue);
+            const parsedData = jobsJson.map(parseJson);
+            setData(parsedData);
         } catch (error) {
-            console.error(error);
-            showErrorToast();
+            console.error("Error:", error);
+            showErrorToast(error instanceof Error ? error.message : "An unexpected error occurred");
+        } finally {
+            setIsLoading(false);
         }
     };
 
-
     useEffect(() => {
-        if (!authIsLoading) {
-            fetchJobs();
+        if (!authIsLoading && token) {
+            fetchStageAndJobs();
         }
-    }, [authIsLoading]);
+    }, [authIsLoading, token, showRankingTable]);
 
     if (isLoading) {
         return (
@@ -148,11 +100,22 @@ export default function JobPage() {
     }
 
     return (
-        <JobTable
-            columns={columns}
-            data={data}
-            setData={setData}
-            fetchJobs={fetchJobs}
-        />
+        <>
+            {showRankingTable ? (
+                <RankingTable
+                    columns={rankingColumns}
+                    data={data}
+                    setData={setData}
+                    fetchJobs={fetchStageAndJobs}
+                />
+            ) : (
+                <InterviewTable
+                    columns={interviewColumns}
+                    data={data}
+                    setData={setData}
+                    fetchJobs={fetchStageAndJobs}
+                />
+            )}
+        </>
     );
 }

@@ -1,8 +1,8 @@
 import { Job } from "./job";
 import { Row } from "@tanstack/react-table";
 import { useGlobal } from "@/context/StageContext";
-import ContributeStatus from "./contribute-status";
-import ContributeRanking from "./contribute-ranking";
+import ContributeStatus from "../interview/contribute-status";
+import ContributeRanking from "../ranking/contribute-ranking";
 
 export default function Contribute({ row, refresh }: { row: Row<Job>, refresh: any }) {
     const { isRankingStage } = useGlobal();

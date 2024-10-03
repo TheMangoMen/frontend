@@ -1,6 +1,3 @@
-import { Company } from "./company";
-import { Status } from "./status";
-import { Tags } from "./tags";
 export type Job = {
 	archived: boolean;
 	inprogress: boolean;
@@ -12,4 +9,7 @@ export type Job = {
 	oa: number;
 	interview: number[];
 	offer: number;
+	ranking: number,
+	taking: number,
+	notTaking: number
 };
