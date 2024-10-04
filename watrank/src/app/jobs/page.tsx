@@ -10,6 +10,7 @@ import { Icons } from "../login/components/icons";
 import { useRouter } from "next/navigation";
 import { stageCountFn } from "@/utils/utils";
 import { rankingColumns } from "./ranking/ranking-columns";
+import Banner from "@/components/banner";
 
 function parseJson(json: any) {
     const stageCount = stageCountFn(json.stages);
@@ -100,22 +101,25 @@ export default function JobPage() {
     }
 
     return (
-        <>
-            {showRankingTable ? (
-                <RankingTable
-                    columns={rankingColumns}
-                    data={data}
-                    setData={setData}
-                    fetchJobs={fetchStageAndJobs}
-                />
-            ) : (
-                <InterviewTable
-                    columns={interviewColumns}
-                    data={data}
-                    setData={setData}
-                    fetchJobs={fetchStageAndJobs}
-                />
-            )}
-        </>
+        <div className="w-full h-full flex items-center justify-center">
+            <Banner />
+        </div>
+        // <>
+        //     {showRankingTable ? (
+        //         <RankingTable
+        //             columns={rankingColumns}
+        //             data={data}
+        //             setData={setData}
+        //             fetchJobs={fetchStageAndJobs}
+        //         />
+        //     ) : (
+        //         <InterviewTable
+        //             columns={interviewColumns}
+        //             data={data}
+        //             setData={setData}
+        //             fetchJobs={fetchStageAndJobs}
+        //         />
+        //     )}
+        // </>
     );
 }
