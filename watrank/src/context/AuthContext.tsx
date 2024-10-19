@@ -41,7 +41,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
 
     const login = (token: string) => {
-        Cookies.set('token', token);
+        Cookies.set('token', token, {
+            expires: 30,
+          });
         setToken(token);
         toast({ title: "Log in successful!", });
     };
