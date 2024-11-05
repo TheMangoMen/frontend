@@ -101,25 +101,8 @@ export default function JobPage() {
     }
 
     return (
-        // <div className="w-full h-full flex items-center justify-center">
-        //     <Banner />
-        // </div>
-        <>
-            {showRankingTable ? (
-                <RankingTable
-                    columns={rankingColumns}
-                    data={data}
-                    setData={setData}
-                    fetchJobs={fetchStageAndJobs}
-                />
-            ) : (
-                <InterviewTable
-                    columns={interviewColumns}
-                    data={data}
-                    setData={setData}
-                    fetchJobs={fetchStageAndJobs}
-                />
-            )}
-        </>
+        <div className="w-full h-full flex items-center justify-center">
+            <Banner />
+        </div>
     );
 }
