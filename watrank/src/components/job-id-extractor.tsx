@@ -47,7 +47,7 @@ const JobIDExtractor: React.FC = () => {
 
     // Function to extract Job IDs from the provided text
     const extractJobIDs = (text: string) => {
-        const jobIDRegex = /view\s+\d{4}\s+-\s+Winter\s+(\d{6})/g; // TODO: remove this from frontend
+        const jobIDRegex = /view\s+\d{4}\s+-\s+Spring\s+(\d{6})/g; // TODO: remove this from frontend
         let match: RegExpExecArray | null;
         const extractedJobIDs: number[] = [];
         while ((match = jobIDRegex.exec(text)) !== null) {
