@@ -10,6 +10,7 @@ import {
 } from "@/animations/landing";
 import { ArrowRight, CheckIcon, Heart, XIcon } from "lucide-react";
 import { Footer } from "@/components/footer";
+import { FAQ } from "@/components/faq";
 import { useAuth } from "@/context/AuthContext";
 import { cn } from "@/lib/utils";
 import {
@@ -241,42 +242,8 @@ const LandingPage = () => {
                         Let others know if you&apos;re taking a job.
                     </p>
                 </div>
-
-                <div className="p-4 lg:p-10 border-med-grey lg:border-r border-b">
-                    <div className="h-[276px] w-[276px] bg-secondary rounded-lg mx-auto relative border border-med-grey shadow-xl flex items-center justify-center">
-                        <Heart
-                            ref={heartSVGRef}
-                            className="stroke-red-500 drop-shadow-[0_0_3px_red] w-28 h-28"
-                        />
-                    </div>
-                    <h2 className="text-3xl font-bold text-center pb-1 mt-8">
-                        Contribute
-                    </h2>
-                    <p className="text-lg lg:text-xl text-secondary-foreground text-center">
-                        To the success of your peers.
-                    </p>
-                </div>
-
-                <div className="p-4 lg:p-10 border-med-grey border-b">
-                    <div
-                        id="analytics-graph"
-                        ref={analyticsRef}
-                        className="max-w-lg h-[276px] mx-auto rounded-lg border border-med-grey shadow-xl bg-secondary"
-                    >
-                        <div className="flex justify-around h-full p-6">
-                            <div className="w-10 h-5/6 bg-[#ffd942] self-end"></div>
-                            <div className="w-10 h-1/2 bg-[#aeff90] self-end"></div>
-                            <div className="w-10 h-1/6 bg-[#7cc8ff] self-end"></div>
-                        </div>
-                    </div>
-                    <h2 className="text-3xl font-bold text-center pb-1 mt-8">
-                        Analytics
-                    </h2>
-                    <p className="text-lg lg:text-xl text-secondary-foreground text-center">
-                        See how you&apos;ve grown!
-                    </p>
-                </div>
             </div>
+            <FAQ />
             <Footer />
         </>
     );
