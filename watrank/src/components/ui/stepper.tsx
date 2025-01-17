@@ -1,7 +1,21 @@
 import React from "react";
-import { Bot, ContactRoundIcon, DollarSign, Minus, ListOrdered, Ban, Trophy, LucideProps } from "lucide-react"; // Import specific icons
+import {
+    Bot,
+    ContactRoundIcon,
+    DollarSign,
+    Minus,
+    ListOrdered,
+    Ban,
+    Trophy,
+    LucideProps,
+} from "lucide-react"; // Import specific icons
 import { Status } from "@/app/jobs/table-shared/status";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "./tooltip";
 
 interface StepperProps {
     steps: Status[];
@@ -9,9 +23,11 @@ interface StepperProps {
 
 const Stepper: React.FC<StepperProps> = ({ steps }) => {
     if (steps === null || steps.length === 0) {
-        return <></>
+        return <></>;
     }
-    const isRankingStage = ["Ranked", "Taking", "Not Taking"].includes(steps[0].name);
+    const isRankingStage = ["Ranked", "Taking", "Not Taking"].includes(
+        steps[0].name
+    );
     const currentStep = !isRankingStage ? steps.length - 1 : -1; // Always set to the last step, dont set any for ranking stage
 
     // Define fixed icons for the first and last steps
@@ -25,25 +41,32 @@ const Stepper: React.FC<StepperProps> = ({ steps }) => {
     const notTakingIcon = Ban;
     const rankedIcon = ListOrdered;
 
-    const iconMap: Record<string, React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>> = {
-        "OA": preAssessmentIcon,
+    const iconMap: Record<
+        string,
+        React.ForwardRefExoticComponent<
+            Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
+        >
+    > = {
+        OA: preAssessmentIcon,
         "Offer Call": offerCallIcon,
-        "Interview": interviewIcon,
-        "Ranked": rankedIcon,
-        "Taking": takingIcon,
+        Interview: interviewIcon,
+        Ranked: rankedIcon,
+        Taking: takingIcon,
         "Not Taking": notTakingIcon,
-    }
+    };
 
     return (
         <div>
             <div className="flex">
                 {steps?.map((step, index) => {
-                    let IconComponent: React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
+                    let IconComponent: React.ForwardRefExoticComponent<
+                        Omit<LucideProps, "ref"> &
+                            React.RefAttributes<SVGSVGElement>
+                    >;
                     if (step.name in iconMap) {
-                        IconComponent = iconMap[step.name]
-                    }
-                    else {
-                        IconComponent = iconMap["Interview"]
+                        IconComponent = iconMap[step.name];
+                    } else {
+                        IconComponent = iconMap["Interview"];
                     }
 
                     return (
@@ -58,10 +81,16 @@ const Stepper: React.FC<StepperProps> = ({ steps }) => {
                                                 </div>
                                             )}
                                             <div
-                                                className={`flex items-center justify-center w-8 h-8 rounded-full ${index === currentStep ? "bg-primary/80 " : "bg-transparent outline outline-primary/80"
-                                                    } ${index != currentStep ? "opacity-75" : ""}`}
+                                                className={`flex items-center justify-center w-8 h-8 rounded-full ${
+                                                    index === currentStep
+                                                        ? "bg-primary/80 "
+                                                        : "bg-transparent outline outline-primary/80"
+                                                } ${index != currentStep ? "opacity-75" : ""}`}
                                             >
-                                                <IconComponent className={`w-4 h-4 ${index === currentStep ? "text-black" : ""}`} strokeWidth={2} />{" "}
+                                                <IconComponent
+                                                    className={`w-4 h-4 ${index === currentStep ? "text-black" : ""}`}
+                                                    strokeWidth={2}
+                                                />{" "}
                                             </div>
                                             {index < steps.length - 1 && (
                                                 <div className="flex-auto">
@@ -69,10 +98,18 @@ const Stepper: React.FC<StepperProps> = ({ steps }) => {
                                                 </div>
                                             )}
                                         </div>
-                                        {["Ranked", "Taking", "Not Taking"].includes(step.name) && <p>{step.count}</p>}
+                                        {[
+                                            "Ranked",
+                                            "Taking",
+                                            "Not Taking",
+                                        ].includes(step.name) && (
+                                            <p>{step.count}</p>
+                                        )}
                                     </TooltipTrigger>
                                     <TooltipContent>
-                                        <div className="text-sm">{step.name}: {step.count}</div>
+                                        <div className="text-sm">
+                                            {step.name}: {step.count}
+                                        </div>
                                     </TooltipContent>
                                 </Tooltip>
                             </TooltipProvider>

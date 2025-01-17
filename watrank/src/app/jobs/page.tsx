@@ -22,7 +22,7 @@ function parseJson(json: any) {
         Offer: stageCount("Offer Call")?.count,
         Ranked: stageCount("Ranked")?.count,
         Taking: stageCount("Taking")?.count,
-        NotTaking: stageCount("Not Taking")?.count
+        NotTaking: stageCount("Not Taking")?.count,
     };
 }
 
@@ -58,15 +58,19 @@ export default function JobPage() {
                 fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs`, {
                     method: "GET",
                     headers: { Authorization: `Bearer ${token}` },
-                })
+                }),
             ]);
 
             if (!stageResponse.ok || !jobsResponse.ok) {
-                if (stageResponse.status === 401 || jobsResponse.status === 401 ||
-                    stageResponse.status === 403 || jobsResponse.status === 403) {
+                if (
+                    stageResponse.status === 401 ||
+                    jobsResponse.status === 401 ||
+                    stageResponse.status === 403 ||
+                    jobsResponse.status === 403
+                ) {
                     logout();
                     showTokenExpiredToast();
-                    router.replace('/login');
+                    router.replace("/login");
                     return;
                 }
                 throw new Error("Failed to fetch data");
@@ -74,15 +78,19 @@ export default function JobPage() {
 
             const [stageValue, jobsJson] = await Promise.all([
                 stageResponse.json(),
-                jobsResponse.json()
+                jobsResponse.json(),
             ]);
-            console.log(stageValue === true)
+            console.log(stageValue === true);
             setShowRankingTable(stageValue);
             const parsedData = jobsJson.map(parseJson);
             setData(parsedData);
         } catch (error) {
             console.error("Error:", error);
-            showErrorToast(error instanceof Error ? error.message : "An unexpected error occurred");
+            showErrorToast(
+                error instanceof Error
+                    ? error.message
+                    : "An unexpected error occurred"
+            );
         } finally {
             setIsLoading(false);
         }
@@ -101,22 +109,22 @@ export default function JobPage() {
     }
 
     return (
-         <>
-             {showRankingTable ? (
-                 <RankingTable
-                     columns={rankingColumns}
-                     data={data}
-                     setData={setData}
-                     fetchJobs={fetchStageAndJobs}
-                 />
-             ) : (
-                 <InterviewTable
-                     columns={interviewColumns}
-                     data={data}
-                     setData={setData}
-                     fetchJobs={fetchStageAndJobs}
-                 />
-             )}
-         </>
+        <>
+            {showRankingTable ? (
+                <RankingTable
+                    columns={rankingColumns}
+                    data={data}
+                    setData={setData}
+                    fetchJobs={fetchStageAndJobs}
+                />
+            ) : (
+                <InterviewTable
+                    columns={interviewColumns}
+                    data={data}
+                    setData={setData}
+                    fetchJobs={fetchStageAndJobs}
+                />
+            )}
+        </>
     );
 }

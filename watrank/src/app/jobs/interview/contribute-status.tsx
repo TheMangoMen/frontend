@@ -1,7 +1,14 @@
 "use client";
 
 import { Job } from "../table-shared/job";
-import { DollarSign, EditIcon, Trash, Trash2, Trash2Icon, TrashIcon } from "lucide-react";
+import {
+    DollarSign,
+    EditIcon,
+    Trash,
+    Trash2,
+    Trash2Icon,
+    TrashIcon,
+} from "lucide-react";
 import {
     Dialog,
     DialogContent,
@@ -61,7 +68,13 @@ const formSchema = z.object({
     compensation: z.number().min(0).max(200).optional(),
 });
 
-export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refresh: any}) {
+export default function ContributeStatus({
+    row,
+    refresh,
+}: {
+    row: Row<Job>;
+    refresh: any;
+}) {
     const { token, isLoggedIn } = useAuth();
     const { toast } = useToast();
     const [open, setOpen] = React.useState(false);
@@ -91,13 +104,16 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
 
                 // Prepopulate the form fields
                 const formData: any = {
-                    interviewcount: data.interviewcount == 0 ? 1 : data.interviewcount,
+                    interviewcount:
+                        data.interviewcount == 0 ? 1 : data.interviewcount,
                     compensation: data.compensation,
                 };
 
-                if (data.oadifficulty) formData.oadifficulty = data.oadifficulty;
+                if (data.oadifficulty)
+                    formData.oadifficulty = data.oadifficulty;
                 if (data.oalength) formData.oalength = data.oalength;
-                if (data.interviewvibe) formData.interviewvibe = data.interviewvibe;
+                if (data.interviewvibe)
+                    formData.interviewvibe = data.interviewvibe;
                 if (data.interviewtechnical)
                     formData.interviewtechnical = data.interviewtechnical;
 
@@ -110,7 +126,10 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
                 if (data.offercall) accordionsToOpen.push("OfferCall");
                 setStatus(accordionsToOpen);
             } else {
-                toast({ variant: "destructive", title: "Failed to fetch data." });
+                toast({
+                    variant: "destructive",
+                    title: "Failed to fetch data.",
+                });
             }
         } catch (error) {
             console.error(error);
@@ -150,7 +169,7 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
         return statusPresence;
     };
 
-    async function updateContribution(data : any, message : string){
+    async function updateContribution(data: any, message: string) {
         try {
             const response = await fetch(
                 `${process.env.NEXT_PUBLIC_API_URL}/contribution`,
@@ -173,7 +192,7 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
         } catch (error) {
             console.error(error);
             showErrorToast();
-        } 
+        }
     }
 
     async function onDelete() {
@@ -192,9 +211,7 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
         console.log("deleting");
         console.log(data);
         await updateContribution(data, "Your contribution has been deleted!");
-        
     }
-
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         const parsedStatus = parseStatus(status);
@@ -213,7 +230,7 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
         };
         console.log("submitting");
         console.log(data);
-        await updateContribution(data, "Thank you for your contribution!")
+        await updateContribution(data, "Thank you for your contribution!");
     }
 
     return (
@@ -222,7 +239,9 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
                 <Tooltip>
                     <TooltipContent>
                         <p>
-                            {isLoggedIn() ? "Contribute your status" : "Log in to contribute"}
+                            {isLoggedIn()
+                                ? "Contribute your status"
+                                : "Log in to contribute"}
                         </p>
                     </TooltipContent>
                     <TooltipTrigger>
@@ -247,7 +266,10 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
                     </DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <form
+                        onSubmit={form.handleSubmit(onSubmit)}
+                        className="space-y-8"
+                    >
                         <Accordion
                             type="multiple"
                             className="w-full"
@@ -255,7 +277,9 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
                             onValueChange={(value) => setStatus(value)}
                         >
                             <AccordionItem value="OA">
-                                <AccordionTrigger className="font-bold">OA</AccordionTrigger>
+                                <AccordionTrigger className="font-bold">
+                                    OA
+                                </AccordionTrigger>
                                 <AccordionContent className="px-4">
                                     <div className="grid sm:grid-cols-2 bg-muted/70 p-4 rounded-md space-y-4 sm:space-y-0">
                                         <FormField
@@ -263,20 +287,34 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
                                             name="oadifficulty"
                                             render={({ field }) => (
                                                 <FormItem className="space-y-3">
-                                                    <FormLabel>Difficulty (optional)</FormLabel>
+                                                    <FormLabel>
+                                                        Difficulty (optional)
+                                                    </FormLabel>
                                                     <FormControl>
                                                         <RadioGroup
-                                                            onValueChange={field.onChange}
-                                                            defaultValue={field.value}
+                                                            onValueChange={
+                                                                field.onChange
+                                                            }
+                                                            defaultValue={
+                                                                field.value
+                                                            }
                                                             className="flex flex-col space-y-1"
                                                         >
-                                                            {["Easy", "Medium", "Hard"].map((value) => (
+                                                            {[
+                                                                "Easy",
+                                                                "Medium",
+                                                                "Hard",
+                                                            ].map((value) => (
                                                                 <FormItem
                                                                     key={value}
                                                                     className="flex items-center space-x-3 space-y-0"
                                                                 >
                                                                     <FormControl>
-                                                                        <RadioGroupItem value={value} />
+                                                                        <RadioGroupItem
+                                                                            value={
+                                                                                value
+                                                                            }
+                                                                        />
                                                                     </FormControl>
                                                                     <FormLabel className="font-normal">
                                                                         {value}
@@ -294,11 +332,17 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
                                             name="oalength"
                                             render={({ field }) => (
                                                 <FormItem className="space-y-3">
-                                                    <FormLabel>Length (optional)</FormLabel>
+                                                    <FormLabel>
+                                                        Length (optional)
+                                                    </FormLabel>
                                                     <FormControl>
                                                         <RadioGroup
-                                                            onValueChange={field.onChange}
-                                                            defaultValue={field.value}
+                                                            onValueChange={
+                                                                field.onChange
+                                                            }
+                                                            defaultValue={
+                                                                field.value
+                                                            }
                                                             className="flex flex-col space-y-1"
                                                         >
                                                             {[
@@ -311,7 +355,11 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
                                                                     className="flex items-center space-x-3 space-y-0"
                                                                 >
                                                                     <FormControl>
-                                                                        <RadioGroupItem value={value} />
+                                                                        <RadioGroupItem
+                                                                            value={
+                                                                                value
+                                                                            }
+                                                                        />
                                                                     </FormControl>
                                                                     <FormLabel className="font-normal">
                                                                         {value}
@@ -339,11 +387,18 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
                                             defaultValue={1}
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>What round of interview?</FormLabel>
+                                                    <FormLabel>
+                                                        What round of interview?
+                                                    </FormLabel>
                                                     <Select
                                                         value={field.value?.toString()}
-                                                        onValueChange={(value) =>
-                                                            form.setValue("interviewcount", Number(value))
+                                                        onValueChange={(
+                                                            value
+                                                        ) =>
+                                                            form.setValue(
+                                                                "interviewcount",
+                                                                Number(value)
+                                                            )
                                                         }
                                                     >
                                                         <FormControl>
@@ -352,9 +407,15 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
                                                             </SelectTrigger>
                                                         </FormControl>
                                                         <SelectContent>
-                                                            <SelectItem value="1">Interview #1</SelectItem>
-                                                            <SelectItem value="2">Interview #2</SelectItem>
-                                                            <SelectItem value="3">Interview #3</SelectItem>
+                                                            <SelectItem value="1">
+                                                                Interview #1
+                                                            </SelectItem>
+                                                            <SelectItem value="2">
+                                                                Interview #2
+                                                            </SelectItem>
+                                                            <SelectItem value="3">
+                                                                Interview #3
+                                                            </SelectItem>
                                                         </SelectContent>
                                                     </Select>
                                                     <FormMessage />
@@ -367,26 +428,47 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
                                                 name="interviewvibe"
                                                 render={({ field }) => (
                                                     <FormItem className="space-y-3">
-                                                        <FormLabel>What were the vibes? (optional)</FormLabel>
+                                                        <FormLabel>
+                                                            What were the vibes?
+                                                            (optional)
+                                                        </FormLabel>
                                                         <FormControl>
                                                             <RadioGroup
-                                                                onValueChange={field.onChange}
-                                                                defaultValue={field.value}
+                                                                onValueChange={
+                                                                    field.onChange
+                                                                }
+                                                                defaultValue={
+                                                                    field.value
+                                                                }
                                                                 className="flex flex-col space-y-1"
                                                             >
-                                                                {["Bad", "Good", "Neutral"].map((value) => (
-                                                                    <FormItem
-                                                                        key={value}
-                                                                        className="flex items-center space-x-3 space-y-0"
-                                                                    >
-                                                                        <FormControl>
-                                                                            <RadioGroupItem value={value} />
-                                                                        </FormControl>
-                                                                        <FormLabel className="font-normal">
-                                                                            {value}
-                                                                        </FormLabel>
-                                                                    </FormItem>
-                                                                ))}
+                                                                {[
+                                                                    "Bad",
+                                                                    "Good",
+                                                                    "Neutral",
+                                                                ].map(
+                                                                    (value) => (
+                                                                        <FormItem
+                                                                            key={
+                                                                                value
+                                                                            }
+                                                                            className="flex items-center space-x-3 space-y-0"
+                                                                        >
+                                                                            <FormControl>
+                                                                                <RadioGroupItem
+                                                                                    value={
+                                                                                        value
+                                                                                    }
+                                                                                />
+                                                                            </FormControl>
+                                                                            <FormLabel className="font-normal">
+                                                                                {
+                                                                                    value
+                                                                                }
+                                                                            </FormLabel>
+                                                                        </FormItem>
+                                                                    )
+                                                                )}
                                                             </RadioGroup>
                                                         </FormControl>
                                                         <FormMessage />
@@ -398,24 +480,43 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
                                                 name="interviewtechnical"
                                                 render={({ field }) => (
                                                     <FormItem className="space-y-3">
-                                                        <FormLabel>How technical was it? (optional)</FormLabel>
+                                                        <FormLabel>
+                                                            How technical was
+                                                            it? (optional)
+                                                        </FormLabel>
                                                         <FormControl>
                                                             <RadioGroup
-                                                                onValueChange={field.onChange}
-                                                                defaultValue={field.value}
+                                                                onValueChange={
+                                                                    field.onChange
+                                                                }
+                                                                defaultValue={
+                                                                    field.value
+                                                                }
                                                                 className="flex flex-col space-y-1"
                                                             >
-                                                                {["Non-technical", "Somewhat", "Technical"].map(
+                                                                {[
+                                                                    "Non-technical",
+                                                                    "Somewhat",
+                                                                    "Technical",
+                                                                ].map(
                                                                     (value) => (
                                                                         <FormItem
-                                                                            key={value}
+                                                                            key={
+                                                                                value
+                                                                            }
                                                                             className="flex items-center space-x-3 space-y-0"
                                                                         >
                                                                             <FormControl>
-                                                                                <RadioGroupItem value={value} />
+                                                                                <RadioGroupItem
+                                                                                    value={
+                                                                                        value
+                                                                                    }
+                                                                                />
                                                                             </FormControl>
                                                                             <FormLabel className="font-normal">
-                                                                                {value}
+                                                                                {
+                                                                                    value
+                                                                                }
                                                                             </FormLabel>
                                                                         </FormItem>
                                                                     )
@@ -440,18 +541,34 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
                                         name="compensation"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Compensation (CAD / hour) (optional)</FormLabel>
+                                                <FormLabel>
+                                                    Compensation (CAD / hour)
+                                                    (optional)
+                                                </FormLabel>
                                                 <FormControl>
                                                     <Input
                                                         startIcon={DollarSign}
                                                         type="number"
                                                         value={field.value?.toString()}
                                                         onChange={(e) => {
-                                                            const value = e.target.value;
-                                                            if (!isNaN(Number(value))) {
-                                                                field.onChange(Number(value));
+                                                            const value =
+                                                                e.target.value;
+                                                            if (
+                                                                !isNaN(
+                                                                    Number(
+                                                                        value
+                                                                    )
+                                                                )
+                                                            ) {
+                                                                field.onChange(
+                                                                    Number(
+                                                                        value
+                                                                    )
+                                                                );
                                                             } else {
-                                                                field.onChange(Number(201));
+                                                                field.onChange(
+                                                                    Number(201)
+                                                                );
                                                             }
                                                         }}
                                                     />
@@ -464,10 +581,17 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
                             </AccordionItem>
                         </Accordion>
                         <div className="flex flex-row justify-between">
-                        <Button type="submit"className="font-bold">Contribute</Button>
-                        <Button type="button" variant="ghost" onClick={onDelete} size="sm">
-                            <Trash className="h-4 w-4 text-destructive" />
-                        </Button>
+                            <Button type="submit" className="font-bold">
+                                Contribute
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                onClick={onDelete}
+                                size="sm"
+                            >
+                                <Trash className="h-4 w-4 text-destructive" />
+                            </Button>
                         </div>
                     </form>
                 </Form>

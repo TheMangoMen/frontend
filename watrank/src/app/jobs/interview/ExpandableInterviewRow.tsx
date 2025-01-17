@@ -6,7 +6,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { InterviewRound, OACheck, OfferCheck } from "../table-shared/expanded-count-cell";
+import {
+    InterviewRound,
+    OACheck,
+    OfferCheck,
+} from "../table-shared/expanded-count-cell";
 import { formatDate, stageCountFn } from "@/utils/utils";
 import { Tags } from "../table-shared/tags";
 import { Badge } from "@/components/ui/badge";
@@ -14,36 +18,39 @@ import { cn } from "@/lib/utils";
 import { cellStyles } from "../table-shared/count-cell";
 
 interface ExpandableInterviewRowProps<TData> {
-	row: Row<TData>;
+    row: Row<TData>;
 }
 
 //call contributions, dipslay horizontal flex-box of badges
 function TagBadges({ tags }: { tags: Tags }) {
-	if (!tags) {
-		return null;
-	}
-	//to-do: systemic enum changes to not have "somewhat interview"s
-	let tech = tags.interviewtechnical;
-	if (tags.interviewtechnical == "Somewhat") {
-		tech = "Mixed";
-	}
+    if (!tags) {
+        return null;
+    }
+    //to-do: systemic enum changes to not have "somewhat interview"s
+    let tech = tags.interviewtechnical;
+    if (tags.interviewtechnical == "Somewhat") {
+        tech = "Mixed";
+    }
 
-	return (
-		<div className="flex flex-wrap flex-row gap-2">
-			{tags.oadifficulty &&
-				<Badge className={cn(Object.values(cellStyles.OA))}>
-					{`${tags.oadifficulty} OA`}
-				</Badge>}
-			{tags.interviewvibe &&
-				<Badge className={cn(Object.values(cellStyles.interview))}>
-					{`${tags.interviewvibe} Vibes`}
-				</Badge>}
-			{tags.interviewtechnical &&
-				<Badge className={cn(Object.values(cellStyles.interview))}>
-					{`${tech} Interview`}</Badge>
-			}
-		</div>
-	);
+    return (
+        <div className="flex flex-wrap flex-row gap-2">
+            {tags.oadifficulty && (
+                <Badge className={cn(Object.values(cellStyles.OA))}>
+                    {`${tags.oadifficulty} OA`}
+                </Badge>
+            )}
+            {tags.interviewvibe && (
+                <Badge className={cn(Object.values(cellStyles.interview))}>
+                    {`${tags.interviewvibe} Vibes`}
+                </Badge>
+            )}
+            {tags.interviewtechnical && (
+                <Badge className={cn(Object.values(cellStyles.interview))}>
+                    {`${tech} Interview`}
+                </Badge>
+            )}
+        </div>
+    );
 }
 
 // {
@@ -72,136 +79,173 @@ function TagBadges({ tags }: { tags: Tags }) {
 // }
 
 function parseContribution(contribution: any) {
-	const stageCount = stageCountFn(contribution.stages)
+    const stageCount = stageCountFn(contribution.stages);
 
-	return {
-		gotOA: stageCount("OA")?.count === 1,
-		interviewRound: stageCount("Interview Stage")?.count,
-		gotOffer: stageCount("Offer Call")?.count === 1,
-		tags: contribution.tags,
-		contributionTime: new Date(contribution.logtime)
-	};
+    return {
+        gotOA: stageCount("OA")?.count === 1,
+        interviewRound: stageCount("Interview Stage")?.count,
+        gotOffer: stageCount("Offer Call")?.count === 1,
+        tags: contribution.tags,
+        contributionTime: new Date(contribution.logtime),
+    };
 }
 
 const ExpandableInterviewRow = ({ row }: any) => {
-	const { toast } = useToast();
-	const { token, isLoggedIn } = useAuth();
-	const [isExpanded, setIsExpanded] = React.useState(false);
-	const [contributionData, setContributionData] = useState([]);
+    const { toast } = useToast();
+    const { token, isLoggedIn } = useAuth();
+    const [isExpanded, setIsExpanded] = React.useState(false);
+    const [contributionData, setContributionData] = useState([]);
 
-	const disabled = ["OA", "Interview", "Offer"]
-		.map((s: any) => row.original[s])
-		.every(i => i === 0)
+    const disabled = ["OA", "Interview", "Offer"]
+        .map((s: any) => row.original[s])
+        .every((i) => i === 0);
 
-	// Simulated API cal
-	const fetchExpandedData = async (id: string) => {
-		try {
-			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/jobs/specific/interview/${row.getValue("jid")}`,
-				{
-					method: "GET",
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
+    // Simulated API cal
+    const fetchExpandedData = async (id: string) => {
+        try {
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/jobs/specific/interview/${row.getValue("jid")}`,
+                {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            if (response.ok) {
+                const data = await response.json();
 
-				}
-			);
-			if (response.ok) {
-				const data = await response.json();
+                setContributionData(data);
+                console.log("contributt", data);
+            } else {
+                toast({
+                    variant: "destructive",
+                    title: "Failed to fetch data.",
+                });
+            }
+        } catch (error) {
+            console.error(error);
+            toast({ variant: "destructive", title: "Failed to fetch data." });
+        }
+    };
 
-				setContributionData(data)
-				console.log("contributt", data);
-			} else {
-				toast({ variant: "destructive", title: "Failed to fetch data." });
-			}
-		} catch (error) {
-			console.error(error);
-			toast({ variant: "destructive", title: "Failed to fetch data." });
-		}
-	}
+    const { data, isLoading } = useQuery({
+        queryKey: ["expandedData", row.id],
+        queryFn: () => fetchExpandedData(row.id as string),
+        enabled: isExpanded,
+    });
 
-	const { data, isLoading } = useQuery({
-		queryKey: ["expandedData", row.id],
-		queryFn: () => fetchExpandedData(row.id as string),
-		enabled: isExpanded,
-	});
+    return (
+        <>
+            <TableRow
+                key={row.id}
+                className={`flex cursor-pointer hover:bg-secondary ${isExpanded ? "bg-secondary" : ""}`}
+                data-state={row.getIsSelected() && "selected"}
+                onClick={() => !disabled && setIsExpanded(!isExpanded)}
+            >
+                {row.getVisibleCells().map((cell: any) => (
+                    <TableCell
+                        key={cell.id}
+                        className={`flex items-center grow-0 shrink-0 ${cell.column.columnDef.meta?.className}`}
+                    >
+                        {cell.column.id === "isOpen" && !disabled ? (
+                            <div className="ml-2 w-4 h-4 flex items-center text-secondary-foreground">
+                                {isExpanded ? (
+                                    <ChevronDown />
+                                ) : (
+                                    <ChevronRight />
+                                )}
+                            </div>
+                        ) : (
+                            flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext()
+                            )
+                        )}
+                    </TableCell>
+                ))}
+            </TableRow>
+            {isExpanded &&
+                contributionData.map((contribution: any) => {
+                    const {
+                        gotOA,
+                        interviewRound,
+                        gotOffer,
+                        tags,
+                        contributionTime,
+                    } = parseContribution(contribution);
 
-	return (
-		<>
-			<TableRow
-				key={row.id}
-				className={`flex cursor-pointer hover:bg-secondary ${isExpanded ? "bg-secondary" : ""}`}
-				data-state={row.getIsSelected() && "selected"}
-				onClick={() => !disabled && setIsExpanded(!isExpanded)}
-			>
-				{row.getVisibleCells().map((cell: any) =>
-					<TableCell
-						key={cell.id}
-						className={`flex items-center grow-0 shrink-0 ${cell.column.columnDef.meta?.className}`}
-					>
-						{cell.column.id === 'isOpen' && !disabled
-							? <div className="ml-2 w-4 h-4 flex items-center text-secondary-foreground">
-								{isExpanded
-									? <ChevronDown />
-									: <ChevronRight />}
-							</div>
-							: flexRender(cell.column.columnDef.cell, cell.getContext())}
-					</TableCell>
-				)}
-			</TableRow >
-			{isExpanded && (
-				contributionData.map((contribution: any) => {
-					const { gotOA, interviewRound, gotOffer, tags, contributionTime } = parseContribution(contribution);
+                    return (
+                        <TableRow
+                            key={contributionTime.toDateString()}
+                            className="flex bg-secondary hover:bg-secondary"
+                        >
+                            {row.getVisibleCells().map((cell: any) => {
+                                const DefaultCell = ({
+                                    children,
+                                }: {
+                                    children?:
+                                        | React.ReactNode[]
+                                        | React.ReactNode;
+                                }) => (
+                                    <TableCell
+                                        key={cell.id}
+                                        className={`flex items-center grow-0 shrink-0 ${cell.column.columnDef.meta?.className}`}
+                                    >
+                                        {children}
+                                    </TableCell>
+                                );
 
-					return <TableRow
-						key={contributionTime.toDateString()}
-						className="flex bg-secondary hover:bg-secondary"
-					>
-						{row.getVisibleCells().map((cell: any) => {
-							const DefaultCell = ({ children }: { children?: React.ReactNode[] | React.ReactNode }) =>
-								<TableCell
-									key={cell.id}
-									className={`flex items-center grow-0 shrink-0 ${cell.column.columnDef.meta?.className}`}
-								>
-									{children}
-								</TableCell>
-
-							let render;
-							switch (cell.column.id) {
-								case "isOpen":
-									render = <DefaultCell />
-									break;
-								case "OA":
-									render = <DefaultCell>
-										{gotOA && <OACheck />}
-									</DefaultCell>
-									break;
-								case "Interview":
-									render = <DefaultCell>
-										{interviewRound && <InterviewRound round={interviewRound} />}
-									</DefaultCell>
-									break;
-								case "Offer":
-									render = <DefaultCell>
-										{gotOffer && <OfferCheck />}
-									</DefaultCell>
-									break;
-								case "job":
-									render = <DefaultCell>
-										<div className="text-secondary-foreground mr-2">
-											{formatDate(contributionTime)}
-										</div>
-										<TagBadges tags={tags} />
-									</DefaultCell>
-									break;
-							}
-							return render
-						})}
-					</TableRow>
-				}))
-			}
-		</>
-	);
+                                let render;
+                                switch (cell.column.id) {
+                                    case "isOpen":
+                                        render = <DefaultCell />;
+                                        break;
+                                    case "OA":
+                                        render = (
+                                            <DefaultCell>
+                                                {gotOA && <OACheck />}
+                                            </DefaultCell>
+                                        );
+                                        break;
+                                    case "Interview":
+                                        render = (
+                                            <DefaultCell>
+                                                {interviewRound && (
+                                                    <InterviewRound
+                                                        round={interviewRound}
+                                                    />
+                                                )}
+                                            </DefaultCell>
+                                        );
+                                        break;
+                                    case "Offer":
+                                        render = (
+                                            <DefaultCell>
+                                                {gotOffer && <OfferCheck />}
+                                            </DefaultCell>
+                                        );
+                                        break;
+                                    case "job":
+                                        render = (
+                                            <DefaultCell>
+                                                <div className="text-secondary-foreground mr-2">
+                                                    {formatDate(
+                                                        contributionTime
+                                                    )}
+                                                </div>
+                                                <TagBadges tags={tags} />
+                                            </DefaultCell>
+                                        );
+                                        break;
+                                }
+                                return render;
+                            })}
+                        </TableRow>
+                    );
+                })}
+        </>
+    );
 };
 
 export default ExpandableInterviewRow;

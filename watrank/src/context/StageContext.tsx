@@ -1,21 +1,29 @@
-"use client"
+"use client";
 
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, {
+    createContext,
+    useContext,
+    useState,
+    ReactNode,
+    useEffect,
+} from "react";
 
 type GlobalContextType = {
     isRankingStage: string | undefined;
-    globalIsLoading: boolean
-}
+    globalIsLoading: boolean;
+};
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
 
-export const GlobalProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const GlobalProvider: React.FC<{ children: ReactNode }> = ({
+    children,
+}) => {
     const [isRankingStage, setIsRankingStage] = useState<string>();
     const [globalIsLoading, setGlobalIsLoading] = useState<boolean>(true);
     useEffect(() => {
         setGlobalIsLoading(true);
         const fetchStage = async () => {
-            console.log("FETCH")
+            console.log("FETCH");
             const url = `${process.env.NEXT_PUBLIC_API_URL}/stage`;
             try {
                 const response = await fetch(url, {
@@ -29,14 +37,14 @@ export const GlobalProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         };
         fetchStage();
         setGlobalIsLoading(false);
-    }, [])
+    }, []);
 
     return (
         <GlobalContext.Provider value={{ isRankingStage, globalIsLoading }}>
             {children}
         </GlobalContext.Provider>
-    )
-}
+    );
+};
 
 export const useGlobal = (): GlobalContextType => {
     const context = useContext(GlobalContext);
@@ -44,4 +52,4 @@ export const useGlobal = (): GlobalContextType => {
         throw new Error("");
     }
     return context;
-}
+};

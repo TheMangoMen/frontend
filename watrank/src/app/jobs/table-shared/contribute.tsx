@@ -4,7 +4,13 @@ import { useGlobal } from "@/context/StageContext";
 import ContributeStatus from "../interview/contribute-status";
 import ContributeRanking from "../ranking/contribute-ranking";
 
-export default function Contribute({ row, refresh }: { row: Row<Job>, refresh: any }) {
+export default function Contribute({
+    row,
+    refresh,
+}: {
+    row: Row<Job>;
+    refresh: any;
+}) {
     const { isRankingStage } = useGlobal();
 
     const handleChildClick = (event: React.MouseEvent) => {
@@ -13,7 +19,11 @@ export default function Contribute({ row, refresh }: { row: Row<Job>, refresh: a
 
     return (
         <div onClick={handleChildClick}>
-            {isRankingStage ? <ContributeRanking row={row} refresh={refresh} /> : <ContributeStatus row={row} refresh={refresh} />}
+            {isRankingStage ? (
+                <ContributeRanking row={row} refresh={refresh} />
+            ) : (
+                <ContributeStatus row={row} refresh={refresh} />
+            )}
         </div>
     );
 }

@@ -1,66 +1,87 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Image from 'next/image';
-import Link from "next/link"
+import * as React from "react";
+import Image from "next/image";
+import Link from "next/link";
 
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Icons } from "@/app/login/components/icons"
-import { useToast } from "@/components/ui/use-toast"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Icons } from "@/app/login/components/icons";
+import { useToast } from "@/components/ui/use-toast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import {
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
 
 const formSchema = z.object({
-    username: z.string()
+    username: z
+        .string()
         .min(2, { message: "WatIAM must be at least 2 characters." })
         .max(8, { message: "WatIAM must be at most 8 characters." })
-        .regex(/^[a-z0-9]*$/, { message: "Only lowercase letters and numbers are allowed." })
-        .regex(/^[a-z][a-z0-9]*$/, { message: "WatIAM must start with a lowercase letter." })
-})
+        .regex(/^[a-z0-9]*$/, {
+            message: "Only lowercase letters and numbers are allowed.",
+        })
+        .regex(/^[a-z][a-z0-9]*$/, {
+            message: "WatIAM must start with a lowercase letter.",
+        }),
+});
 
 export default function AuthenticationPage() {
-    const [isSuccessful, setIsSuccessful] = React.useState<boolean>(false)
-    const [username, setUsername] = React.useState<string>("")
-    const [isLoading, setIsLoading] = React.useState<boolean>(false)
-    const { toast } = useToast()
+    const [isSuccessful, setIsSuccessful] = React.useState<boolean>(false);
+    const [username, setUsername] = React.useState<string>("");
+    const [isLoading, setIsLoading] = React.useState<boolean>(false);
+    const { toast } = useToast();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             username: "",
         },
-    })
+    });
 
-    const showErrorToast = ({ title, description }: { title?: string; description?: string } = {}) => {
+    const showErrorToast = ({
+        title,
+        description,
+    }: { title?: string; description?: string } = {}) => {
         toast({
             variant: "destructive",
             title: title || "Uh oh! Something went wrong.",
-            description: description || "Sorry, we messed up somewhere. We'll fix it soon."
+            description:
+                description ||
+                "Sorry, we messed up somewhere. We'll fix it soon.",
         });
     };
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        setIsLoading(true)
-        console.log(values)
+        setIsLoading(true);
+        console.log(values);
 
         const url = `${process.env.NEXT_PUBLIC_API_URL}/login/${values.username}`;
 
         try {
-            const response = await fetch(url, { method: 'POST' });
+            const response = await fetch(url, { method: "POST" });
             // 429: rate limit exceeded, 401: token expired, 403: forbidden
             if (!response.ok) {
-                showErrorToast()
+                showErrorToast();
             } else {
-                setIsSuccessful(true)
-                setUsername(values.username)
+                setIsSuccessful(true);
+                setUsername(values.username);
             }
         } catch (error) {
-            console.error('There has been a problem with your fetch operation:', error);
-            showErrorToast()
+            console.error(
+                "There has been a problem with your fetch operation:",
+                error
+            );
+            showErrorToast();
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
 
         // FOR TESTING ONLY
@@ -76,49 +97,52 @@ export default function AuthenticationPage() {
 
     let content;
     if (!isSuccessful) {
-        content = <>
-            <div className="flex flex-col space-y-2 text-center">
-                <h1 className="text-2xl font-semibold tracking-tight">
-                    Log In with WatIAM
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                    We&apos;ll send a link to your @uwaterloo.ca email
-                </p>
-            </div>
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-
-                    <div className="grid gap-2">
-                        <FormField
-                            control={form.control}
-                            name="username"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormControl>
-                                        <Input
-                                            placeholder="n42chen"
-                                            autoCapitalize="none"
-                                            autoComplete="username"
-                                            autoCorrect="off"
-                                            disabled={isLoading}
-                                            {...field} />
-                                    </FormControl>
-                                    <FormDescription>
-                                    </FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <Button type="submit" disabled={isLoading}>
-                            {isLoading && (
-                                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                            )}
-                            Send
-                        </Button>
-                    </div>
-                </form>
-            </Form>
-            {/* <p className="px-8 text-center text-sm text-muted-foreground">
+        content = (
+            <>
+                <div className="flex flex-col space-y-2 text-center">
+                    <h1 className="text-2xl font-semibold tracking-tight">
+                        Log In with WatIAM
+                    </h1>
+                    <p className="text-sm text-muted-foreground">
+                        We&apos;ll send a link to your @uwaterloo.ca email
+                    </p>
+                </div>
+                <Form {...form}>
+                    <form
+                        onSubmit={form.handleSubmit(onSubmit)}
+                        className="space-y-8"
+                    >
+                        <div className="grid gap-2">
+                            <FormField
+                                control={form.control}
+                                name="username"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="n42chen"
+                                                autoCapitalize="none"
+                                                autoComplete="username"
+                                                autoCorrect="off"
+                                                disabled={isLoading}
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormDescription></FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <Button type="submit" disabled={isLoading}>
+                                {isLoading && (
+                                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                                )}
+                                Send
+                            </Button>
+                        </div>
+                    </form>
+                </Form>
+                {/* <p className="px-8 text-center text-sm text-muted-foreground">
                 By clicking send, you agree to our{" "}<br />
                 <Link
                     href="/terms"
@@ -135,9 +159,10 @@ export default function AuthenticationPage() {
                 </Link>
                 .
             </p> */}
-        </>
+            </>
+        );
     } else {
-        content =
+        content = (
             <div className="flex flex-col space-y-2 text-center">
                 <h1 className="text-2xl font-semibold tracking-tight">
                     Thanks!
@@ -152,6 +177,7 @@ export default function AuthenticationPage() {
                     jk we fixed it, it&apos;s blazing fast now 🚀
                 </p>
             </div>
+        );
     }
 
     return (
@@ -160,6 +186,5 @@ export default function AuthenticationPage() {
                 {content}
             </div>
         </div>
-    )
-
+    );
 }

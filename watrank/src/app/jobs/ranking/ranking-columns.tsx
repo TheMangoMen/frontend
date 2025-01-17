@@ -1,6 +1,11 @@
 "use client";
 import { Job } from "../table-shared/job";
-import { InterviewCountCell, NotTakingCountCell, OACountCell, OfferCountCell } from "../table-shared/count-cell";
+import {
+    InterviewCountCell,
+    NotTakingCountCell,
+    OACountCell,
+    OfferCountCell,
+} from "../table-shared/count-cell";
 import { ColumnDef } from "@tanstack/react-table";
 import * as React from "react";
 import Contribute from "../table-shared/contribute";
@@ -17,21 +22,27 @@ export const rankingColumns: ColumnDef<Job>[] = [
         accessorKey: "Ranked",
         header: "Ranked",
         enableHiding: false,
-        cell: ({ row, table }) => <OACountCell value={row.getValue("Ranked")} />,
+        cell: ({ row, table }) => (
+            <OACountCell value={row.getValue("Ranked")} />
+        ),
         meta: { className: "w-16 justify-center" }, // Fixed width and no flexing
     },
     {
         accessorKey: "NotTaking",
         header: "Not Taking",
         enableHiding: false,
-        cell: ({ row, table }) => <NotTakingCountCell value={row.getValue("NotTaking")} />,
+        cell: ({ row, table }) => (
+            <NotTakingCountCell value={row.getValue("NotTaking")} />
+        ),
         meta: { className: "w-24 justify-center" },
     },
     {
         accessorKey: "Taking",
         header: "Taking",
         enableHiding: false,
-        cell: ({ row, table }) => <InterviewCountCell value={row.getValue("Taking")} />,
+        cell: ({ row, table }) => (
+            <InterviewCountCell value={row.getValue("Taking")} />
+        ),
         meta: { className: "w-16 justify-center" },
     },
     {
@@ -46,7 +57,8 @@ export const rankingColumns: ColumnDef<Job>[] = [
             />
         ),
         meta: { className: "flex-1 justify-start" },
-        sortingFn: (rowA, rowB) => rowA.original.company.localeCompare(rowB.original.company)
+        sortingFn: (rowA, rowB) =>
+            rowA.original.company.localeCompare(rowB.original.company),
     },
     {
         accessorKey: "",

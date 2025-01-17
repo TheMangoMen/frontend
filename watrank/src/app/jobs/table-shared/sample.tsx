@@ -1,46 +1,46 @@
-import React from 'react'
+import React from "react";
 import {
     useReactTable,
     getCoreRowModel,
     getSortedRowModel,
     flexRender,
     SortingState,
-} from '@tanstack/react-table'
+} from "@tanstack/react-table";
 
 // Define your data type
 type Person = {
-    firstName: string
-    lastName: string
-    age: number
-}
+    firstName: string;
+    lastName: string;
+    age: number;
+};
 
 // Sample data
 const data: Person[] = [
-    { firstName: 'John', lastName: 'Doe', age: 30 },
-    { firstName: 'Jane', lastName: 'Doe', age: 25 },
-    { firstName: 'Joe', lastName: 'Smith', age: 40 },
-]
+    { firstName: "John", lastName: "Doe", age: 30 },
+    { firstName: "Jane", lastName: "Doe", age: 25 },
+    { firstName: "Joe", lastName: "Smith", age: 40 },
+];
 
 const SortableTable: React.FC = () => {
-    const [sorting, setSorting] = React.useState<SortingState>([])
+    const [sorting, setSorting] = React.useState<SortingState>([]);
 
     const columns = React.useMemo(
         () => [
             {
-                header: 'First Name',
-                accessorKey: 'firstName',
+                header: "First Name",
+                accessorKey: "firstName",
             },
             {
-                header: 'Last Name',
-                accessorKey: 'lastName',
+                header: "Last Name",
+                accessorKey: "lastName",
             },
             {
-                header: 'Age',
-                accessorKey: 'age',
+                header: "Age",
+                accessorKey: "age",
             },
         ],
         []
-    )
+    );
 
     const table = useReactTable({
         data,
@@ -52,7 +52,7 @@ const SortableTable: React.FC = () => {
         getCoreRowModel: getCoreRowModel(),
         getRowCanExpand: (row) => true,
         getSortedRowModel: getSortedRowModel(),
-    })
+    });
 
     return (
         <table>
@@ -63,13 +63,17 @@ const SortableTable: React.FC = () => {
                             <th
                                 key={header.id}
                                 onClick={header.column.getToggleSortingHandler()}
-                                style={{ cursor: 'pointer' }}
+                                style={{ cursor: "pointer" }}
                             >
-                                {flexRender(header.column.columnDef.header, header.getContext())}
+                                {flexRender(
+                                    header.column.columnDef.header,
+                                    header.getContext()
+                                )}
                                 {{
-                                    asc: ' 🔼',
-                                    desc: ' 🔽',
-                                }[header.column.getIsSorted() as string] ?? null}
+                                    asc: " 🔼",
+                                    desc: " 🔽",
+                                }[header.column.getIsSorted() as string] ??
+                                    null}
                             </th>
                         ))}
                     </tr>
@@ -80,14 +84,17 @@ const SortableTable: React.FC = () => {
                     <tr key={row.id}>
                         {row.getVisibleCells().map((cell) => (
                             <td key={cell.id}>
-                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                {flexRender(
+                                    cell.column.columnDef.cell,
+                                    cell.getContext()
+                                )}
                             </td>
                         ))}
                     </tr>
                 ))}
             </tbody>
         </table>
-    )
-}
+    );
+};
 
-export default SortableTable
+export default SortableTable;

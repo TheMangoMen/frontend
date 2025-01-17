@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
 import { useEffect, useState, ChangeEvent, FormEvent } from "react";
 import { Check, Trash, X, Users } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
     Card,
     CardContent,
@@ -12,26 +12,26 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/components/ui/use-toast";
-import { DataTable } from "@/components/ui/data-table"
-import { ColumnDef } from "@tanstack/react-table"
-import { useRouter } from 'next/navigation'
-import { notFound } from 'next/navigation';
+import { DataTable } from "@/components/ui/data-table";
+import { ColumnDef } from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
+import { notFound } from "next/navigation";
 import {
     Accordion,
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
-} from "@/components/ui/accordion"
+} from "@/components/ui/accordion";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -42,7 +42,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 
 const ADMIN_CARD_DATA = [
     {
@@ -114,7 +114,7 @@ interface AdminCardProps {
     buttonText: string;
     fetchUrl: string;
     updateUrl: string;
-    inputType: 'text' | 'number' | 'dropdown' | 'boolean';
+    inputType: "text" | "number" | "dropdown" | "boolean";
     dataKey: string;
     token: string;
     toastTitle: string;
@@ -134,13 +134,13 @@ const AdminCard: React.FC<AdminCardProps> = ({
     token,
     toastTitle,
     toastDescription,
-    dropdownOptions
+    dropdownOptions,
 }) => {
-    const { toast } = useToast()
-    const [value, setValue] = useState<string>('');
-    const [initialValue, setInitialValue] = useState<string>('');
-    const { isAdmin } = useAuth()
-    const router = useRouter()
+    const { toast } = useToast();
+    const [value, setValue] = useState<string>("");
+    const [initialValue, setInitialValue] = useState<string>("");
+    const { isAdmin } = useAuth();
+    const router = useRouter();
 
     const showToast = () => {
         toast({
@@ -155,14 +155,16 @@ const AdminCard: React.FC<AdminCardProps> = ({
             try {
                 const response = await fetch(fetchUrl, {
                     method: "GET",
-                    headers: { ...(!!token && { 'Authorization': `Bearer ${token}` }) }
+                    headers: {
+                        ...(!!token && { Authorization: `Bearer ${token}` }),
+                    },
                 });
                 const data = await response.json();
                 const initialValue = String(data); // Convert the value to a string
                 setValue(initialValue);
                 setInitialValue(initialValue);
             } catch (error) {
-                console.error('Error fetching initial value:', error);
+                console.error("Error fetching initial value:", error);
             }
         };
 
@@ -172,26 +174,38 @@ const AdminCard: React.FC<AdminCardProps> = ({
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         try {
-            const payload = inputType === 'number' ? { [dataKey]: parseFloat(value) } : { [dataKey]: value === 'true' ? true : value === 'false' ? false : value };
-            console.log(payload)
+            const payload =
+                inputType === "number"
+                    ? { [dataKey]: parseFloat(value) }
+                    : {
+                          [dataKey]:
+                              value === "true"
+                                  ? true
+                                  : value === "false"
+                                    ? false
+                                    : value,
+                      };
+            console.log(payload);
             const res: any = await fetch(updateUrl, {
-                method: 'POST',
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify(payload),
             });
-            const val: any = await res.json()
+            const val: any = await res.json();
             setInitialValue(val[dataKey]);
-            setValue(val[dataKey])
-            showToast()
+            setValue(val[dataKey]);
+            showToast();
         } catch (error) {
-            console.error('Error updating value:', error);
+            console.error("Error updating value:", error);
         }
     };
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleChange = (
+        e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    ) => {
         setValue(e.target.value);
     };
 
@@ -201,7 +215,7 @@ const AdminCard: React.FC<AdminCardProps> = ({
 
     if (!isAdmin()) {
         notFound();
-    };
+    }
 
     return (
         <Card className="m-2 w-fit">
@@ -209,23 +223,32 @@ const AdminCard: React.FC<AdminCardProps> = ({
                 <CardTitle>{title}</CardTitle>
                 <CardDescription>{description}</CardDescription>
             </CardHeader>
-            <CardContent >
+            <CardContent>
                 <form onSubmit={handleSubmit} className="w-full">
-                    {inputType === 'dropdown' && dropdownOptions ? (
-                        <Select value={value} onValueChange={handleSelectChange} >
+                    {inputType === "dropdown" && dropdownOptions ? (
+                        <Select
+                            value={value}
+                            onValueChange={handleSelectChange}
+                        >
                             <SelectTrigger className="w-full">
                                 <SelectValue placeholder={placeholder} />
                             </SelectTrigger>
                             <SelectContent className="w-full">
                                 {dropdownOptions?.map((option, index) => (
-                                    <SelectItem key={index} value={String(option.value)}>
+                                    <SelectItem
+                                        key={index}
+                                        value={String(option.value)}
+                                    >
                                         {option.label}
                                     </SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
-                    ) : inputType === 'boolean' ? (
-                        <Select value={value} onValueChange={handleSelectChange} >
+                    ) : inputType === "boolean" ? (
+                        <Select
+                            value={value}
+                            onValueChange={handleSelectChange}
+                        >
                             <SelectTrigger className="w-[180px]">
                                 <SelectValue placeholder={placeholder} />
                             </SelectTrigger>
@@ -243,18 +266,20 @@ const AdminCard: React.FC<AdminCardProps> = ({
                             className="w-full"
                         />
                     )}
-                    <Button className="w-full mt-4" type="submit">{buttonText}</Button>
+                    <Button className="w-full mt-4" type="submit">
+                        {buttonText}
+                    </Button>
                 </form>
             </CardContent>
         </Card>
     );
 };
 
-const StatsCard: React.FC<{ title: string; description: string; value: number | null }> = ({
-    title,
-    description,
-    value,
-}) => {
+const StatsCard: React.FC<{
+    title: string;
+    description: string;
+    value: number | null;
+}> = ({ title, description, value }) => {
     return (
         <Card className="m-2 w-fit">
             <CardHeader>
@@ -265,12 +290,13 @@ const StatsCard: React.FC<{ title: string; description: string; value: number | 
                 <CardDescription>{description}</CardDescription>
             </CardHeader>
             <CardContent>
-                <p className="text-4xl font-bold">{value !== null ? value : 'Loading...'}</p>
+                <p className="text-4xl font-bold">
+                    {value !== null ? value : "Loading..."}
+                </p>
             </CardContent>
         </Card>
     );
 };
-
 
 interface ContributionLog {
     LogID: number;
@@ -285,39 +311,45 @@ interface ContributionLog {
 const logColumns: ColumnDef<ContributionLog>[] = [
     {
         accessorKey: "LogID",
-        header: "Log ID"
+        header: "Log ID",
     },
     {
         accessorKey: "LogTime",
-        header: "Log Time"
+        header: "Log Time",
     },
     {
         accessorKey: "UID",
-        header: "User ID"
+        header: "User ID",
     },
     {
         accessorKey: "JID",
-        header: "Job ID"
+        header: "Job ID",
     },
     {
         accessorKey: "OA",
         header: "OA",
-        cell: ({ row }) => (
-            row.original.OA ? <Check className="text-green-500" /> : <X className="text-red-500" />
-        )
+        cell: ({ row }) =>
+            row.original.OA ? (
+                <Check className="text-green-500" />
+            ) : (
+                <X className="text-red-500" />
+            ),
     },
     {
         accessorKey: "InterviewStage",
-        header: "Interview Stage"
+        header: "Interview Stage",
     },
     {
         accessorKey: "OfferCall",
         header: "Offer Call",
-        cell: ({ row }) => (
-            row.original.OfferCall ? <Check className="text-green-500" /> : <X className="text-red-500" />
-        )
+        cell: ({ row }) =>
+            row.original.OfferCall ? (
+                <Check className="text-green-500" />
+            ) : (
+                <X className="text-red-500" />
+            ),
     },
-]
+];
 
 interface AdminViewContribution {
     UID: string;
@@ -329,37 +361,53 @@ interface AdminViewContribution {
     Title: string;
 }
 
-const deleteContribution = async (jid: number, uid: string, token: string, onSuccess: () => void) => {
+const deleteContribution = async (
+    jid: number,
+    uid: string,
+    token: string,
+    onSuccess: () => void
+) => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/contributions`, {
-            method: "DELETE",
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            },
-            body: JSON.stringify({ jid, uid }),
-        });
+        const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/admin/contributions`,
+            {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ jid, uid }),
+            }
+        );
         if (response.ok) {
             onSuccess();
         } else {
-            console.error('Failed to delete contribution');
+            console.error("Failed to delete contribution");
         }
     } catch (error) {
-        console.error('Error deleting contribution:', error);
+        console.error("Error deleting contribution:", error);
     }
 };
 
-const DeleteContributionButton: React.FC<{ contribution: AdminViewContribution }> = ({ contribution }) => {
+const DeleteContributionButton: React.FC<{
+    contribution: AdminViewContribution;
+}> = ({ contribution }) => {
     const { toast } = useToast();
     const { token } = useAuth();
 
     const handleDelete = () => {
-        deleteContribution(contribution.JID, contribution.UID, token || "", () => {
-            toast({
-                title: "Contribution Deleted",
-                description: "The contribution has been successfully deleted.",
-            });
-        });
+        deleteContribution(
+            contribution.JID,
+            contribution.UID,
+            token || "",
+            () => {
+                toast({
+                    title: "Contribution Deleted",
+                    description:
+                        "The contribution has been successfully deleted.",
+                });
+            }
+        );
     };
 
     return (
@@ -371,7 +419,9 @@ const DeleteContributionButton: React.FC<{ contribution: AdminViewContribution }
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogTitle>
+                        Are you absolutely sure?
+                    </AlertDialogTitle>
                     <AlertDialogDescription>
                         This action cannot be undone.
                     </AlertDialogDescription>
@@ -390,40 +440,55 @@ const DeleteContributionButton: React.FC<{ contribution: AdminViewContribution }
 const contributionColumns: ColumnDef<AdminViewContribution>[] = [
     {
         id: "actions",
-        cell: ({ row }) => <DeleteContributionButton contribution={row.original} />,
+        cell: ({ row }) => (
+            <DeleteContributionButton contribution={row.original} />
+        ),
     },
     {
         accessorKey: "UID",
-        header: "User ID"
+        header: "User ID",
     },
     {
         accessorKey: "OA",
         header: "OA",
-        cell: ({ row }) => (
-            row.original.OA ? <Check className="text-green-500" /> : <X className="text-red-500" />
-        )
+        cell: ({ row }) =>
+            row.original.OA ? (
+                <Check className="text-green-500" />
+            ) : (
+                <X className="text-red-500" />
+            ),
     },
     {
         accessorKey: "InterviewStage",
-        header: "Interview Stage"
+        header: "Interview Stage",
     },
     {
         accessorKey: "OfferCall",
         header: "Offer Call",
-        cell: ({ row }) => (
-            row.original.OfferCall ? <Check className="text-cyan-500 bg-cyan-100 rounded-full p-1" /> : <X className="text-red-500" />
-        )
+        cell: ({ row }) =>
+            row.original.OfferCall ? (
+                <Check className="text-cyan-500 bg-cyan-100 rounded-full p-1" />
+            ) : (
+                <X className="text-red-500" />
+            ),
     },
-]
+];
 
 interface GroupedContributions {
     [key: string]: AdminViewContribution[];
 }
 
-const ContributionsAccordion: React.FC<{ contributions: AdminViewContribution[], onDelete: (jid: number, uid: string) => void }> = ({ contributions, onDelete }) => {
-    const [sortBy, setSortBy] = useState<'contributions' | 'company'>('contributions');
+const ContributionsAccordion: React.FC<{
+    contributions: AdminViewContribution[];
+    onDelete: (jid: number, uid: string) => void;
+}> = ({ contributions, onDelete }) => {
+    const [sortBy, setSortBy] = useState<"contributions" | "company">(
+        "contributions"
+    );
 
-    const groupedContributions: GroupedContributions = (contributions || []).reduce((acc, contribution) => {
+    const groupedContributions: GroupedContributions = (
+        contributions || []
+    ).reduce((acc, contribution) => {
         const key = `${contribution.Company} - ${contribution.Title} (${contribution.JID})`;
         if (!acc[key]) {
             acc[key] = [];
@@ -432,8 +497,10 @@ const ContributionsAccordion: React.FC<{ contributions: AdminViewContribution[],
         return acc;
     }, {} as GroupedContributions);
 
-    const sortedGroupedContributions = Object.entries(groupedContributions).sort((a, b) => {
-        if (sortBy === 'contributions') {
+    const sortedGroupedContributions = Object.entries(
+        groupedContributions
+    ).sort((a, b) => {
+        if (sortBy === "contributions") {
             return b[1].length - a[1].length;
         } else {
             return a[0].localeCompare(b[0]);
@@ -443,97 +510,138 @@ const ContributionsAccordion: React.FC<{ contributions: AdminViewContribution[],
     return (
         <>
             <div className="mb-4">
-                <Select onValueChange={(value) => setSortBy(value as 'contributions' | 'company')}>
+                <Select
+                    onValueChange={(value) =>
+                        setSortBy(value as "contributions" | "company")
+                    }
+                >
                     <SelectTrigger className="w-56">
                         <SelectValue placeholder="Sort by" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="contributions">Number of Contributions</SelectItem>
+                        <SelectItem value="contributions">
+                            Number of Contributions
+                        </SelectItem>
                         <SelectItem value="company">Company Name</SelectItem>
                     </SelectContent>
                 </Select>
             </div>
             <Accordion type="single" collapsible className="w-full">
-                {sortedGroupedContributions.map(([key, groupContributions], index) => {
-                    const [company, rest] = key.split(/ - (.*)/);
-                    const offerCallCount = groupContributions.filter(c => c.OfferCall).length;
-                    return (
-                        <AccordionItem value={`item-${index}`} key={index}>
-                            <AccordionTrigger className="flex space-x-2">
-                                <span className="bg-primary text-primary-foreground rounded-full px-2 py-1 text-sm font-bold min-w-[3rem] text-center">
-                                    {groupContributions.length}
-                                </span>
-                                <span className={`text-primary-foreground rounded-full px-2 py-1 text-sm font-bold min-w-[3rem] text-center bg-cyan-300 ${offerCallCount === 0 ? 'invisible' : ''}`}>
-                                    {offerCallCount}
-                                </span>
-                                <span className="text-lg font-bold w-96 text-left">{company}</span>
-                                <span className="text-sm text-left flex-grow">{rest}</span>
-                            </AccordionTrigger>
-                            <AccordionContent>
-                                <DataTable columns={contributionColumns} data={groupContributions} />
-                            </AccordionContent>
-                        </AccordionItem>
-                    );
-                })}
+                {sortedGroupedContributions.map(
+                    ([key, groupContributions], index) => {
+                        const [company, rest] = key.split(/ - (.*)/);
+                        const offerCallCount = groupContributions.filter(
+                            (c) => c.OfferCall
+                        ).length;
+                        return (
+                            <AccordionItem value={`item-${index}`} key={index}>
+                                <AccordionTrigger className="flex space-x-2">
+                                    <span className="bg-primary text-primary-foreground rounded-full px-2 py-1 text-sm font-bold min-w-[3rem] text-center">
+                                        {groupContributions.length}
+                                    </span>
+                                    <span
+                                        className={`text-primary-foreground rounded-full px-2 py-1 text-sm font-bold min-w-[3rem] text-center bg-cyan-300 ${offerCallCount === 0 ? "invisible" : ""}`}
+                                    >
+                                        {offerCallCount}
+                                    </span>
+                                    <span className="text-lg font-bold w-96 text-left">
+                                        {company}
+                                    </span>
+                                    <span className="text-sm text-left flex-grow">
+                                        {rest}
+                                    </span>
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                    <DataTable
+                                        columns={contributionColumns}
+                                        data={groupContributions}
+                                    />
+                                </AccordionContent>
+                            </AccordionItem>
+                        );
+                    }
+                )}
             </Accordion>
         </>
     );
 };
 
 export default function AdminPage() {
-    const { token, authIsLoading } = useAuth()
-    const [contributionLogs, setContributionLogs] = useState<ContributionLog[]>([])
-    const [contributions, setContributions] = useState<AdminViewContribution[]>([])
+    const { token, authIsLoading } = useAuth();
+    const [contributionLogs, setContributionLogs] = useState<ContributionLog[]>(
+        []
+    );
+    const [contributions, setContributions] = useState<AdminViewContribution[]>(
+        []
+    );
     const [userCount, setUserCount] = useState<number | null>(null);
 
     const fetchUserCount = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/contributions/user_count`, {
-                method: "GET",
-                headers: { ...(!!token && { 'Authorization': `Bearer ${token}` }) }
-            });
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/admin/contributions/user_count`,
+                {
+                    method: "GET",
+                    headers: {
+                        ...(!!token && { Authorization: `Bearer ${token}` }),
+                    },
+                }
+            );
             const data = await response.json();
             setUserCount(data.count);
         } catch (error) {
-            console.error('Error fetching user count:', error);
+            console.error("Error fetching user count:", error);
         }
     };
 
     const fetchContributionLogs = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/contribution_logs`, {
-                method: "GET",
-                headers: { ...(!!token && { 'Authorization': `Bearer ${token}` }) }
-            });
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/admin/contribution_logs`,
+                {
+                    method: "GET",
+                    headers: {
+                        ...(!!token && { Authorization: `Bearer ${token}` }),
+                    },
+                }
+            );
             const data = await response.json();
             const formattedData = data.map((entry: ContributionLog) => {
                 const date = new Date(entry.LogTime);
-                const formattedLogTime = `${date.toLocaleDateString('en-US')} ${date.toLocaleTimeString('en-US', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit'
-                })}`;
+                const formattedLogTime = `${date.toLocaleDateString("en-US")} ${date.toLocaleTimeString(
+                    "en-US",
+                    {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                    }
+                )}`;
                 return {
                     ...entry,
-                    LogTime: formattedLogTime
+                    LogTime: formattedLogTime,
                 };
             });
             setContributionLogs(formattedData);
         } catch (error) {
-            console.error('Error fetching contribution logs:', error);
+            console.error("Error fetching contribution logs:", error);
         }
     };
 
     const fetchContributions = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/contributions`, {
-                method: "GET",
-                headers: { ...(!!token && { 'Authorization': `Bearer ${token}` }) }
-            });
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/admin/contributions`,
+                {
+                    method: "GET",
+                    headers: {
+                        ...(!!token && { Authorization: `Bearer ${token}` }),
+                    },
+                }
+            );
             const data = await response.json();
             setContributions(data);
         } catch (error) {
-            console.error('Error fetching contributions:', error);
+            console.error("Error fetching contributions:", error);
         }
     };
 
@@ -543,7 +651,7 @@ export default function AdminPage() {
             fetchContributions();
             fetchUserCount();
         }
-    }, [authIsLoading])
+    }, [authIsLoading]);
 
     if (authIsLoading) {
         return <div>Loading...</div>;
@@ -553,7 +661,9 @@ export default function AdminPage() {
             <Card>
                 <CardHeader>
                     <CardTitle>Status</CardTitle>
-                    <CardDescription>Update current statuses of the platform</CardDescription>
+                    <CardDescription>
+                        Update current statuses of the platform
+                    </CardDescription>
                 </CardHeader>
                 <CardContent className="justify-center items-center flex flex-wrap">
                     {ADMIN_CARD_DATA.map((card, index) => (
@@ -578,7 +688,9 @@ export default function AdminPage() {
             <Card>
                 <CardHeader>
                     <CardTitle>Stats</CardTitle>
-                    <CardDescription>Key statistics about the platform</CardDescription>
+                    <CardDescription>
+                        Key statistics about the platform
+                    </CardDescription>
                 </CardHeader>
                 <CardContent className="justify-center items-center flex flex-wrap">
                     <StatsCard
@@ -591,7 +703,9 @@ export default function AdminPage() {
             <Card>
                 <CardHeader>
                     <CardTitle>Contributions</CardTitle>
-                    <CardDescription>View and delete contributions</CardDescription>
+                    <CardDescription>
+                        View and delete contributions
+                    </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <ContributionsAccordion
@@ -607,12 +721,14 @@ export default function AdminPage() {
             <Card>
                 <CardHeader>
                     <CardTitle>Logs</CardTitle>
-                    <CardDescription>View logs for recent contributions</CardDescription>
+                    <CardDescription>
+                        View logs for recent contributions
+                    </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <DataTable columns={logColumns} data={contributionLogs} />
                 </CardContent>
             </Card>
         </div>
-    )
+    );
 }

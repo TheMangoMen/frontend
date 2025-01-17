@@ -1,4 +1,4 @@
 export type Status = {
-    name: string,
-    count: number
-}
+    name: string;
+    count: number;
+};

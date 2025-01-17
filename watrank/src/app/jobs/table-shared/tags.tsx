@@ -1,7 +1,7 @@
 export type Tags = {
-	oadifficulty?: string;
-	oalength?: string;
-	interviewvibe?: string;
-	interviewtechnical?: string;
-	compensation?: 0;
+    oadifficulty?: string;
+    oalength?: string;
+    interviewvibe?: string;
+    interviewtechnical?: string;
+    compensation?: 0;
 };

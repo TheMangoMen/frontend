@@ -42,14 +42,32 @@ const NOT_INTERESTED_NUM = -1;
 const NOT_INTERESTED_STRING = "Not Interested";
 
 const EmployerRanking = z.enum(["Offer", "Ranked"]);
-const UserRanking = z.enum(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", NOT_INTERESTED_STRING]);
+const UserRanking = z.enum([
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    NOT_INTERESTED_STRING,
+]);
 
 const formSchema = z.object({
     employerRanking: EmployerRanking,
-    userRanking: UserRanking
+    userRanking: UserRanking,
 });
 
-export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refresh: any }) {
+export default function ContributeStatus({
+    row,
+    refresh,
+}: {
+    row: Row<Job>;
+    refresh: any;
+}) {
     const { token, isLoggedIn } = useAuth();
     const { toast } = useToast();
     const [open, setOpen] = React.useState(false);
@@ -77,10 +95,13 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
 
                 form.reset({
                     employerRanking: data.employerranking,
-                    userRanking: data.userranking
+                    userRanking: data.userranking,
                 });
             } else {
-                toast({ variant: "destructive", title: "Failed to fetch data." });
+                toast({
+                    variant: "destructive",
+                    title: "Failed to fetch data.",
+                });
             }
         } catch (error) {
             console.error(error);
@@ -102,9 +123,9 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
     const showErrorToast = () =>
         toast({ variant: "destructive", title: "An error occured." });
 
-    async function onDelete(){
+    async function onDelete() {
         try {
-            const  jid =  row.getValue("jid")
+            const jid = row.getValue("jid");
             const response = await fetch(
                 `${process.env.NEXT_PUBLIC_API_URL}/ranking/${jid}`,
                 {
@@ -112,7 +133,7 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
                     headers: {
                         Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json",
-                    }
+                    },
                 }
             );
             if (!response.ok) {
@@ -128,11 +149,17 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
         }
     }
 
-    async function onSubmit({ employerRanking, userRanking }: z.infer<typeof formSchema>) {
+    async function onSubmit({
+        employerRanking,
+        userRanking,
+    }: z.infer<typeof formSchema>) {
         const data = {
             jid: row.getValue("jid"),
             employerRanking,
-            userRanking: userRanking === NOT_INTERESTED_STRING ? NOT_INTERESTED_NUM : parseInt(userRanking)
+            userRanking:
+                userRanking === NOT_INTERESTED_STRING
+                    ? NOT_INTERESTED_NUM
+                    : parseInt(userRanking),
         };
         console.log("submitting");
         console.log(data);
@@ -158,7 +185,7 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
         } catch (error) {
             console.error(error);
             showErrorToast();
-        } 
+        }
     }
 
     return (
@@ -167,7 +194,9 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
                 <Tooltip>
                     <TooltipContent>
                         <p>
-                            {isLoggedIn() ? "Contribute your ranking" : "Log in to contribute"}
+                            {isLoggedIn()
+                                ? "Contribute your ranking"
+                                : "Log in to contribute"}
                         </p>
                     </TooltipContent>
                     <TooltipTrigger>
@@ -200,16 +229,26 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Employer Ranking</FormLabel>
-                                        <Select value={field.value?.toString()} onValueChange={field.onChange}>
+                                        <Select
+                                            value={field.value?.toString()}
+                                            onValueChange={field.onChange}
+                                        >
                                             <FormControl>
                                                 <SelectTrigger>
                                                     <SelectValue />
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                {EmployerRanking.options.map((option, index) => (
-                                                    <SelectItem key={index} value={option}>{option}</SelectItem>
-                                                ))}
+                                                {EmployerRanking.options.map(
+                                                    (option, index) => (
+                                                        <SelectItem
+                                                            key={index}
+                                                            value={option}
+                                                        >
+                                                            {option}
+                                                        </SelectItem>
+                                                    )
+                                                )}
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
@@ -222,16 +261,26 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Your Ranking</FormLabel>
-                                        <Select value={field.value} onValueChange={field.onChange}>
+                                        <Select
+                                            value={field.value}
+                                            onValueChange={field.onChange}
+                                        >
                                             <FormControl>
                                                 <SelectTrigger>
                                                     <SelectValue />
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                {UserRanking.options.map((option, index) => (
-                                                    <SelectItem key={index} value={option}>{option}</SelectItem>
-                                                ))}
+                                                {UserRanking.options.map(
+                                                    (option, index) => (
+                                                        <SelectItem
+                                                            key={index}
+                                                            value={option}
+                                                        >
+                                                            {option}
+                                                        </SelectItem>
+                                                    )
+                                                )}
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
@@ -240,10 +289,17 @@ export default function ContributeStatus({ row, refresh }: { row: Row<Job>, refr
                             />
                         </div>
                         <div className="flex flex-row justify-between">
-                        <Button type="submit"className="font-bold">Contribute</Button>
-                        <Button type="button" variant="ghost" onClick={onDelete} size="sm">
-                            <Trash className="h-4 w-4 text-destructive" />
-                        </Button>
+                            <Button type="submit" className="font-bold">
+                                Contribute
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                onClick={onDelete}
+                                size="sm"
+                            >
+                                <Trash className="h-4 w-4 text-destructive" />
+                            </Button>
                         </div>
                     </form>
                 </Form>

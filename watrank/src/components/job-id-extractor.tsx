@@ -1,9 +1,9 @@
-"use client"
-import React, { useEffect, useState } from 'react';
-import { Button } from './ui/button';
-import { ClipboardPaste } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
-import { useToast } from './ui/use-toast';
+"use client";
+import React, { useEffect, useState } from "react";
+import { Button } from "./ui/button";
+import { ClipboardPaste } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { useToast } from "./ui/use-toast";
 
 const JobIDExtractor: React.FC = () => {
     const { token } = useAuth();
@@ -13,7 +13,7 @@ const JobIDExtractor: React.FC = () => {
     async function updateWatchList(jids: number[]) {
         const data = {
             jids,
-            delete: false
+            delete: false,
         };
 
         const showErrorToast = () =>
@@ -66,15 +66,16 @@ const JobIDExtractor: React.FC = () => {
     const handleClick = async () => {
         try {
             const clipboardText = await navigator.clipboard.readText();
+            console.log(clipboardText.slice(0, 100));
             const extractedJobIDs = extractJobIDs(clipboardText);
             if (extractedJobIDs?.length == 0) {
-                showParseErrorToast()
-                return
+                showParseErrorToast();
+                return;
             }
             updateWatchList(extractedJobIDs);
-            console.log(extractedJobIDs)
+            console.log(extractedJobIDs);
         } catch (err) {
-            console.error('Failed to read clipboard contents: ', err);
+            console.error("Failed to read clipboard contents: ", err);
         }
     };
 

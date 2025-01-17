@@ -1,7 +1,11 @@
 "use client";
 import { Job } from "../table-shared/job";
-import { InterviewCountCell, OACountCell, OfferCountCell } from "../table-shared/count-cell";
-import { ColumnDef} from "@tanstack/react-table";
+import {
+    InterviewCountCell,
+    OACountCell,
+    OfferCountCell,
+} from "../table-shared/count-cell";
+import { ColumnDef } from "@tanstack/react-table";
 import * as React from "react";
 import Contribute from "../table-shared/contribute";
 import JobCell from "../table-shared/job-cell";
@@ -23,14 +27,18 @@ export const interviewColumns: ColumnDef<Job>[] = [
         accessorKey: "Interview",
         header: "Interview",
         enableHiding: false,
-        cell: ({ row, table }) => <InterviewCountCell value={row.getValue("Interview")} />,
+        cell: ({ row, table }) => (
+            <InterviewCountCell value={row.getValue("Interview")} />
+        ),
         meta: { className: "w-20 justify-center" },
     },
     {
         accessorKey: "Offer",
         header: "Offer",
         enableHiding: false,
-        cell: ({ row, table }) => <OfferCountCell value={row.getValue("Offer")} />,
+        cell: ({ row, table }) => (
+            <OfferCountCell value={row.getValue("Offer")} />
+        ),
         meta: { className: "w-14 justify-center" },
     },
     {
@@ -45,7 +53,8 @@ export const interviewColumns: ColumnDef<Job>[] = [
             />
         ),
         meta: { className: "flex-1 justify-start" },
-        sortingFn: (rowA, rowB) => rowA.original.company.localeCompare(rowB.original.company)
+        sortingFn: (rowA, rowB) =>
+            rowA.original.company.localeCompare(rowB.original.company),
     },
     {
         accessorKey: "",

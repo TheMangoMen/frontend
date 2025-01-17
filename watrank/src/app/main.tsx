@@ -13,27 +13,27 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const queryClient = new QueryClient();
 
 export default function Main({
-	children,
+    children,
 }: Readonly<{ children: React.ReactNode }>) {
-	const currentUrl = usePathname();
-	if (currentUrl === "/") {
-		return <LandingPage />;
-	} else {
-		return (
-			<main className={"dark:bg-black bg-muted/70 text-foreground"}>
-				<QueryClientProvider client={queryClient}>
-					<TooltipProvider>
-						<div className="h-screen box-border flex flex-col overflow-auto">
-							<Header />
-							<div className="flex-grow flex flex-col w-full max-w-6xl px-4 md:px-8 py-5 mx-auto">
-								{children}
-							</div>
-							<Footer />
-						</div>
-					</TooltipProvider>
-					<Toaster />
-				</QueryClientProvider>
-			</main>
-		);
-	}
+    const currentUrl = usePathname();
+    if (currentUrl === "/") {
+        return <LandingPage />;
+    } else {
+        return (
+            <main className={"dark:bg-black bg-muted/70 text-foreground"}>
+                <QueryClientProvider client={queryClient}>
+                    <TooltipProvider>
+                        <div className="h-screen box-border flex flex-col overflow-auto">
+                            <Header />
+                            <div className="flex-grow flex flex-col w-full max-w-6xl px-4 md:px-8 py-5 mx-auto">
+                                {children}
+                            </div>
+                            <Footer />
+                        </div>
+                    </TooltipProvider>
+                    <Toaster />
+                </QueryClientProvider>
+            </main>
+        );
+    }
 }
