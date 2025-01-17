@@ -86,7 +86,7 @@ export function User() {
                     </DropdownMenuTrigger>
                 </Button>
                 <DropdownMenuContent>
-                    <Link href="/analytics">
+                    {/* <Link href="/analytics">
                         <DropdownMenuItem className="cursor-pointer">
                             <LineChart className="mr-2 h-4 w-4" />
                             <span>Analytics</span>
@@ -97,19 +97,18 @@ export function User() {
                             <ClipboardPaste className="mr-2 h-4 w-4" />
                             <span>Import jobs</span>
                         </DropdownMenuItem>
-                    </DialogTrigger>
+                    </DialogTrigger> */}
                     {isAdmin() && (
                         <>
-                            <DropdownMenuSeparator />
                             <Link href="/admin">
                                 <DropdownMenuItem className="cursor-pointer">
                                     <ShieldHalf className="mr-2 h-4 w-4" />
                                     <span>Admin dashboard</span>
                                 </DropdownMenuItem>
                             </Link>
+                            <DropdownMenuSeparator />
                         </>
                     )}
-                    <DropdownMenuSeparator />
                     <DropdownMenuItem
                         className="cursor-pointer"
                         onClick={logoutAndRedirect}
