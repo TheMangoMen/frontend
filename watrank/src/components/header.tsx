@@ -11,8 +11,25 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { AutofillPopup } from "./autofill-popup";
+import { FullStory, init } from "@fullstory/browser";
+import { useEffect } from "react";
 
 export function Header() {
+    useEffect(() => {
+        init({ orgId: "o-22JNHK-na1" });
+
+        FullStory("observe", {
+            type: "start",
+            callback: () => {
+                const sessionURL = FullStory("getSession");
+                console.log("sessionURL", sessionURL);
+                // Do stuff with session URL...
+            },
+        });
+
+        console.log("hello");
+    }, []);
+
     const { isLoggedIn } = useAuth();
     return (
         <header className="sticky top-0 bg-background z-10 shadow dark:shadow-gray-700">
