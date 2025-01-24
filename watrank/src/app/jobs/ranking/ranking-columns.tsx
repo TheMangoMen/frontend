@@ -74,17 +74,17 @@ export const rankingColumns: ColumnDef<Job>[] = [
     {
         accessorKey: "location",
         header: "Location",
-        meta: { className: "w-32" },
+        meta: { className: "w-32 fs-mask" },
     },
     {
         accessorKey: "openings",
         header: "Openings",
         enableHiding: false,
-        meta: { className: "w-20" },
+        meta: { className: "w-20 fs-mask" },
     },
     {
         accessorKey: "jid",
         header: "ID",
-        meta: { className: "w-20" },
+        meta: { className: "w-20 fs-mask" },
     },
 ];

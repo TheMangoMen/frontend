@@ -52,7 +52,7 @@ export const interviewColumns: ColumnDef<Job>[] = [
                 jid={row.original.jid}
             />
         ),
-        meta: { className: "flex-1 justify-start" },
+        meta: { className: "flex-1 justify-start fs-mask" },
         sortingFn: (rowA, rowB) =>
             rowA.original.company.localeCompare(rowB.original.company),
     },
@@ -70,16 +70,16 @@ export const interviewColumns: ColumnDef<Job>[] = [
     {
         accessorKey: "location",
         header: "Location",
-        meta: { className: "w-32" },
+        meta: { className: "w-32 fs-mask" },
     },
     {
         accessorKey: "openings",
         header: "Openings",
-        meta: { className: "w-20" },
+        meta: { className: "w-20 fs-mask" },
     },
     {
         accessorKey: "jid",
         header: "ID",
-        meta: { className: "w-20" },
+        meta: { className: "w-20 fs-mask" },
     },
 ];

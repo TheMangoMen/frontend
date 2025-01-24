@@ -91,7 +91,9 @@ export default function ContributeStatus({
         setLoading(true);
         try {
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/contribution/${row.getValue("jid")}`,
+                `${process.env.NEXT_PUBLIC_API_URL}/contribution/${row.getValue(
+                    "jid"
+                )}`,
                 {
                     method: "GET",
                     headers: {
@@ -259,7 +261,7 @@ export default function ContributeStatus({
             </DialogTrigger>
             <DialogContent className="max-h-full overflow-auto">
                 <DialogHeader>
-                    <DialogTitle>
+                    <DialogTitle className="fs-mask">
                         {row.original.title}
                         <span className="text-primary"> @ </span>
                         {row.original.company}

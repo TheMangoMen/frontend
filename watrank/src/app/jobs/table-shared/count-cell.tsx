@@ -9,7 +9,7 @@ function CountCell({
     className?: string;
 }) {
     let styles =
-        "w-8 h-8 lg:w-10 lg:h-10 rounded-lg flex items-center justify-center font-bold text-dark-grey mx-auto";
+        "w-8 h-8 lg:w-10 lg:h-10 rounded-lg flex items-center justify-center font-bold text-dark-grey mx-auto fs-mask";
     if (value > 0) {
         styles = cn(styles, className);
     }
