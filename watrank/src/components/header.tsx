@@ -12,25 +12,29 @@ import {
 } from "@/components/ui/tooltip";
 import { AutofillPopup } from "./autofill-popup";
 import { FullStory, init } from "@fullstory/browser";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { jwtDecode } from "jwt-decode";
 
 export function Header() {
+    const { token } = useAuth();
+    const [isInitialized, setIsInitialized] = useState(false);
+
     useEffect(() => {
-        init({ orgId: "o-22JNHK-na1" });
-
-        FullStory("observe", {
-            type: "start",
-            callback: () => {
-                const sessionURL = FullStory("getSession");
-                console.log("sessionURL", sessionURL);
-                // Do stuff with session URL...
-            },
+        init({ orgId: "o-22JNHK-na1" }, () => {
+            setIsInitialized(true);
         });
-
         console.log("hello");
     }, []);
 
-    const { isLoggedIn } = useAuth();
+    useEffect(() => {
+        if (token && isInitialized) {
+            FullStory("setIdentity", {
+                uid: jwtDecode(token).sub,
+            });
+        }
+        console.log("stuff", token, isInitialized);
+    }, [token, isInitialized]);
+
     return (
         <header className="sticky top-0 bg-background z-10 shadow dark:shadow-gray-700">
             <div className="flex items-center justify-between h-[4.5rem] select-none max-w-6xl mx-auto px-6 md:px-8">
