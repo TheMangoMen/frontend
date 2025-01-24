@@ -30,6 +30,10 @@ export function Header() {
         if (token && isInitialized) {
             FullStory("setIdentity", {
                 uid: jwtDecode(token).sub,
+                properties: {
+                    displayName: jwtDecode(token).sub,
+                    email: jwtDecode(token).sub,
+                },
             });
         }
         console.log("stuff", token, isInitialized);
