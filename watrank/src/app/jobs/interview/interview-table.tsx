@@ -232,7 +232,7 @@ export function InterviewTable<TData, TValue>({
                     />
                 </div>
                 <div className="hidden md:block">
-                    <AutofillPopupWithoutButton />
+                    <AutofillPopupWithoutButton refresh={fetchJobs} />
                 </div>
                 {/* <div className="max-sm:hidden flex gap-2">
 					<DropdownMenu>
@@ -276,7 +276,15 @@ export function InterviewTable<TData, TValue>({
                                         <TableHead
                                             key={header.id}
                                             onClick={header.column.getToggleSortingHandler()}
-                                            className={`cursor-pointer select-none flex items-center grow-0 shrink-0 ${header.column.columnDef.meta && (header.column.columnDef.meta as { className?: string }).className}`}
+                                            className={`cursor-pointer select-none flex items-center grow-0 shrink-0 ${
+                                                header.column.columnDef.meta &&
+                                                (
+                                                    header.column.columnDef
+                                                        .meta as {
+                                                        className?: string;
+                                                    }
+                                                ).className
+                                            }`}
                                         >
                                             {header.isPlaceholder
                                                 ? null
@@ -315,7 +323,9 @@ export function InterviewTable<TData, TValue>({
                                     colSpan={columns.length}
                                     className="h-24 text-center"
                                 >
-                                    <AutofillPopupWithoutButton />
+                                    <AutofillPopupWithoutButton
+                                        refresh={fetchJobs}
+                                    />
                                 </TableCell>
                             </TableRow>
                         )}
