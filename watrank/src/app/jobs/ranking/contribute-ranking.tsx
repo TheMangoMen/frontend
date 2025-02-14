@@ -1,7 +1,7 @@
 "use client";
 
 import { Job } from "../table-shared/job";
-import { EditIcon, Trash } from "lucide-react";
+import { SquarePlus, Trash } from "lucide-react";
 import {
     Dialog,
     DialogContent,
@@ -209,7 +209,7 @@ export default function ContributeStatus({
                             className={`text-foreground/60 hover:text-foreground h-full flex p-1`}
                             variant="ghost"
                         >
-                            <EditIcon className="w-5" />
+                            <SquarePlus className="w-5 text-primary" />
                         </Button>
                     </TooltipTrigger>
                 </Tooltip>
@@ -224,7 +224,7 @@ export default function ContributeStatus({
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="">
-                        <div className="grid grid-cols-2 mb-8 gap-x-10">
+                        <div className="grid lg:grid-cols-2 mb-8 gap-x-10 gap-y-5">
                             <FormField
                                 control={form.control}
                                 name="employerRanking"
@@ -273,16 +273,71 @@ export default function ContributeStatus({
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                {UserRanking.options.map(
-                                                    (option, index) => (
+                                                <div className="p-2 flex flex-col gap-2">
+                                                    <div className="flex justify-center border-b">
                                                         <SelectItem
-                                                            key={index}
-                                                            value={option}
+                                                            value="1"
+                                                            className="flex items-center justify-center py-2 px-4 cursor-pointer hover:bg-accent data-[state=checked]:text-primary data-[state=checked]:font-bold [&>svg]:hidden"
                                                         >
-                                                            {option}
+                                                            1
                                                         </SelectItem>
-                                                    )
-                                                )}
+                                                    </div>
+                                                    <div className="flex justify-center gap-2">
+                                                        {["2", "3", "4"].map(
+                                                            (option) => (
+                                                                <SelectItem
+                                                                    key={option}
+                                                                    value={
+                                                                        option
+                                                                    }
+                                                                    className="flex items-center justify-center py-2 px-4 cursor-pointer hover:bg-accent data-[state=checked]:text-primary data-[state=checked]:font-bold [&>svg]:hidden"
+                                                                >
+                                                                    {option}
+                                                                </SelectItem>
+                                                            )
+                                                        )}
+                                                    </div>
+                                                    <div className="flex justify-center gap-2">
+                                                        {["5", "6", "7"].map(
+                                                            (option) => (
+                                                                <SelectItem
+                                                                    key={option}
+                                                                    value={
+                                                                        option
+                                                                    }
+                                                                    className="flex items-center justify-center py-2 px-4 cursor-pointer hover:bg-accent data-[state=checked]:text-primary data-[state=checked]:font-bold [&>svg]:hidden"
+                                                                >
+                                                                    {option}
+                                                                </SelectItem>
+                                                            )
+                                                        )}
+                                                    </div>
+                                                    <div className="flex justify-center gap-2">
+                                                        {["8", "9", "10"].map(
+                                                            (option) => (
+                                                                <SelectItem
+                                                                    key={option}
+                                                                    value={
+                                                                        option
+                                                                    }
+                                                                    className="flex items-center justify-center py-2 px-4 cursor-pointer hover:bg-accent data-[state=checked]:text-primary data-[state=checked]:font-bold [&>svg]:hidden"
+                                                                >
+                                                                    {option}
+                                                                </SelectItem>
+                                                            )
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div className="border-t mt-2 pt-2">
+                                                    <SelectItem
+                                                        value={
+                                                            NOT_INTERESTED_STRING
+                                                        }
+                                                        className="w-full flex items-center justify-center p-2 cursor-pointer hover:bg-accent data-[state=checked]:text-primary data-[state=checked]:font-bold [&>svg]:hidden"
+                                                    >
+                                                        {NOT_INTERESTED_STRING}
+                                                    </SelectItem>
+                                                </div>
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
