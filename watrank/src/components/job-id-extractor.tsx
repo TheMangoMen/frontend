@@ -5,7 +5,11 @@ import { ClipboardPaste } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useToast } from "./ui/use-toast";
 
-const JobIDExtractor: React.FC = () => {
+interface JobIDExtractorProps {
+    refresh?: () => void;
+}
+
+const JobIDExtractor: React.FC<JobIDExtractorProps> = ({ refresh }) => {
     const { token } = useAuth();
     const [jobIDs, setJobIDs] = useState<string[]>([]);
     const { toast } = useToast();
@@ -38,6 +42,7 @@ const JobIDExtractor: React.FC = () => {
                 showErrorToast();
             } else {
                 toast({ title: "Populated your watch list!" });
+                refresh?.();
             }
         } catch (error) {
             console.error(error);
