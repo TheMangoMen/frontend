@@ -4,6 +4,7 @@ import { Job } from "../table-shared/job";
 import {
     DollarSign,
     EditIcon,
+    SquarePlus,
     Trash,
     Trash2,
     Trash2Icon,
@@ -42,8 +43,6 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion";
-import { useGlobal } from "@/context/StageContext";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
     Select,
     SelectContent,
@@ -53,6 +52,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/input";
 import { Row } from "@tanstack/react-table";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const Difficulty = z.enum(["Easy", "Medium", "Hard"]);
 const Length = z.enum(["Under 1 Hour", "1 to 2 Hours", "Over 2 Hours"]);
@@ -254,7 +254,7 @@ export default function ContributeStatus({
                             className={`text-foreground/60 hover:text-foreground h-full flex p-1`}
                             variant="ghost"
                         >
-                            <EditIcon className="w-5" />
+                            <SquarePlus className="w-5 text-primary" />
                         </Button>
                     </TooltipTrigger>
                 </Tooltip>
@@ -292,39 +292,37 @@ export default function ContributeStatus({
                                                     <FormLabel>
                                                         Difficulty (optional)
                                                     </FormLabel>
-                                                    <FormControl>
-                                                        <RadioGroup
-                                                            onValueChange={
-                                                                field.onChange
-                                                            }
-                                                            defaultValue={
-                                                                field.value
-                                                            }
-                                                            className="flex flex-col space-y-1"
-                                                        >
-                                                            {[
-                                                                "Easy",
-                                                                "Medium",
-                                                                "Hard",
-                                                            ].map((value) => (
-                                                                <FormItem
-                                                                    key={value}
-                                                                    className="flex items-center space-x-3 space-y-0"
-                                                                >
-                                                                    <FormControl>
-                                                                        <RadioGroupItem
-                                                                            value={
-                                                                                value
-                                                                            }
-                                                                        />
-                                                                    </FormControl>
-                                                                    <FormLabel className="font-normal">
-                                                                        {value}
-                                                                    </FormLabel>
-                                                                </FormItem>
-                                                            ))}
-                                                        </RadioGroup>
-                                                    </FormControl>
+                                                    <div className="flex flex-col space-y-2">
+                                                        {[
+                                                            "Easy",
+                                                            "Medium",
+                                                            "Hard",
+                                                        ].map((option) => (
+                                                            <div
+                                                                key={option}
+                                                                className="flex items-center space-x-2"
+                                                            >
+                                                                <Checkbox
+                                                                    checked={
+                                                                        field.value ===
+                                                                        option
+                                                                    }
+                                                                    onCheckedChange={(
+                                                                        checked
+                                                                    ) => {
+                                                                        field.onChange(
+                                                                            checked
+                                                                                ? option
+                                                                                : undefined
+                                                                        );
+                                                                    }}
+                                                                />
+                                                                <FormLabel className="font-normal">
+                                                                    {option}
+                                                                </FormLabel>
+                                                            </div>
+                                                        ))}
+                                                    </div>
                                                     <FormMessage />
                                                 </FormItem>
                                             )}
@@ -337,39 +335,37 @@ export default function ContributeStatus({
                                                     <FormLabel>
                                                         Length (optional)
                                                     </FormLabel>
-                                                    <FormControl>
-                                                        <RadioGroup
-                                                            onValueChange={
-                                                                field.onChange
-                                                            }
-                                                            defaultValue={
-                                                                field.value
-                                                            }
-                                                            className="flex flex-col space-y-1"
-                                                        >
-                                                            {[
-                                                                "Under 1 Hour",
-                                                                "1 to 2 Hours",
-                                                                "Over 2 Hours",
-                                                            ].map((value) => (
-                                                                <FormItem
-                                                                    key={value}
-                                                                    className="flex items-center space-x-3 space-y-0"
-                                                                >
-                                                                    <FormControl>
-                                                                        <RadioGroupItem
-                                                                            value={
-                                                                                value
-                                                                            }
-                                                                        />
-                                                                    </FormControl>
-                                                                    <FormLabel className="font-normal">
-                                                                        {value}
-                                                                    </FormLabel>
-                                                                </FormItem>
-                                                            ))}
-                                                        </RadioGroup>
-                                                    </FormControl>
+                                                    <div className="flex flex-col space-y-2">
+                                                        {[
+                                                            "Under 1 Hour",
+                                                            "1 to 2 Hours",
+                                                            "Over 2 Hours",
+                                                        ].map((option) => (
+                                                            <div
+                                                                key={option}
+                                                                className="flex items-center space-x-2"
+                                                            >
+                                                                <Checkbox
+                                                                    checked={
+                                                                        field.value ===
+                                                                        option
+                                                                    }
+                                                                    onCheckedChange={(
+                                                                        checked
+                                                                    ) => {
+                                                                        field.onChange(
+                                                                            checked
+                                                                                ? option
+                                                                                : undefined
+                                                                        );
+                                                                    }}
+                                                                />
+                                                                <FormLabel className="font-normal">
+                                                                    {option}
+                                                                </FormLabel>
+                                                            </div>
+                                                        ))}
+                                                    </div>
                                                     <FormMessage />
                                                 </FormItem>
                                             )}
@@ -434,45 +430,37 @@ export default function ContributeStatus({
                                                             What were the vibes?
                                                             (optional)
                                                         </FormLabel>
-                                                        <FormControl>
-                                                            <RadioGroup
-                                                                onValueChange={
-                                                                    field.onChange
-                                                                }
-                                                                defaultValue={
-                                                                    field.value
-                                                                }
-                                                                className="flex flex-col space-y-1"
-                                                            >
-                                                                {[
-                                                                    "Bad",
-                                                                    "Good",
-                                                                    "Neutral",
-                                                                ].map(
-                                                                    (value) => (
-                                                                        <FormItem
-                                                                            key={
-                                                                                value
-                                                                            }
-                                                                            className="flex items-center space-x-3 space-y-0"
-                                                                        >
-                                                                            <FormControl>
-                                                                                <RadioGroupItem
-                                                                                    value={
-                                                                                        value
-                                                                                    }
-                                                                                />
-                                                                            </FormControl>
-                                                                            <FormLabel className="font-normal">
-                                                                                {
-                                                                                    value
-                                                                                }
-                                                                            </FormLabel>
-                                                                        </FormItem>
-                                                                    )
-                                                                )}
-                                                            </RadioGroup>
-                                                        </FormControl>
+                                                        <div className="flex flex-col space-y-2">
+                                                            {[
+                                                                "Bad",
+                                                                "Good",
+                                                                "Neutral",
+                                                            ].map((option) => (
+                                                                <div
+                                                                    key={option}
+                                                                    className="flex items-center space-x-2"
+                                                                >
+                                                                    <Checkbox
+                                                                        checked={
+                                                                            field.value ===
+                                                                            option
+                                                                        }
+                                                                        onCheckedChange={(
+                                                                            checked
+                                                                        ) => {
+                                                                            field.onChange(
+                                                                                checked
+                                                                                    ? option
+                                                                                    : undefined
+                                                                            );
+                                                                        }}
+                                                                    />
+                                                                    <FormLabel className="font-normal">
+                                                                        {option}
+                                                                    </FormLabel>
+                                                                </div>
+                                                            ))}
+                                                        </div>
                                                         <FormMessage />
                                                     </FormItem>
                                                 )}
@@ -486,45 +474,37 @@ export default function ContributeStatus({
                                                             How technical was
                                                             it? (optional)
                                                         </FormLabel>
-                                                        <FormControl>
-                                                            <RadioGroup
-                                                                onValueChange={
-                                                                    field.onChange
-                                                                }
-                                                                defaultValue={
-                                                                    field.value
-                                                                }
-                                                                className="flex flex-col space-y-1"
-                                                            >
-                                                                {[
-                                                                    "Non-technical",
-                                                                    "Somewhat",
-                                                                    "Technical",
-                                                                ].map(
-                                                                    (value) => (
-                                                                        <FormItem
-                                                                            key={
-                                                                                value
-                                                                            }
-                                                                            className="flex items-center space-x-3 space-y-0"
-                                                                        >
-                                                                            <FormControl>
-                                                                                <RadioGroupItem
-                                                                                    value={
-                                                                                        value
-                                                                                    }
-                                                                                />
-                                                                            </FormControl>
-                                                                            <FormLabel className="font-normal">
-                                                                                {
-                                                                                    value
-                                                                                }
-                                                                            </FormLabel>
-                                                                        </FormItem>
-                                                                    )
-                                                                )}
-                                                            </RadioGroup>
-                                                        </FormControl>
+                                                        <div className="flex flex-col space-y-2">
+                                                            {[
+                                                                "Non-technical",
+                                                                "Somewhat",
+                                                                "Technical",
+                                                            ].map((option) => (
+                                                                <div
+                                                                    key={option}
+                                                                    className="flex items-center space-x-2"
+                                                                >
+                                                                    <Checkbox
+                                                                        checked={
+                                                                            field.value ===
+                                                                            option
+                                                                        }
+                                                                        onCheckedChange={(
+                                                                            checked
+                                                                        ) => {
+                                                                            field.onChange(
+                                                                                checked
+                                                                                    ? option
+                                                                                    : undefined
+                                                                            );
+                                                                        }}
+                                                                    />
+                                                                    <FormLabel className="font-normal">
+                                                                        {option}
+                                                                    </FormLabel>
+                                                                </div>
+                                                            ))}
+                                                        </div>
                                                         <FormMessage />
                                                     </FormItem>
                                                 )}
