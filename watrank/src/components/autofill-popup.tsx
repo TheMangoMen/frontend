@@ -74,9 +74,8 @@ function AutofillPopupContent({
 export function AutofillPopup() {
     return (
         <Dialog>
-            <AutofillPopupContent>
-                <User />
-            </AutofillPopupContent>
+            <AutofillPopupContent />
+            <User />
         </Dialog>
     );
 }
