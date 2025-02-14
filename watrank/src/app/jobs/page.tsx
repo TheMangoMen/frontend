@@ -23,6 +23,7 @@ function parseJson(json: any) {
         Ranked: stageCount("Ranked")?.count,
         Taking: stageCount("Taking")?.count,
         NotTaking: stageCount("Not Taking")?.count,
+        hasContributed: json.hascontributed,
     };
 }
 
