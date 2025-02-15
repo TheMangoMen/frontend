@@ -302,9 +302,9 @@ export default function ContributeStatus({
                                                             "Medium",
                                                             "Hard",
                                                         ].map((option) => (
-                                                            <div
+                                                            <label
                                                                 key={option}
-                                                                className="flex items-center space-x-2"
+                                                                className="flex items-center space-x-2 cursor-pointer"
                                                             >
                                                                 <Checkbox
                                                                     checked={
@@ -321,10 +321,10 @@ export default function ContributeStatus({
                                                                         );
                                                                     }}
                                                                 />
-                                                                <FormLabel className="font-normal">
+                                                                <span className="font-normal">
                                                                     {option}
-                                                                </FormLabel>
-                                                            </div>
+                                                                </span>
+                                                            </label>
                                                         ))}
                                                     </div>
                                                     <FormMessage />
@@ -345,9 +345,9 @@ export default function ContributeStatus({
                                                             "1 to 2 Hours",
                                                             "Over 2 Hours",
                                                         ].map((option) => (
-                                                            <div
+                                                            <label
                                                                 key={option}
-                                                                className="flex items-center space-x-2"
+                                                                className="flex items-center space-x-2 cursor-pointer"
                                                             >
                                                                 <Checkbox
                                                                     checked={
@@ -364,10 +364,10 @@ export default function ContributeStatus({
                                                                         );
                                                                     }}
                                                                 />
-                                                                <FormLabel className="font-normal">
+                                                                <span className="font-normal">
                                                                     {option}
-                                                                </FormLabel>
-                                                            </div>
+                                                                </span>
+                                                            </label>
                                                         ))}
                                                     </div>
                                                     <FormMessage />
@@ -445,6 +445,7 @@ export default function ContributeStatus({
                                                                     className="flex items-center space-x-2"
                                                                 >
                                                                     <Checkbox
+                                                                        id={`vibe-${option}`}
                                                                         checked={
                                                                             field.value ===
                                                                             option
@@ -459,9 +460,12 @@ export default function ContributeStatus({
                                                                             );
                                                                         }}
                                                                     />
-                                                                    <FormLabel className="font-normal">
+                                                                    <label
+                                                                        htmlFor={`vibe-${option}`}
+                                                                        className="font-normal cursor-pointer"
+                                                                    >
                                                                         {option}
-                                                                    </FormLabel>
+                                                                    </label>
                                                                 </div>
                                                             ))}
                                                         </div>
@@ -484,9 +488,9 @@ export default function ContributeStatus({
                                                                 "Somewhat",
                                                                 "Technical",
                                                             ].map((option) => (
-                                                                <div
+                                                                <label
                                                                     key={option}
-                                                                    className="flex items-center space-x-2"
+                                                                    className="flex items-center space-x-2 cursor-pointer"
                                                                 >
                                                                     <Checkbox
                                                                         checked={
@@ -503,10 +507,10 @@ export default function ContributeStatus({
                                                                             );
                                                                         }}
                                                                     />
-                                                                    <FormLabel className="font-normal">
+                                                                    <span className="font-normal">
                                                                         {option}
-                                                                    </FormLabel>
-                                                                </div>
+                                                                    </span>
+                                                                </label>
                                                             ))}
                                                         </div>
                                                         <FormMessage />
