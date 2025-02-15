@@ -41,7 +41,7 @@ export const interviewColumns: ColumnDef<Job>[] = [
         cell: ({ row, table }) => (
             <OfferCountCell value={row.getValue("Offer")} />
         ),
-        meta: { className: "w-8 lg:w-14 justify-center text-xs lg:text-sm" },
+        meta: { className: "w-12 lg:w-14 justify-center text-xs lg:text-sm" },
     },
     {
         accessorKey: "",
