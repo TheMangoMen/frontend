@@ -6,7 +6,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useToast } from "./ui/use-toast";
 
 interface JobIDExtractorProps {
-    refresh?: () => void;
+    refresh: () => void;
 }
 
 const JobIDExtractor: React.FC<JobIDExtractorProps> = ({ refresh }) => {
@@ -42,7 +42,7 @@ const JobIDExtractor: React.FC<JobIDExtractorProps> = ({ refresh }) => {
                 showErrorToast();
             } else {
                 toast({ title: "Populated your watch list!" });
-                refresh?.();
+                refresh();
             }
         } catch (error) {
             console.error(error);

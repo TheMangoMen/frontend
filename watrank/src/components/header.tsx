@@ -10,10 +10,10 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { AutofillPopup } from "./autofill-popup";
 import { FullStory, init } from "@fullstory/browser";
 import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
+import { User } from "./user-button.tsx/user-button";
 
 export function Header() {
     const { token } = useAuth();
@@ -49,7 +49,7 @@ export function Header() {
                     <div className="justify-end">
                         <ModeToggle />
                     </div>
-                    <AutofillPopup />
+                    <User />
                 </div>
             </div>
         </header>

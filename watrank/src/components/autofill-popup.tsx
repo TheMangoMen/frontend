@@ -36,7 +36,7 @@ const CommandKey: React.FC<CommandKeyProps> = ({ text }) => {
 
 interface AutofillPopupContentProps {
     children?: React.ReactNode;
-    refresh?: () => void;
+    refresh: () => void;
 }
 
 function AutofillPopupContent({
@@ -71,20 +71,7 @@ function AutofillPopupContent({
     );
 }
 
-export function AutofillPopup() {
-    return (
-        <Dialog>
-            <AutofillPopupContent />
-            <User />
-        </Dialog>
-    );
-}
-
-export function AutofillPopupWithoutButton({
-    refresh,
-}: {
-    refresh?: () => void;
-}) {
+export function AutofillPopup({ refresh }: { refresh: () => void }) {
     return (
         <Dialog>
             <AutofillPopupContent refresh={refresh} />

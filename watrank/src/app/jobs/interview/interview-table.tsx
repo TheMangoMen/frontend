@@ -36,7 +36,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/AuthContext";
 import { ChevronUp, ChevronDown } from "lucide-react";
-import { AutofillPopupWithoutButton } from "@/components/autofill-popup";
+import { AutofillPopup } from "@/components/autofill-popup";
 import ExpandableInterviewRow from "./ExpandableInterviewRow";
 import AnimatedTabs from "../table-shared/animatedtabs";
 
@@ -241,7 +241,7 @@ export function InterviewTable<TData, TValue>({
                     />
                 </div>
                 <div className="hidden md:block">
-                    <AutofillPopupWithoutButton refresh={fetchJobs} />
+                    <AutofillPopup refresh={fetchJobs} />
                 </div>
                 {/* <div className="max-sm:hidden flex gap-2">
 					<DropdownMenu>
@@ -364,9 +364,7 @@ export function InterviewTable<TData, TValue>({
                                     colSpan={columns.length}
                                     className="h-24 text-center"
                                 >
-                                    <AutofillPopupWithoutButton
-                                        refresh={fetchJobs}
-                                    />
+                                    <AutofillPopup refresh={fetchJobs} />
                                 </TableCell>
                             </TableRow>
                         )}
