@@ -17,6 +17,7 @@ import { cellStyles } from "../table-shared/count-cell";
 
 interface ExpandableRankingRowProps<TData> {
     row: Row<TData>;
+    className?: string;
 }
 
 interface Contribution {
@@ -24,7 +25,10 @@ interface Contribution {
     employerranking: "Ranked" | "Offer";
 }
 
-const ExpandableRankingRow = ({ row }: any) => {
+const ExpandableRankingRow = ({
+    row,
+    className = "",
+}: ExpandableRankingRowProps<any>) => {
     const { toast } = useToast();
     const { token, isLoggedIn } = useAuth();
     const [isExpanded, setIsExpanded] = React.useState(false);
@@ -38,7 +42,9 @@ const ExpandableRankingRow = ({ row }: any) => {
     const fetchExpandedData = async (id: string) => {
         try {
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/jobs/specific/ranking/${row.getValue("jid")}`,
+                `${
+                    process.env.NEXT_PUBLIC_API_URL
+                }/jobs/specific/ranking/${row.getValue("jid")}`,
                 {
                     method: "GET",
                     headers: {
@@ -96,7 +102,12 @@ const ExpandableRankingRow = ({ row }: any) => {
         <>
             <TableRow
                 key={row.id}
-                className={`flex cursor-pointer hover:bg-secondary ${isExpanded ? "bg-secondary" : ""}`}
+                className={cn(
+                    `flex cursor-pointer hover:bg-secondary ${
+                        isExpanded ? "bg-secondary" : ""
+                    }`,
+                    className
+                )}
                 data-state={row.getIsSelected() && "selected"}
                 onClick={() => !disabled && setIsExpanded(!isExpanded)}
             >

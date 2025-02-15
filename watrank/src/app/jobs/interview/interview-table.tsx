@@ -37,7 +37,7 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/AuthContext";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { AutofillPopupWithoutButton } from "@/components/autofill-popup";
-import ExpandableRow from "./ExpandableInterviewRow";
+import ExpandableInterviewRow from "./ExpandableInterviewRow";
 import AnimatedTabs from "../table-shared/animatedtabs";
 
 declare module "@tanstack/table-core" {
@@ -221,6 +221,15 @@ export function InterviewTable<TData, TValue>({
             });
     }, [isMobile, table]);
 
+    // Split the rows into contributed and non-contributed
+    const rows = table.getRowModel().rows;
+    const contributedRows = rows.filter(
+        (row) => (row.original as any).hasContributed
+    );
+    const nonContributedRows = rows.filter(
+        (row) => !(row.original as any).hasContributed
+    );
+
     return (
         <div>
             <div className="pb-2 flex gap-5 justify-between">
@@ -311,12 +320,44 @@ export function InterviewTable<TData, TValue>({
                         ))}
                     </TableHeader>
                     <TableBody>
-                        {table.getRowModel().rows?.length > 0 ? (
-                            table
-                                .getRowModel()
-                                .rows.map((row) => (
-                                    <ExpandableRow key={row.id} row={row} />
-                                ))
+                        {rows.length > 0 ? (
+                            <>
+                                {/* Contributed Section */}
+                                {contributedRows.length > 0 && (
+                                    <>
+                                        {contributedRows.map((row, index) => (
+                                            <ExpandableInterviewRow
+                                                key={row.id}
+                                                row={row}
+                                                className={
+                                                    index === 0
+                                                        ? "border-t-2 border-t-blue/90"
+                                                        : ""
+                                                }
+                                            />
+                                        ))}
+                                    </>
+                                )}
+
+                                {/* Non-contributed Section */}
+                                {nonContributedRows.length > 0 && (
+                                    <>
+                                        {nonContributedRows.map(
+                                            (row, index) => (
+                                                <ExpandableInterviewRow
+                                                    key={row.id}
+                                                    row={row}
+                                                    className={
+                                                        index === 0
+                                                            ? "border-t-2 border-t-blue"
+                                                            : ""
+                                                    }
+                                                />
+                                            )
+                                        )}
+                                    </>
+                                )}
+                            </>
                         ) : (
                             <TableRow>
                                 <TableCell

@@ -19,6 +19,7 @@ import { cellStyles } from "../table-shared/count-cell";
 
 interface ExpandableInterviewRowProps<TData> {
     row: Row<TData>;
+    className?: string;
 }
 
 //call contributions, dipslay horizontal flex-box of badges
@@ -90,7 +91,10 @@ function parseContribution(contribution: any) {
     };
 }
 
-const ExpandableInterviewRow = ({ row }: any) => {
+const ExpandableInterviewRow = ({
+    row,
+    className = "",
+}: ExpandableInterviewRowProps<any>) => {
     const { toast } = useToast();
     const { token, isLoggedIn } = useAuth();
     const [isExpanded, setIsExpanded] = React.useState(false);
@@ -104,7 +108,9 @@ const ExpandableInterviewRow = ({ row }: any) => {
     const fetchExpandedData = async (id: string) => {
         try {
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/jobs/specific/interview/${row.getValue("jid")}`,
+                `${
+                    process.env.NEXT_PUBLIC_API_URL
+                }/jobs/specific/interview/${row.getValue("jid")}`,
                 {
                     method: "GET",
                     headers: {
@@ -139,7 +145,12 @@ const ExpandableInterviewRow = ({ row }: any) => {
         <>
             <TableRow
                 key={row.id}
-                className={`flex cursor-pointer hover:bg-secondary ${isExpanded ? "bg-secondary" : ""}`}
+                className={cn(
+                    `flex cursor-pointer hover:bg-secondary ${
+                        isExpanded ? "bg-secondary" : ""
+                    }`,
+                    className
+                )}
                 data-state={row.getIsSelected() && "selected"}
                 onClick={() => !disabled && setIsExpanded(!isExpanded)}
             >
