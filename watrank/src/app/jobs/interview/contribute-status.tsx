@@ -1,5 +1,6 @@
 "use client";
 
+import confetti from "canvas-confetti";
 import { Job } from "../table-shared/job";
 import {
     DollarSign,
@@ -194,6 +195,10 @@ export default function ContributeStatus({
                 showErrorToast();
             } else {
                 toast({ title: message });
+                confetti({
+                    particleCount: 30,
+                    spread: 120,
+                });
                 setOpen(false);
                 refresh();
             }

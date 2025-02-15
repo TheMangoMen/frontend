@@ -1,5 +1,6 @@
 "use client";
 
+import confetti from "canvas-confetti";
 import { Job } from "../table-shared/job";
 import { SquarePlus, Trash } from "lucide-react";
 import {
@@ -185,6 +186,10 @@ export default function ContributeStatus({
                 showErrorToast();
             } else {
                 toast({ title: "Thank you for your contribution!" });
+                confetti({
+                    particleCount: 30,
+                    spread: 120,
+                });
                 setOpen(false);
                 refresh();
             }
