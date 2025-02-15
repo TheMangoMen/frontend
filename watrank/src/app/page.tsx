@@ -25,6 +25,7 @@ import {
 } from "./jobs/table-shared/expanded-count-cell";
 import { formatDate } from "@/utils/utils";
 import Banner from "@/components/banner";
+import confetti from "canvas-confetti";
 
 const LandingPage = () => {
     const { isLoggedIn } = useAuth();
@@ -62,6 +63,50 @@ const LandingPage = () => {
             animateContributions(contributionsTableRef.current);
             animateAnalytics(analyticsRef.current);
         } catch {}
+
+        // Add snow animation
+        const duration = 15 * 1000;
+        const animationEnd = Date.now() + duration;
+        const SNOW_CHANCE = 0.1; // Lower = fewer snowflakes
+        const SNOW_SIZE = 1.5; // Adjust size of snowflakes
+        let skew = 1;
+
+        function randomInRange(min: number, max: number) {
+            return Math.random() * (max - min) + min;
+        }
+
+        const snowflakes = ["❄"].map((text) =>
+            confetti.shapeFromText({ text, scalar: SNOW_SIZE })
+        );
+
+        function makeItSnow() {
+            const timeLeft = animationEnd - Date.now();
+            const ticks = Math.max(200, 500 * (timeLeft / duration));
+            skew = Math.max(0.8, skew - 0.001);
+
+            if (Math.random() < SNOW_CHANCE) {
+                confetti({
+                    particleCount: 1,
+                    startVelocity: 0,
+                    ticks: ticks,
+                    origin: {
+                        x: Math.random(),
+                        y: Math.random() * skew - 0.2,
+                    },
+                    colors: ["#89CFF0", "#ADD8E6", "#B0E0E6"],
+                    shapes: snowflakes,
+                    scalar: SNOW_SIZE,
+                    gravity: randomInRange(0.3, 0.5),
+                    drift: randomInRange(-0.4, 0.4),
+                });
+            }
+
+            if (timeLeft > 0) {
+                requestAnimationFrame(makeItSnow);
+            }
+        }
+
+        makeItSnow();
     }, []);
 
     // dynamically import and initialize countUp, sets value of `countUpAnim`
