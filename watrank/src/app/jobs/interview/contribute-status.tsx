@@ -71,9 +71,13 @@ const formSchema = z.object({
 export default function ContributeStatus({
     row,
     refresh,
+    icon,
+    tooltipText,
 }: {
     row: Row<Job>;
     refresh: any;
+    icon: React.ReactNode;
+    tooltipText: string;
 }) {
     const { token, isLoggedIn } = useAuth();
     const { toast } = useToast();
@@ -242,7 +246,7 @@ export default function ContributeStatus({
                     <TooltipContent>
                         <p>
                             {isLoggedIn()
-                                ? "Contribute your status"
+                                ? tooltipText
                                 : "Log in to contribute"}
                         </p>
                     </TooltipContent>
@@ -254,7 +258,7 @@ export default function ContributeStatus({
                             className={`text-foreground/60 hover:text-foreground h-full flex p-1`}
                             variant="ghost"
                         >
-                            <SquarePlus className="w-5 text-primary" />
+                            {icon}
                         </Button>
                     </TooltipTrigger>
                 </Tooltip>

@@ -12,4 +12,5 @@ export type Job = {
     ranking: number;
     taking: number;
     notTaking: number;
+    hasContributed: boolean;
 };
