@@ -100,7 +100,7 @@ export function RankingTable<TData, TValue>({
     const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
     const [globalFilter, setGlobalFilter] = React.useState<{
         search: string;
-        tab: "all" | "inProgress" | "pending" | "contributed";
+        tab: "all" | "inProgress" | "pending";
     }>({
         search: "",
         tab: "all",
@@ -121,11 +121,10 @@ export function RankingTable<TData, TValue>({
             columnId,
             filterValue: {
                 search: string;
-                tab: "all" | "inProgress" | "pending" | "contributed";
+                tab: "all" | "inProgress" | "pending";
             }
         ) => {
-            const { company, title, jid, inprogress, hasContributed }: any =
-                row.original;
+            const { company, title, jid, inprogress }: any = row.original;
 
             const matchesSearchFilter = (company + title + jid)
                 .toLowerCase()
@@ -134,8 +133,7 @@ export function RankingTable<TData, TValue>({
             const matchesTabFilter =
                 filterValue.tab === "all" ||
                 (filterValue.tab === "inProgress" && inprogress === true) ||
-                (filterValue.tab === "pending" && inprogress === false) ||
-                (filterValue.tab === "contributed" && hasContributed === true);
+                (filterValue.tab === "pending" && inprogress === false);
 
             return matchesSearchFilter && matchesTabFilter;
         },
@@ -179,9 +177,7 @@ export function RankingTable<TData, TValue>({
         setGlobalFilter((prev) => ({ ...prev, search: event.target.value }));
     };
 
-    const handleTabChange = (
-        newTab: "all" | "inProgress" | "pending" | "contributed"
-    ) => {
+    const handleTabChange = (newTab: "all" | "inProgress" | "pending") => {
         setGlobalFilter((prev) => ({ ...prev, tab: newTab }));
     };
     const { isLoggedIn } = useAuth();

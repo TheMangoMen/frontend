@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 
-type FilterOption = "all" | "inProgress" | "pending" | "contributed";
+type FilterOption = "all" | "inProgress" | "pending";
 
 interface AnimatedTabsProps {
     setTabFilter: (tab: FilterOption) => void;
@@ -17,7 +17,6 @@ const AnimatedTabs: React.FC<AnimatedTabsProps> = ({ setTabFilter }) => {
         { label: "All", value: "all" },
         { label: "In Progress", value: "inProgress" },
         { label: "Pending", value: "pending" },
-        { label: "Contributed", value: "contributed" },
     ];
 
     const handleTabChange = (option: FilterOption) => {
