@@ -311,13 +311,12 @@ export default function ContributeStatus({
                                                                         field.value ===
                                                                         option
                                                                     }
-                                                                    onCheckedChange={(
-                                                                        checked
-                                                                    ) => {
+                                                                    onCheckedChange={() => {
                                                                         field.onChange(
-                                                                            checked
-                                                                                ? option
-                                                                                : undefined
+                                                                            field.value ===
+                                                                                option
+                                                                                ? null
+                                                                                : option
                                                                         );
                                                                     }}
                                                                 />
@@ -354,13 +353,12 @@ export default function ContributeStatus({
                                                                         field.value ===
                                                                         option
                                                                     }
-                                                                    onCheckedChange={(
-                                                                        checked
-                                                                    ) => {
+                                                                    onCheckedChange={() => {
                                                                         field.onChange(
-                                                                            checked
-                                                                                ? option
-                                                                                : undefined
+                                                                            field.value ===
+                                                                                option
+                                                                                ? null
+                                                                                : option
                                                                         );
                                                                     }}
                                                                 />
@@ -450,13 +448,12 @@ export default function ContributeStatus({
                                                                             field.value ===
                                                                             option
                                                                         }
-                                                                        onCheckedChange={(
-                                                                            checked
-                                                                        ) => {
+                                                                        onCheckedChange={() => {
                                                                             field.onChange(
-                                                                                checked
-                                                                                    ? option
-                                                                                    : undefined
+                                                                                field.value ===
+                                                                                    option
+                                                                                    ? null
+                                                                                    : option
                                                                             );
                                                                         }}
                                                                     />
@@ -497,13 +494,12 @@ export default function ContributeStatus({
                                                                             field.value ===
                                                                             option
                                                                         }
-                                                                        onCheckedChange={(
-                                                                            checked
-                                                                        ) => {
+                                                                        onCheckedChange={() => {
                                                                             field.onChange(
-                                                                                checked
-                                                                                    ? option
-                                                                                    : undefined
+                                                                                field.value ===
+                                                                                    option
+                                                                                    ? null
+                                                                                    : option
                                                                             );
                                                                         }}
                                                                     />
