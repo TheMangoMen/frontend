@@ -644,7 +644,7 @@ export default function AdminPage() {
                 }
             );
             const data = await response.json();
-            setContributions(data.slice(0, 50)); // Limit to 50 most recent contributions
+            setContributions(data); // Limit to 50 most recent contributions
         } catch (error) {
             console.error("Error fetching contributions:", error);
         }
