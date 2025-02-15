@@ -182,8 +182,8 @@ const AdminCard: React.FC<AdminCardProps> = ({
                               value === "true"
                                   ? true
                                   : value === "false"
-                                    ? false
-                                    : value,
+                                  ? false
+                                  : value,
                       };
             console.log(payload);
             const res: any = await fetch(updateUrl, {
@@ -540,7 +540,11 @@ const ContributionsAccordion: React.FC<{
                                         {groupContributions.length}
                                     </span>
                                     <span
-                                        className={`text-primary-foreground rounded-full px-2 py-1 text-sm font-bold min-w-[3rem] text-center bg-cyan-300 ${offerCallCount === 0 ? "invisible" : ""}`}
+                                        className={`text-primary-foreground rounded-full px-2 py-1 text-sm font-bold min-w-[3rem] text-center bg-cyan-300 ${
+                                            offerCallCount === 0
+                                                ? "invisible"
+                                                : ""
+                                        }`}
                                     >
                                         {offerCallCount}
                                     </span>
@@ -606,21 +610,22 @@ export default function AdminPage() {
                 }
             );
             const data = await response.json();
-            const formattedData = data.map((entry: ContributionLog) => {
-                const date = new Date(entry.LogTime);
-                const formattedLogTime = `${date.toLocaleDateString("en-US")} ${date.toLocaleTimeString(
-                    "en-US",
-                    {
+            const formattedData = data
+                .slice(0, 50) // Limit to 50 most recent logs
+                .map((entry: ContributionLog) => {
+                    const date = new Date(entry.LogTime);
+                    const formattedLogTime = `${date.toLocaleDateString(
+                        "en-US"
+                    )} ${date.toLocaleTimeString("en-US", {
                         hour: "2-digit",
                         minute: "2-digit",
                         second: "2-digit",
-                    }
-                )}`;
-                return {
-                    ...entry,
-                    LogTime: formattedLogTime,
-                };
-            });
+                    })}`;
+                    return {
+                        ...entry,
+                        LogTime: formattedLogTime,
+                    };
+                });
             setContributionLogs(formattedData);
         } catch (error) {
             console.error("Error fetching contribution logs:", error);
@@ -639,7 +644,7 @@ export default function AdminPage() {
                 }
             );
             const data = await response.json();
-            setContributions(data);
+            setContributions(data.slice(0, 50)); // Limit to 50 most recent contributions
         } catch (error) {
             console.error("Error fetching contributions:", error);
         }
