@@ -54,10 +54,12 @@ import { Input } from "@/components/input";
 import { Row } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 
-const Difficulty = z.enum(["Easy", "Medium", "Hard"]);
-const Length = z.enum(["Under 1 Hour", "1 to 2 Hours", "Over 2 Hours"]);
-const Vibe = z.enum(["Bad", "Good", "Neutral"]);
-const Technical = z.enum(["Non-technical", "Somewhat", "Technical"]);
+const Difficulty = z.enum(["Easy", "Medium", "Hard"]).nullable();
+const Length = z
+    .enum(["Under 1 Hour", "1 to 2 Hours", "Over 2 Hours"])
+    .nullable();
+const Vibe = z.enum(["Bad", "Good", "Neutral"]).nullable();
+const Technical = z.enum(["Non-technical", "Somewhat", "Technical"]).nullable();
 
 const formSchema = z.object({
     interviewcount: z.number().min(1).max(3).default(1),
