@@ -20,31 +20,22 @@ interface Job {
     cycle: number;
 }
 
-const JOB_BLOCK_REGEX = /([\w\s&\-()\/]+)\n(\d{6})\n(\d{4} - \w+)\n(.+?)\n(?:Applied|Selected for Interview|Not Selected)[\s\S]+?\n(\d+)\n(?:[A-Za-z]+ \d{1,2}, \d{4} \d{1,2}:\d{2} [AP]M)\n(?:[A-Za-z]+ \d{1,2}, \d{4} \d{1,2}:\d{2} [AP]M)\nLillian Liu/gi;
+const JOB_BLOCK_REGEX = /preview\s*print\s*(.*?)\s+(\d{6})\s+(?:\d{4}\s*-\s*\w+)\s+(.*?)\s+(?:Applied|Selected|Not Selected)[\s\S]*?(?:[\s\n])(\d+)(?=\s*May)/gi;
 
 const parseJobs = (text: string): Job[] => {
   const matches = [...text.matchAll(JOB_BLOCK_REGEX)];
   return matches.map(match => {
-    const [_, title, jobIdStr, term, company, openingsStr] = match;
-
-    const job_id = parseInt(jobIdStr, 10);
-    const openings = parseInt(openingsStr, 10);
-
-    const [yearStr, season] = term.split(" - ");
-    const year = parseInt(yearStr, 10);
-
-    // Cycle: we don't have cycle explicitly, so default 1 or infer based on date
-    const cycle = 1;
+    const [_, title, jobIdStr, company, openingsStr] = match;
 
     return {
-      job_id,
+      job_id: parseInt(jobIdStr, 10),
       title: title.trim(),
       company: company.trim(),
-      location: "", // You can add location parsing if needed later
-      openings,
-      season: season.trim(),
-      year,
-      cycle,
+      location: "",
+      openings: parseInt(openingsStr, 10),
+      season: "Fall",
+      year: 2025,
+      cycle: 1
     };
   });
 };
@@ -81,7 +72,7 @@ const JobIDExtractor: React.FC<JobIDExtractorProps> = ({ refresh }) => {
                         ...(token && { Authorization: `Bearer ${token}` }),
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ jobs, delete: false }),
+                    body: JSON.stringify(jobs),
                 }
             );
 
