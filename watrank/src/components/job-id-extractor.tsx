@@ -20,24 +20,82 @@ interface Job {
     cycle: number;
 }
 
-const JOB_BLOCK_REGEX = /preview\s*print\s*(.*?)\s+(\d{6})\s+(?:\d{4}\s*-\s*\w+)\s+(.*?)\s+(?:Applied|Selected|Not Selected)[\s\S]*?(?:[\s\n])(\d+)(?=\s*May)/gi;
-
 const parseJobs = (text: string): Job[] => {
-  const matches = [...text.matchAll(JOB_BLOCK_REGEX)];
-  return matches.map(match => {
-    const [_, title, jobIdStr, company, openingsStr] = match;
+  const jobs: Job[] = [];
+  const lines = text.split('\n');
+  
+  let currentJob: Partial<Job> = {};
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    
+    // Start of a new job entry
+    if (line === 'preview' && lines[i + 1]?.trim() === 'print') {
+      // Save previous job if exists
+      if (currentJob.job_id) {
+        jobs.push(currentJob as Job);
+      }
+      
+      // Reset for new job
+      currentJob = {
+        season: "Fall",
+        year: 2025,
+        cycle: 1
+      };
+      
+      // Skip the 'print' line
+      i++;
+      
+      // Next line should be the title
+      if (lines[i + 1]) {
+        currentJob.title = lines[i + 1].trim();
+        i++;
+      }
+      
+      // Next line should be job ID
+      if (lines[i + 1]) {
+        currentJob.job_id = parseInt(lines[i + 1].trim(), 10);
+        i++;
+      }
+      
+      // Skip the term line
+      i++;
+      
+      // Next line should be company
+      if (lines[i + 1]) {
+        currentJob.company = lines[i + 1].trim();
+        i++;
+      }
 
-    return {
-      job_id: parseInt(jobIdStr, 10),
-      title: title.trim(),
-      company: company.trim(),
-      location: "",
-      openings: parseInt(openingsStr, 10),
-      season: "Fall",
-      year: 2025,
-      cycle: 1
-    };
-  });
+      // Look ahead for the date line
+      let j = i + 1;
+      while (j < lines.length) {
+        const currentLine = lines[j].trim();
+        // Match date format: Month DD, YYYY H:MM AM/PM
+        if (/[A-Za-z]+ \d{1,2}, \d{4} \d{1,2}:\d{2} [AP]M/.test(currentLine)) {
+          // The line two before the date is the city
+          if (j >= 2) {
+            currentJob.location = lines[j - 2].trim();
+          }
+          // The line right before the date is the openings
+          if (j >= 1) {
+            const openings = parseInt(lines[j - 1].trim(), 10);
+            currentJob.openings = isNaN(openings) ? 1 : openings;
+          }
+          break;
+        }
+        j++;
+      }
+      i = j; // Skip to where we found the date
+    }
+  }
+  
+  // Add the last job if exists
+  if (currentJob.job_id) {
+    jobs.push(currentJob as Job);
+  }
+  
+  return jobs;
 };
 
 
