@@ -106,13 +106,13 @@ const JobIDExtractor: React.FC<JobIDExtractorProps> = ({ refresh }) => {
     const showErrorToast = () =>
         toast({
             variant: "destructive",
-            title: "An error occurred while trying to populate your watchlist.",
+            title: "An error occurred while trying to populate your watchlist. We reccomend using Google Chrome when copying.",
         });
 
     const showParseErrorToast = () =>
         toast({
             variant: "destructive",
-            title: "No jobs found, please try copying the table again.",
+            title: "No jobs found, please try copying the table again. We reccomend using Google Chrome when copying.",
         });
 
     const showSuccessToast = () =>
