@@ -55,7 +55,7 @@ function TagBadges({ tags }: { tags: Tags }) {
                     {`${tech} Interview`}
                 </Badge>
             )}
-            {tags.compensation && tags.compensation > 0 && (
+            {tags.compensation !== undefined && tags.compensation !== null && tags.compensation > 0 && (
                 <Badge className={cn(Object.values(cellStyles.offer))}>
                     {`$${tags.compensation}/hr`}
                 </Badge>
