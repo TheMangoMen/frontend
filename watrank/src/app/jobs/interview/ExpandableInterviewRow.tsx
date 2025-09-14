@@ -40,6 +40,11 @@ function TagBadges({ tags }: { tags: Tags }) {
                     {`${tags.oadifficulty} OA`}
                 </Badge>
             )}
+            {tags.oalength && (
+                <Badge className={cn(Object.values(cellStyles.OA))}>
+                    {`${tags.oalength} OA`}
+                </Badge>
+            )}
             {tags.interviewvibe && (
                 <Badge className={cn(Object.values(cellStyles.interview))}>
                     {`${tags.interviewvibe} Vibes`}
@@ -48,6 +53,11 @@ function TagBadges({ tags }: { tags: Tags }) {
             {tags.interviewtechnical && (
                 <Badge className={cn(Object.values(cellStyles.interview))}>
                     {`${tech} Interview`}
+                </Badge>
+            )}
+            {tags.compensation !== undefined && tags.compensation !== null && tags.compensation > 0 && (
+                <Badge className={cn(Object.values(cellStyles.offer))}>
+                    {`$${tags.compensation}/hr`}
                 </Badge>
             )}
         </div>
