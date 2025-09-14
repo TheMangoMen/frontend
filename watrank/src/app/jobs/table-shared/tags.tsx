@@ -3,5 +3,5 @@ export type Tags = {
     oalength?: string;
     interviewvibe?: string;
     interviewtechnical?: string;
-    compensation?: 0;
+    compensation?: number;
 };
