@@ -38,23 +38,25 @@ const parseJobs = (text: string): Job[] => {
 
             if (printIndex === -1) continue;
 
-            // Look for "cancel" after "print"
-            let cancelIndex = -1;
-            for (
-                let k = printIndex + 1;
-                k < lines.length && k < printIndex + 5;
-                k++
-            ) {
-                if (lines[k] === "cancel") {
-                    cancelIndex = k;
-                    break;
-                }
-            }
+            // // This is only works when the job deadline has not passed (i.e. users can still cancel the application)
+            // // Look for "cancel" after "print"
+            // let cancelIndex = -1;
+            // for (
+            //     let k = printIndex + 1;
+            //     k < lines.length && k < printIndex + 5;
+            //     k++
+            // ) {
+            //     if (lines[k] === "cancel") {
+            //         cancelIndex = k;
+            //         break;
+            //     }
+            // }
+            // if (cancelIndex === -1) continue;
+            // // Start parsing job data after "cancel"
+            // let jobStartIndex = cancelIndex + 1;
 
-            if (cancelIndex === -1) continue;
-
-            // Start parsing job data after "cancel"
-            let jobStartIndex = cancelIndex + 1;
+            // Start parsing job data after "print"
+            let jobStartIndex = printIndex + 1;
 
             // Skip any empty lines
             while (
