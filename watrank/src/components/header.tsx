@@ -40,7 +40,7 @@ export function Header() {
     }, [token, isInitialized]);
 
     return (
-        <header className="sticky top-0 bg-background z-10 shadow dark:shadow-gray-700">
+        <header className="sticky top-0 bg-background z-50 shadow dark:shadow-gray-700">
             <div className="flex items-center justify-between h-[4.5rem] select-none max-w-6xl mx-auto px-6 md:px-8">
                 <div className="flex items-center gap-1 md:gap-4">
                     <Logo />
