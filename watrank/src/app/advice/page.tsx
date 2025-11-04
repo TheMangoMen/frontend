@@ -22,7 +22,7 @@ const interviews: Interview[] = [
     {
         id: "1",
         name: "Ava Thompson",
-        date: "2025-09-12",
+        date: "2025-11-03",
         title: "Senior Software Engineer",
         company: "Shopify",
         topic: "Finding your first co-op",
@@ -35,7 +35,7 @@ const interviews: Interview[] = [
     {
         id: "2",
         name: "Daniel Kim",
-        date: "2025-08-21",
+        date: "2025-11-01",
         title: "Machine Learning Engineer",
         company: "NVIDIA",
         topic: "Jumping into AI/ML",
@@ -48,20 +48,20 @@ const interviews: Interview[] = [
     {
         id: "3",
         name: "Maya Patel",
-        date: "2025-07-03",
+        date: "2025-10-29",
         title: "Product Manager",
         company: "Atlassian",
         topic: "Communicating impact",
         advice:
             "Frame your work as outcomes, not tasks. What changed for users or the business because of your contribution?",
-        tags: ["communication", "impact"],
+        tags: ["interviews", "communication", "impact"],
         details:
             "Convert tasks to metrics: latency reduced by 30%, support tickets down 15%, conversion up 3%. Include the measurement window and confidence. Use before/after visuals where possible.",
     },
     {
         id: "4",
         name: "Leo García",
-        date: "2025-06-17",
+        date: "2025-10-29",
         title: "Site Reliability Engineer",
         company: "Cloudflare",
         topic: "Systems and reliability",
@@ -74,7 +74,7 @@ const interviews: Interview[] = [
     {
         id: "5",
         name: "Sofia Rossi",
-        date: "2025-05-02",
+        date: "2025-10-26",
         title: "Frontend Engineer",
         company: "Figma",
         topic: "Frontend craftsmanship",
@@ -87,13 +87,13 @@ const interviews: Interview[] = [
     {
         id: "6",
         name: "Noah Williams",
-        date: "2025-04-11",
+        date: "2025-10-26",
         title: "Backend Engineer",
         company: "Stripe",
         topic: "APIs that age well",
         advice:
             "Design for clarity and evolution. Strong contracts, good errors, idempotency, and observability save future you.",
-        tags: ["api", "design", "backend"],
+        tags: ["backend", "api"],
         details:
             "Return actionable error messages with machine-readable codes. Document idempotency and rate limits. Add request IDs and structured logs to speed up incident response.",
     },
@@ -161,7 +161,7 @@ export default function AdvicePage() {
                                             </CardDescription>
                                         </div>
                                         <div className="hidden sm:flex gap-1 flex-wrap justify-end">
-                                            {item.tags.slice(0, 2).map((tag) => (
+                                            {item.tags.slice(0, 1).map((tag) => (
                                                 <Badge key={tag} variant="secondary" className="whitespace-nowrap">
                                                     {tag}
                                                 </Badge>
