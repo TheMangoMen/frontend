@@ -8,47 +8,49 @@ import { Button } from "@/components/ui/button";
 import { ThumbsDown, ThumbsUp } from 'lucide-react';
 type Interview = {
     id: string;
-    name: string;
     title: string;
     company: string;
     topic: string;
     advice: string;
     tags: string[];
     date: string;
+    likes?: number;
+    dislikes?: number;
     details?: string;
 };
 
 const interviews: Interview[] = [
     {
         id: "1",
-        name: "Ava Thompson",
+        likes: 3,
+        dislikes: 0,
         date: "2025-11-03",
-        title: "Senior Software Engineer",
+        title: "Senior SWE",
         company: "Shopify",
         topic: "Finding your first co-op",
         advice:
-            "Treat each application as practice. Keep your resume short, quantify impact, and ship small projects you can demo in 2 minutes.",
+            "treat each application as practice. keep your resume short, quantify impact, and ship small projects you can demo in 2 minutes.",
         tags: ["resume", "projects", "interviews"],
         details:
             "Start with a simple, well-scoped project that solves a real problem for you or a friend. Write a concise README that explains the problem, approach, and trade-offs. When interviewing, walk through your decision tree: why this stack, how you tested, and what you'd improve with more time.",
     },
     {
         id: "2",
-        name: "Daniel Kim",
         date: "2025-11-01",
         title: "Machine Learning Engineer",
         company: "NVIDIA",
         topic: "Jumping into AI/ML",
         advice:
-            "Build from first principles: linear algebra, probability, and Python. Reproduce a paper end-to-end instead of only watching tutorials.",
+            "Build from first principles but don't get into analysis paralysis. Linear algebra, probability, Python. Get your hands dirty instead of only watching tutorials.",
         tags: ["ml", "math", "portfolio"],
         details:
             "Pick one benchmark dataset and set a clear goal (e.g., match paper accuracy). Keep an experiment log, control variables, and visualize failures. Focus on data quality and evaluation before adding model complexity.",
     },
     {
         id: "3",
-        name: "Maya Patel",
         date: "2025-10-29",
+        likes: 3,
+        dislikes: 0,
         title: "Product Manager",
         company: "Atlassian",
         topic: "Communicating impact",
@@ -60,40 +62,43 @@ const interviews: Interview[] = [
     },
     {
         id: "4",
-        name: "Leo García",
         date: "2025-10-29",
+        likes: 2,
+        dislikes: 0,
         title: "Site Reliability Engineer",
         company: "Cloudflare",
         topic: "Systems and reliability",
         advice:
-            "Learn to read dashboards and logs calmly. Start with the simplest hypothesis and verify with data before changing anything.",
+            "Learn to read dashboards and logs. Start with the simplest hypothesis and verify with data before changing anything.",
         tags: ["sre", "observability", "debugging"],
         details:
             "Build a personal debugging checklist: check status pages, recent deploys, error budgets, and top alerts. Use bisecting and correlation—avoid changing multiple variables at once.",
     },
     {
         id: "5",
-        name: "Sofia Rossi",
         date: "2025-10-26",
+        likes: 4,
+        dislikes: 0,
         title: "Frontend Engineer",
         company: "Figma",
         topic: "Frontend craftsmanship",
         advice:
-            "Master the fundamentals: DOM, accessibility, and state management. Performance is a UX feature—profile early and often.",
+            "get really good at state management. performance is highkey a UX feature, so keep it sharp.",
         tags: ["frontend", "a11y", "performance"],
         details:
             "Adopt an accessibility-first mindset: semantic HTML, focus states, and color contrast. Measure with Lighthouse and the Performance panel. Prefer simple state over complex abstractions.",
     },
     {
         id: "6",
-        name: "Noah Williams",
         date: "2025-10-26",
-        title: "Backend Engineer",
-        company: "Stripe",
-        topic: "APIs that age well",
+        likes: 2,
+        dislikes: 1,
+        title: "Design Engineer",
+        company: "Windsurf",
+        topic: "Maximizing your internships",
         advice:
-            "Design for clarity and evolution. Strong contracts, good errors, idempotency, and observability save future you.",
-        tags: ["backend", "api"],
+            "If you want to find what you love, aim for high breadth across internships, and high depth within each internship.",
+                    tags: ["jobs", "career"],
         details:
             "Return actionable error messages with machine-readable codes. Document idempotency and rate limits. Add request IDs and structured logs to speed up incident response.",
     },
@@ -103,7 +108,7 @@ export default function AdvicePage() {
     const [votes, setVotes] = useState<Record<string, { likes: number; dislikes: number; choice: "like" | "dislike" | null }>>(() => {
         const initial: Record<string, { likes: number; dislikes: number; choice: "like" | "dislike" | null }> = {};
         interviews.forEach((i) => {
-            initial[i.id] = { likes: 0, dislikes: 0, choice: null };
+            initial[i.id] = { likes: i.likes ?? 0, dislikes: i.dislikes ?? 0, choice: null };
         });
         return initial;
     });
@@ -157,7 +162,7 @@ export default function AdvicePage() {
                                         <div className="min-w-0">
                                             <CardTitle className="truncate">{item.topic}</CardTitle>
                                             <CardDescription className="truncate">
-                                                {item.name} · {item.title} @ {item.company}
+                                                 {item.title} @ {item.company}
                                             </CardDescription>
                                         </div>
                                         <div className="hidden sm:flex gap-1 flex-wrap justify-end">
