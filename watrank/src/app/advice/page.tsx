@@ -1,7 +1,11 @@
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+"use client";
 
+import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { ThumbsDown, ThumbsUp } from 'lucide-react';
 type Interview = {
     id: string;
     name: string;
@@ -10,6 +14,7 @@ type Interview = {
     topic: string;
     advice: string;
     tags: string[];
+    date: string;
     details?: string;
 };
 
@@ -17,6 +22,7 @@ const interviews: Interview[] = [
     {
         id: "1",
         name: "Ava Thompson",
+        date: "2025-09-12",
         title: "Senior Software Engineer",
         company: "Shopify",
         topic: "Finding your first co-op",
@@ -29,6 +35,7 @@ const interviews: Interview[] = [
     {
         id: "2",
         name: "Daniel Kim",
+        date: "2025-08-21",
         title: "Machine Learning Engineer",
         company: "NVIDIA",
         topic: "Jumping into AI/ML",
@@ -41,6 +48,7 @@ const interviews: Interview[] = [
     {
         id: "3",
         name: "Maya Patel",
+        date: "2025-07-03",
         title: "Product Manager",
         company: "Atlassian",
         topic: "Communicating impact",
@@ -53,6 +61,7 @@ const interviews: Interview[] = [
     {
         id: "4",
         name: "Leo García",
+        date: "2025-06-17",
         title: "Site Reliability Engineer",
         company: "Cloudflare",
         topic: "Systems and reliability",
@@ -65,6 +74,7 @@ const interviews: Interview[] = [
     {
         id: "5",
         name: "Sofia Rossi",
+        date: "2025-05-02",
         title: "Frontend Engineer",
         company: "Figma",
         topic: "Frontend craftsmanship",
@@ -77,6 +87,7 @@ const interviews: Interview[] = [
     {
         id: "6",
         name: "Noah Williams",
+        date: "2025-04-11",
         title: "Backend Engineer",
         company: "Stripe",
         topic: "APIs that age well",
@@ -89,8 +100,46 @@ const interviews: Interview[] = [
 ];
 
 export default function AdvicePage() {
+    const [votes, setVotes] = useState<Record<string, { likes: number; dislikes: number; choice: "like" | "dislike" | null }>>(() => {
+        const initial: Record<string, { likes: number; dislikes: number; choice: "like" | "dislike" | null }> = {};
+        interviews.forEach((i) => {
+            initial[i.id] = { likes: 0, dislikes: 0, choice: null };
+        });
+        return initial;
+    });
+
+    function handleLike(id: string) {
+        setVotes((prev) => {
+            const cur = prev[id];
+            const next = { ...prev };
+            if (cur.choice === "like") {
+                next[id] = { ...cur, likes: Math.max(0, cur.likes - 1), choice: null };
+            } else if (cur.choice === "dislike") {
+                next[id] = { ...cur, dislikes: Math.max(0, cur.dislikes - 1), likes: cur.likes + 1, choice: "like" };
+            } else {
+                next[id] = { ...cur, likes: cur.likes + 1, choice: "like" };
+            }
+            return next;
+        });
+    }
+
+    function handleDislike(id: string) {
+        setVotes((prev) => {
+            const cur = prev[id];
+            const next = { ...prev };
+            if (cur.choice === "dislike") {
+                next[id] = { ...cur, dislikes: Math.max(0, cur.dislikes - 1), choice: null };
+            } else if (cur.choice === "like") {
+                next[id] = { ...cur, likes: Math.max(0, cur.likes - 1), dislikes: cur.dislikes + 1, choice: "dislike" };
+            } else {
+                next[id] = { ...cur, dislikes: cur.dislikes + 1, choice: "dislike" };
+            }
+            return next;
+        });
+    }
+
     return (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 py-3">
             <div className="flex flex-col gap-2">
                 <h1 className="text-3xl font-semibold tracking-tight">Career Advice</h1>
                 <p className="text-muted-foreground">
@@ -102,7 +151,7 @@ export default function AdvicePage() {
                 {interviews.map((item) => (
                     <Dialog key={item.id}>
                         <DialogTrigger asChild>
-                            <Card className="h-full cursor-pointer transition hover:shadow-md">
+                            <Card className="h-full flex flex-col cursor-pointer transition hover:shadow-md">
                                 <CardHeader className="pb-3">
                                     <div className="flex items-center justify-between gap-3">
                                         <div className="min-w-0">
@@ -120,7 +169,7 @@ export default function AdvicePage() {
                                         </div>
                                     </div>
                                 </CardHeader>
-                                <CardContent className="pt-0">
+                                <CardContent className="pt-0 flex-1">
                                     <p className="text-sm leading-relaxed">
                                         “{item.advice}”
                                     </p>
@@ -132,6 +181,23 @@ export default function AdvicePage() {
                                         ))}
                                     </div>
                                 </CardContent>
+                                <CardFooter className="pt-0">
+                                    <div className="flex items-center justify-between w-full">
+                                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                            <div className="flex items-center gap-1">
+                                                <span aria-hidden><ThumbsUp size={20} /></span>
+                                                <span>{votes[item.id]?.likes ?? 0}</span>
+                                            </div>
+                                            <div className="flex items-center gap-1">
+                                                <span aria-hidden><ThumbsDown size={20} /></span>
+                                                <span>{votes[item.id]?.dislikes ?? 0}</span>
+                                            </div>
+                                        </div>
+                                        <time className="text-xs text-muted-foreground" dateTime={item.date}>
+                                            {item.date}
+                                        </time>
+                                    </div>
+                                </CardFooter>
                             </Card>
                         </DialogTrigger>
                         <DialogContent>
@@ -151,6 +217,27 @@ export default function AdvicePage() {
                                             {tag}
                                         </Badge>
                                     ))}
+                                </div>
+                                <div className="mt-4 flex items-center gap-3">
+                                    <Button
+                                        variant={votes[item.id]?.choice === "like" ? "secondary" : "ghost"}
+                                        size="sm"
+                                        onClick={() => handleLike(item.id)}
+                                        aria-pressed={votes[item.id]?.choice === "like"}
+                                    >
+                                        <span className="mr-2"><ThumbsUp size={20} /></span>
+                                        <span className="text-sm">{votes[item.id]?.likes ?? 0}</span>
+                                    </Button>
+
+                                    <Button
+                                        variant={votes[item.id]?.choice === "dislike" ? "destructive" : "ghost"}
+                                        size="sm"
+                                        onClick={() => handleDislike(item.id)}
+                                        aria-pressed={votes[item.id]?.choice === "dislike"}
+                                    >
+                                        <span className="mr-2"><ThumbsDown size={20} /></span>
+                                        <span className="text-sm">{votes[item.id]?.dislikes ?? 0}</span>
+                                    </Button>
                                 </div>
                             </div>
                         </DialogContent>
