@@ -154,7 +154,7 @@ export default function AdvicePage() {
         });
     }
 
-    if (authIsLoading || !isAdmin) {
+    if (authIsLoading || !isAdmin()) {
         return <Skeleton className="w-12 h-9 bg-zinc-100 dark:bg-muted" />;
     }
 
