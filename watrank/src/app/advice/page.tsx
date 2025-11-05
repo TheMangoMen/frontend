@@ -209,7 +209,7 @@ export default function AdvicePage() {
                             <DialogHeader>
                                 <DialogTitle>{item.topic}</DialogTitle>
                                 <DialogDescription>
-                                    {item.name} · {item.title} @ {item.company}
+                                    {item.title} @ {item.company}
                                 </DialogDescription>
                             </DialogHeader>
                             <div className="space-y-3">
