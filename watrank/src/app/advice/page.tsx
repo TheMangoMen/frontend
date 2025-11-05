@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Button } from "@/components/ui/button";
 import { ThumbsDown, ThumbsUp } from 'lucide-react';
 import { useAuth } from "@/context/AuthContext";
+import { Skeleton } from "@/components/ui/skeleton";
 type Interview = {
     id: string;
     title: string;
@@ -100,7 +101,7 @@ const interviews: Interview[] = [
         topic: "Maximizing your internships",
         advice:
             "If you want to find what you love, aim for high breadth across internships, and high depth within each internship.",
-                    tags: ["jobs", "career"],
+        tags: ["jobs", "career"],
         details:
             "Return actionable error messages with machine-readable codes. Document idempotency and rate limits. Add request IDs and structured logs to speed up incident response.",
     },
@@ -108,13 +109,12 @@ const interviews: Interview[] = [
 
 export default function AdvicePage() {
     const router = useRouter();
-    const { isAdmin } = useAuth();
+    const { isAdmin, authIsLoading } = useAuth();
 
-    useEffect(() => {
-        if (!isAdmin()) {
-            router.push('/');
-        }
-    }, [isAdmin, router]);
+    if (!authIsLoading && !isAdmin()) {
+        router.push('/');
+        return;
+    }
 
     const [votes, setVotes] = useState<Record<string, { likes: number; dislikes: number; choice: "like" | "dislike" | null }>>(() => {
         const initial: Record<string, { likes: number; dislikes: number; choice: "like" | "dislike" | null }> = {};
@@ -154,6 +154,10 @@ export default function AdvicePage() {
         });
     }
 
+    if (authIsLoading) {
+        return <Skeleton className="w-12 h-9 bg-zinc-100 dark:bg-muted" />;
+    }
+
     return (
         <div className="flex flex-col gap-6 py-3">
             <div className="flex flex-col gap-2">
@@ -173,7 +177,7 @@ export default function AdvicePage() {
                                         <div className="min-w-0">
                                             <CardTitle className="truncate">{item.topic}</CardTitle>
                                             <CardDescription className="truncate">
-                                                 {item.title} @ {item.company}
+                                                {item.title} @ {item.company}
                                             </CardDescription>
                                         </div>
                                         <div className="hidden sm:flex gap-1 flex-wrap justify-end">
