@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ThumbsDown, ThumbsUp } from 'lucide-react';
+import { useAuth } from "@/context/AuthContext";
 type Interview = {
     id: string;
     title: string;
@@ -105,6 +107,15 @@ const interviews: Interview[] = [
 ];
 
 export default function AdvicePage() {
+    const router = useRouter();
+    const { isAdmin } = useAuth();
+
+    useEffect(() => {
+        if (!isAdmin()) {
+            router.push('/');
+        }
+    }, [isAdmin, router]);
+
     const [votes, setVotes] = useState<Record<string, { likes: number; dislikes: number; choice: "like" | "dislike" | null }>>(() => {
         const initial: Record<string, { likes: number; dislikes: number; choice: "like" | "dislike" | null }> = {};
         interviews.forEach((i) => {
