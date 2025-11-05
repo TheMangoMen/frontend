@@ -110,12 +110,6 @@ const interviews: Interview[] = [
 export default function AdvicePage() {
     const router = useRouter();
     const { isAdmin, authIsLoading } = useAuth();
-
-    if (!authIsLoading && !isAdmin()) {
-        router.push('/');
-        return;
-    }
-
     const [votes, setVotes] = useState<Record<string, { likes: number; dislikes: number; choice: "like" | "dislike" | null }>>(() => {
         const initial: Record<string, { likes: number; dislikes: number; choice: "like" | "dislike" | null }> = {};
         interviews.forEach((i) => {
@@ -123,6 +117,12 @@ export default function AdvicePage() {
         });
         return initial;
     });
+
+    useEffect(() => {
+        if (!authIsLoading && !isAdmin()) {
+            router.push('/');
+        }
+    }, [authIsLoading, isAdmin, router]);
 
     function handleLike(id: string) {
         setVotes((prev) => {
@@ -154,7 +154,7 @@ export default function AdvicePage() {
         });
     }
 
-    if (authIsLoading) {
+    if (authIsLoading || !isAdmin) {
         return <Skeleton className="w-12 h-9 bg-zinc-100 dark:bg-muted" />;
     }
 
