@@ -110,22 +110,6 @@ export default function JobPage() {
     }
 
     return (
-        <>
-            {showRankingTable ? (
-                <RankingTable
-                    columns={rankingColumns}
-                    data={data}
-                    setData={setData}
-                    fetchJobs={fetchStageAndJobs}
-                />
-            ) : (
-                <InterviewTable
-                    columns={interviewColumns}
-                    data={data}
-                    setData={setData}
-                    fetchJobs={fetchStageAndJobs}
-                />
-            )}
-        </>
+        <Banner/>
     );
 }
