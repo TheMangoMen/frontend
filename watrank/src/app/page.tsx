@@ -111,9 +111,9 @@ const LandingPage = () => {
                 className="relative py-12 lg:py-24 max-w-6xl px-4 lg:px-8 h-screen grid lg:grid-cols-2 mx-auto content-center lg:items-center justify-center gap-y-8 -mb-6"
             >
                 <div className="mb-8 lg:mb-0">
-                    {/* <div className="flex justify-center lg:justify-start">
+                    <div className="flex justify-center lg:justify-start">
 						<Banner />
-					</div> */}
+					</div>
                     <h1 className="text-3xl font-extrabold">
                         Meet
                         <div className="text-7xl lg:text-8xl">
