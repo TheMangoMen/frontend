@@ -8,7 +8,8 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { GlobalProvider } from "@/context/StageContext";
-import { Analytics } from "@vercel/analytics/react";
+// Removed Vercel Analytics for Cloudflare hosting - enable Cloudflare Web Analytics in dashboard if needed
+// import { Analytics } from "@vercel/analytics/react";
 import Main from "./main";
 import { Inter } from "next/font/google";
 
@@ -42,7 +43,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
     return (
         <html lang="en">
-            <Analytics />
+            {/* <Analytics /> - Vercel Analytics removed, use Cloudflare Web Analytics */}
             <GlobalProvider>
                 <AuthProvider>
                     <ThemeProvider

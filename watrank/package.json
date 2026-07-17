@@ -6,7 +6,12 @@
         "dev": "next dev",
         "build": "next build",
         "start": "next start",
-        "lint": "next lint"
+        "lint": "next lint",
+        "preview": "opennextjs-cloudflare build --dangerouslyUseUnsupportedNextVersion && opennextjs-cloudflare preview",
+        "deploy": "opennextjs-cloudflare build --dangerouslyUseUnsupportedNextVersion && opennextjs-cloudflare deploy",
+        "deploy:cf": "opennextjs-cloudflare build --dangerouslyUseUnsupportedNextVersion && opennextjs-cloudflare deploy",
+        "build:cf": "opennextjs-cloudflare build --dangerouslyUseUnsupportedNextVersion",
+        "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
     },
     "dependencies": {
         "@fullstory/browser": "^2.0.6",
@@ -55,6 +60,8 @@
     },
     "devDependencies": {
         "@types/canvas-confetti": "^1.9.0",
+        "@cloudflare/workers-types": "^5.20260717.1",
+        "@opennextjs/cloudflare": "^1.20.1",
         "@types/js-cookie": "^3.0.6",
         "@types/node": "^20",
         "@types/react": "^18",
@@ -63,6 +70,7 @@
         "eslint-config-next": "^16.0.10",
         "postcss": "^8",
         "tailwindcss": "^3.4.1",
-        "typescript": "^5"
+        "typescript": "^5",
+        "wrangler": "^4.111.0"
     }
 }

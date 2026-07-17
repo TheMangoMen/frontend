@@ -34,3 +34,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# cloudflare / opennext
+.open-next/
+.dev.vars
+wrangler.json
+cloudflare-env.d.ts
+.worker-next.config.json
+# Uncomment to ignore wrangler config if you keep secrets there
+# wrangler.jsonc
+
+# opennext cache
+.open-next/

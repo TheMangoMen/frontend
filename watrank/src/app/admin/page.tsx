@@ -159,7 +159,7 @@ const AdminCard: React.FC<AdminCardProps> = ({
                         ...(!!token && { Authorization: `Bearer ${token}` }),
                     },
                 });
-                const data = await response.json();
+                const data = (await response.json()) as any;
                 const initialValue = String(data); // Convert the value to a string
                 setValue(initialValue);
                 setInitialValue(initialValue);
@@ -591,7 +591,7 @@ export default function AdminPage() {
                     },
                 }
             );
-            const data = await response.json();
+            const data = (await response.json()) as any;
             setUserCount(data.count);
         } catch (error) {
             console.error("Error fetching user count:", error);
@@ -609,14 +609,14 @@ export default function AdminPage() {
                     },
                 }
             );
-            const data = await response.json();
+            const data = (await response.json()) as any;
             const formattedData = data
                 .slice(0, 50) // Limit to 50 most recent logs
                 .map((entry: ContributionLog) => {
                     const date = new Date(entry.LogTime);
-                    const formattedLogTime = `${date.toLocaleDateString(
-                        "en-US"
-                    )} ${date.toLocaleTimeString("en-US", {
+                    const formattedLogTime = `${date.toLocaleDateString("en-US")} ${date.toLocaleTimeString(
+                        "en-US",
+                        {
                         hour: "2-digit",
                         minute: "2-digit",
                         second: "2-digit",
@@ -643,7 +643,7 @@ export default function AdminPage() {
                     },
                 }
             );
-            const data = await response.json();
+            const data = (await response.json()) as any;
             setContributions(data); // Limit to 50 most recent contributions
         } catch (error) {
             console.error("Error fetching contributions:", error);
