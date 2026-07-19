@@ -162,8 +162,8 @@ export default function ContributeStatus({
     }: z.infer<typeof formSchema>) {
         const data = {
             jid: row.getValue("jid"),
-            employerRanking,
-            userRanking:
+            employerranking: employerRanking,
+            userranking:
                 userRanking === NOT_INTERESTED_STRING
                     ? NOT_INTERESTED_NUM
                     : parseInt(userRanking),
