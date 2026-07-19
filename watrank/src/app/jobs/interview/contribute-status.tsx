@@ -217,8 +217,8 @@ export default function ContributeStatus({
             interviewcount: null,
             oadifficulty: null,
             oalength: null,
-            interviewVibe: null,
-            interviewTechnical: null,
+            interviewvibe: null,
+            interviewtechnical: null,
             compensation: null,
         };
         console.log("deleting");
@@ -237,8 +237,8 @@ export default function ContributeStatus({
             interviewcount: values.interviewcount ?? 0,
             oadifficulty: values.oadifficulty ?? null,
             oalength: values.oalength ?? null,
-            interviewVibe: values.interviewvibe ?? null,
-            interviewTechnical: values.interviewtechnical ?? null,
+            interviewvibe: values.interviewvibe ?? null,
+            interviewtechnical: values.interviewtechnical ?? null,
             compensation: values.compensation ?? null,
         };
         console.log("submitting");
