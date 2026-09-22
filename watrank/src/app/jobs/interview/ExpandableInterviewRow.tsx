@@ -97,8 +97,26 @@ function parseContribution(contribution: any) {
         interviewRound: stageCount("Interview Stage")?.count,
         gotOffer: stageCount("Offer Call")?.count === 1,
         tags: contribution.tags,
-        contributionTime: new Date(contribution.logtime),
+        contributionTime: parseLogTime(contribution.logtime),
     };
+}
+
+/**
+ * Returns null rather than an Invalid Date when the backend has no timestamp for a contribution.
+ *
+ * ContributionsLogs is written only by a DB trigger, so the Postgres -> D1 import left a handful
+ * of contributions with no log row and hence no logtime. The endpoint LEFT JOINs those rows now
+ * instead of dropping them, and sends logtime: "" for them.
+ *
+ * The falsy check is the load-bearing part. A bare `new Date(logtime)` is only safe because the
+ * backend sends "": new Date(null) does NOT produce an Invalid Date, it coerces to 0 and yields a
+ * valid Date at the epoch, which formatDate renders as "Dec 31" (or "Jan 01" east of UTC) and
+ * which is indistinguishable from a real contribution date. Guard the value, not just the Date.
+ */
+function parseLogTime(logtime: unknown): Date | null {
+    if (!logtime || typeof logtime !== "string") return null;
+    const d = new Date(logtime);
+    return Number.isNaN(d.getTime()) ? null : d;
 }
 
 const ExpandableInterviewRow = ({
@@ -187,7 +205,7 @@ const ExpandableInterviewRow = ({
                 ))}
             </TableRow>
             {isExpanded &&
-                contributionData.map((contribution: any) => {
+                contributionData.map((contribution: any, i: number) => {
                     const {
                         gotOA,
                         interviewRound,
@@ -198,7 +216,7 @@ const ExpandableInterviewRow = ({
 
                     return (
                         <TableRow
-                            key={contributionTime.toDateString()}
+                            key={i}
                             className="flex bg-secondary hover:bg-secondary"
                         >
                             {row.getVisibleCells().map((cell: any) => {
