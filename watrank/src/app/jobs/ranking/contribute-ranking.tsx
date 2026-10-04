@@ -73,7 +73,7 @@ export default function ContributeStatus({
     icon: React.ReactNode;
     tooltipText: string;
 }) {
-    const { token, isLoggedIn } = useAuth();
+    const { authFetch, isLoggedIn } = useAuth();
     const { toast } = useToast();
     const [open, setOpen] = React.useState(false);
     const [loading, setLoading] = React.useState(true);
@@ -86,15 +86,12 @@ export default function ContributeStatus({
     const fetchData = async () => {
         setLoading(true);
         try {
-            const response = await fetch(
+            const response = await authFetch(
                 `${process.env.NEXT_PUBLIC_API_URL}/ranking/${row.getValue(
                     "jid"
                 )}`,
                 {
                     method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
                 }
             );
             if (response.ok) {
@@ -133,12 +130,11 @@ export default function ContributeStatus({
     async function onDelete() {
         try {
             const jid = row.getValue("jid");
-            const response = await fetch(
+            const response = await authFetch(
                 `${process.env.NEXT_PUBLIC_API_URL}/ranking/${jid}`,
                 {
                     method: "DELETE",
                     headers: {
-                        Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json",
                     },
                 }
@@ -171,12 +167,11 @@ export default function ContributeStatus({
         console.log("submitting");
         console.log(data);
         try {
-            const response = await fetch(
+            const response = await authFetch(
                 `${process.env.NEXT_PUBLIC_API_URL}/rankings`,
                 {
                     method: "POST",
                     headers: {
-                        Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify(data),

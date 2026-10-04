@@ -28,7 +28,8 @@ function parseJson(json: any) {
 }
 
 export default function JobPage() {
-    const { token, logout, authIsLoading } = useAuth();
+    const { authFetch, isLoggedIn, logout, authIsLoading } = useAuth();
+    const loggedIn = isLoggedIn();
     const { toast } = useToast();
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -53,12 +54,9 @@ export default function JobPage() {
         setIsLoading(true);
         try {
             const [stageResponse, jobsResponse] = await Promise.all([
-                fetch(`${process.env.NEXT_PUBLIC_API_URL}/stage`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                }),
-                fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs`, {
+                authFetch(`${process.env.NEXT_PUBLIC_API_URL}/stage`, {}),
+                authFetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs`, {
                     method: "GET",
-                    headers: { Authorization: `Bearer ${token}` },
                 }),
             ]);
 
@@ -98,10 +96,10 @@ export default function JobPage() {
     };
 
     useEffect(() => {
-        if (!authIsLoading && token) {
+        if (!authIsLoading && loggedIn) {
             fetchStageAndJobs();
         }
-    }, [authIsLoading, token, showRankingTable]);
+    }, [authIsLoading, loggedIn, showRankingTable]);
 
     if (isLoading) {
         return (

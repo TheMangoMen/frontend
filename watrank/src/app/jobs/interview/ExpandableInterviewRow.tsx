@@ -106,7 +106,7 @@ const ExpandableInterviewRow = ({
     className = "",
 }: ExpandableInterviewRowProps<any>) => {
     const { toast } = useToast();
-    const { token, isLoggedIn } = useAuth();
+    const { authFetch, isLoggedIn } = useAuth();
     const [isExpanded, setIsExpanded] = React.useState(false);
     const [contributionData, setContributionData] = useState([]);
 
@@ -117,15 +117,12 @@ const ExpandableInterviewRow = ({
     // Simulated API cal
     const fetchExpandedData = async (id: string) => {
         try {
-            const response = await fetch(
+            const response = await authFetch(
                 `${
                     process.env.NEXT_PUBLIC_API_URL
                 }/jobs/specific/interview/${row.getValue("jid")}`,
                 {
                     method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
                 }
             );
             if (response.ok) {

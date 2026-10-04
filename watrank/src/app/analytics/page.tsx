@@ -71,7 +71,7 @@ const addColors = (arr: WatchedStatusCount[]) =>
     }));
 
 export default function AnalyticsPage() {
-    const { token, authIsLoading } = useAuth();
+    const { authFetch, authIsLoading } = useAuth();
     const { toast } = useToast();
     const [jobData, setJobData] = useState<WatchedStatusCount[]>([]);
     const [companyData, setCompanyData] = useState<WatchedStatusCount[]>([]);
@@ -93,11 +93,8 @@ export default function AnalyticsPage() {
         const url = `${process.env.NEXT_PUBLIC_API_URL}/analytics/status_counts`;
 
         try {
-            const response = await fetch(url, {
+            const response = await authFetch(url, {
                 method: "GET",
-                headers: {
-                    ...(!!token && { Authorization: `Bearer ${token}` }),
-                },
             });
             const json: AnalyticsData = await response.json();
             setJobData(addColors(json.jobs));
