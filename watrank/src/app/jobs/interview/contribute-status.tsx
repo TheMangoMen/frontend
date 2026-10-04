@@ -82,7 +82,7 @@ export default function ContributeStatus({
     icon: React.ReactNode;
     tooltipText: string;
 }) {
-    const { token, isLoggedIn } = useAuth();
+    const { authFetch, isLoggedIn } = useAuth();
     const { toast } = useToast();
     const [open, setOpen] = React.useState(false);
     const [status, setStatus] = React.useState<string[]>([]);
@@ -97,15 +97,12 @@ export default function ContributeStatus({
     const fetchData = async () => {
         setLoading(true);
         try {
-            const response = await fetch(
+            const response = await authFetch(
                 `${process.env.NEXT_PUBLIC_API_URL}/contribution/${row.getValue(
                     "jid"
                 )}`,
                 {
                     method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
                 }
             );
             if (response.ok) {
@@ -180,12 +177,11 @@ export default function ContributeStatus({
 
     async function updateContribution(data: any, message: string) {
         try {
-            const response = await fetch(
+            const response = await authFetch(
                 `${process.env.NEXT_PUBLIC_API_URL}/contribution`,
                 {
                     method: "POST",
                     headers: {
-                        Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify(data),

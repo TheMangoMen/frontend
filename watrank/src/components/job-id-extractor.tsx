@@ -140,7 +140,7 @@ const parseJobs = (text: string): Job[] => {
 };
 
 const JobIDExtractor: React.FC<JobIDExtractorProps> = ({ refresh }) => {
-    const { token } = useAuth();
+    const { authFetch } = useAuth();
     const { toast } = useToast();
 
     const showErrorToast = () =>
@@ -162,12 +162,11 @@ const JobIDExtractor: React.FC<JobIDExtractorProps> = ({ refresh }) => {
 
     const updateWatchList = async (jobs: Job[]) => {
         try {
-            const response = await fetch(
+            const response = await authFetch(
                 `${process.env.NEXT_PUBLIC_API_URL}/watching`,
                 {
                     method: "POST",
                     headers: {
-                        ...(token && { Authorization: `Bearer ${token}` }),
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify(jobs),
