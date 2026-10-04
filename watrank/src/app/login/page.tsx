@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { capture } from "@/lib/analytics";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -71,6 +72,7 @@ export default function AuthenticationPage() {
             if (!response.ok) {
                 showErrorToast();
             } else {
+                capture("login_link_requested");
                 setIsSuccessful(true);
                 setUsername(values.username);
             }

@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { capture } from "@/lib/analytics";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 
@@ -20,6 +21,7 @@ const AnimatedTabs: React.FC<AnimatedTabsProps> = ({ setTabFilter }) => {
     ];
 
     const handleTabChange = (option: FilterOption) => {
+        capture("jobs_filter_changed", { filter: option });
         setActiveTab(option);
         setTabFilter(option);
     };

@@ -1,6 +1,7 @@
 "use client";
 
 import confetti from "canvas-confetti";
+import { capture } from "@/lib/analytics";
 import { Job } from "../table-shared/job";
 import { SquarePlus, Trash } from "lucide-react";
 import {
@@ -142,6 +143,7 @@ export default function ContributeStatus({
             if (!response.ok) {
                 showErrorToast();
             } else {
+                capture("ranking_deleted", { jid });
                 toast({ title: "Your contribution has been deleted!" });
                 setOpen(false);
                 refresh();
@@ -180,6 +182,10 @@ export default function ContributeStatus({
             if (!response.ok) {
                 showErrorToast();
             } else {
+                capture("ranking_submitted", {
+                    jid: data.jid,
+                    employer_ranked: !!data.employerranking,
+                });
                 toast({ title: "Thank you for your contribution!" });
                 confetti({
                     particleCount: 30,

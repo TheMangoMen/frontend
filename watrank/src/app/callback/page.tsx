@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/context/AuthContext";
+import { capture } from "@/lib/analytics";
 import { useRouter } from "next/navigation";
 
 import { useSearchParams } from "next/navigation";
@@ -59,9 +60,11 @@ function CallbackHelper() {
                 const { token } = await res.json();
 
                 login(token);
+                capture("login_completed");
                 setIsValid(true);
                 router.push("/jobs");
             } catch {
+                capture("login_failed");
                 setIsValid(false);
             } finally {
                 setIsLoading(false);

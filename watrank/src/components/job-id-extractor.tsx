@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { capture } from "@/lib/analytics";
 import { Button } from "./ui/button";
 import { ClipboardPaste } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
@@ -178,6 +179,7 @@ const JobIDExtractor: React.FC<JobIDExtractorProps> = ({ refresh }) => {
                 return;
             }
 
+            capture("jobs_watched", { count: jobs.length });
             showSuccessToast();
             refresh();
         } catch (error) {
