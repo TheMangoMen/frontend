@@ -1,6 +1,7 @@
 "use client";
 
 import confetti from "canvas-confetti";
+import { capture } from "@/lib/analytics";
 import { Job } from "../table-shared/job";
 import {
     DollarSign,
@@ -175,7 +176,11 @@ export default function ContributeStatus({
         return statusPresence;
     };
 
-    async function updateContribution(data: any, message: string) {
+    async function updateContribution(
+        data: any,
+        message: string,
+        event: string
+    ) {
         try {
             const response = await authFetch(
                 `${process.env.NEXT_PUBLIC_API_URL}/contribution`,
@@ -190,6 +195,12 @@ export default function ContributeStatus({
             if (!response.ok) {
                 showErrorToast();
             } else {
+                capture(event, {
+                    jid: data.jid,
+                    oa: data.oa,
+                    interview: data.interview,
+                    offercall: data.offercall,
+                });
                 toast({ title: message });
                 confetti({
                     particleCount: 30,
@@ -219,7 +230,11 @@ export default function ContributeStatus({
         };
         console.log("deleting");
         console.log(data);
-        await updateContribution(data, "Your contribution has been deleted!");
+        await updateContribution(
+            data,
+            "Your contribution has been deleted!",
+            "interview_status_deleted"
+        );
     }
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -239,7 +254,11 @@ export default function ContributeStatus({
         };
         console.log("submitting");
         console.log(data);
-        await updateContribution(data, "Thank you for your contribution!");
+        await updateContribution(
+            data,
+            "Thank you for your contribution!",
+            "interview_status_submitted"
+        );
     }
 
     return (

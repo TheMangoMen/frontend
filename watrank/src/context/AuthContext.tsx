@@ -12,6 +12,7 @@ import React, {
 import Cookies from "js-cookie";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { useToast } from "@/components/ui/use-toast";
+import { capture, resetIdentity } from "@/lib/analytics";
 
 export type AuthFetch = (
     input: string,
@@ -152,6 +153,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
             method: "POST",
             credentials: "include",
         }).catch(() => {});
+        capture("logout");
+        resetIdentity();
         updateToken(null);
         toast({ title: "Log out successful!" });
     };

@@ -1,13 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: false,
-    typescript: {
-        // Temporary for CF migration - existing codebase has loose any types
-        ignoreBuildErrors: true,
-    },
-    eslint: {
-        ignoreDuringBuilds: true,
-    },
+    // PostHog calls endpoints with a trailing slash (e.g. /ingest/e/); don't redirect them.
+    skipTrailingSlashRedirect: true,
 };
 
 export default nextConfig;
