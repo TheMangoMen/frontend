@@ -1,11 +1,10 @@
 "use client";
 
 import { useAuth } from "@/context/AuthContext";
-import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
 
 import { useSearchParams } from "next/navigation";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Icons } from "../login/components/icons";
 
 const Message = ({
@@ -33,14 +32,31 @@ function CallbackHelper() {
     const router = useRouter();
     const [isValid, setIsValid] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    // The login code works only once, so never send it twice.
+    const exchanged = useRef(false);
 
     useEffect(() => {
         const code = searchParams?.get("code");
+        if (!code) {
+            setIsLoading(false);
+            return;
+        }
+        if (exchanged.current) return;
+        exchanged.current = true;
 
-        if (code) {
+        const exchange = async () => {
             try {
-                const token = atob(code);
-                jwtDecode(token).sub;
+                const res = await fetch(
+                    `${process.env.NEXT_PUBLIC_API_URL}/auth/exchange`,
+                    {
+                        method: "POST",
+                        credentials: "include",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ code }),
+                    }
+                );
+                if (!res.ok) throw new Error(`exchange failed: ${res.status}`);
+                const { token } = await res.json();
 
                 login(token);
                 setIsValid(true);
@@ -50,7 +66,8 @@ function CallbackHelper() {
             } finally {
                 setIsLoading(false);
             }
-        }
+        };
+        exchange();
     }, []);
 
     if (isLoading) {
@@ -69,7 +86,7 @@ function CallbackHelper() {
     return (
         <Message
             title="Error :("
-            description="Please double check that your link is valid"
+            description="This login link is invalid, expired, or already used. Please request a new one."
         />
     );
 }
