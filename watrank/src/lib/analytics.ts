@@ -1,6 +1,6 @@
 import posthog from "posthog-js";
 
-// Public, write-only project key. Baked in at build time from .env.production.
+// Public, write-only project key, committed in .env.production and baked in at build time.
 const POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY;
 
 // Events go through our own domain (see src/app/ingest) so ad blockers don't drop them.
