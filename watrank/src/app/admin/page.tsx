@@ -20,7 +20,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { useAuth } from "@/context/AuthContext";
+import { AuthFetch, useAuth } from "@/context/AuthContext";
 import { useToast } from "@/components/ui/use-toast";
 import { DataTable } from "@/components/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
@@ -116,7 +116,6 @@ interface AdminCardProps {
     updateUrl: string;
     inputType: "text" | "number" | "dropdown" | "boolean";
     dataKey: string;
-    token: string;
     toastTitle: string;
     toastDescription: string;
     dropdownOptions?: { label: string; value: string | number | boolean }[];
@@ -131,7 +130,6 @@ const AdminCard: React.FC<AdminCardProps> = ({
     updateUrl,
     inputType,
     dataKey,
-    token,
     toastTitle,
     toastDescription,
     dropdownOptions,
@@ -139,7 +137,7 @@ const AdminCard: React.FC<AdminCardProps> = ({
     const { toast } = useToast();
     const [value, setValue] = useState<string>("");
     const [initialValue, setInitialValue] = useState<string>("");
-    const { isAdmin } = useAuth();
+    const { isAdmin, authFetch } = useAuth();
     const router = useRouter();
 
     const showToast = () => {
@@ -153,11 +151,8 @@ const AdminCard: React.FC<AdminCardProps> = ({
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(fetchUrl, {
+                const response = await authFetch(fetchUrl, {
                     method: "GET",
-                    headers: {
-                        ...(!!token && { Authorization: `Bearer ${token}` }),
-                    },
                 });
                 const data = (await response.json()) as any;
                 const initialValue = String(data); // Convert the value to a string
@@ -186,11 +181,10 @@ const AdminCard: React.FC<AdminCardProps> = ({
                                   : value,
                       };
             console.log(payload);
-            const res: any = await fetch(updateUrl, {
+            const res: any = await authFetch(updateUrl, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify(payload),
             });
@@ -364,17 +358,16 @@ interface AdminViewContribution {
 const deleteContribution = async (
     jid: number,
     uid: string,
-    token: string,
+    authFetch: AuthFetch,
     onSuccess: () => void
 ) => {
     try {
-        const response = await fetch(
+        const response = await authFetch(
             `${process.env.NEXT_PUBLIC_API_URL}/admin/contributions`,
             {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({ jid, uid }),
             }
@@ -393,13 +386,13 @@ const DeleteContributionButton: React.FC<{
     contribution: AdminViewContribution;
 }> = ({ contribution }) => {
     const { toast } = useToast();
-    const { token } = useAuth();
+    const { authFetch } = useAuth();
 
     const handleDelete = () => {
         deleteContribution(
             contribution.JID,
             contribution.UID,
-            token || "",
+            authFetch,
             () => {
                 toast({
                     title: "Contribution Deleted",
@@ -571,7 +564,7 @@ const ContributionsAccordion: React.FC<{
 };
 
 export default function AdminPage() {
-    const { token, authIsLoading } = useAuth();
+    const { authFetch, authIsLoading } = useAuth();
     const [contributionLogs, setContributionLogs] = useState<ContributionLog[]>(
         []
     );
@@ -582,13 +575,10 @@ export default function AdminPage() {
 
     const fetchUserCount = async () => {
         try {
-            const response = await fetch(
+            const response = await authFetch(
                 `${process.env.NEXT_PUBLIC_API_URL}/admin/contributions/user_count`,
                 {
                     method: "GET",
-                    headers: {
-                        ...(!!token && { Authorization: `Bearer ${token}` }),
-                    },
                 }
             );
             const data = (await response.json()) as any;
@@ -600,13 +590,10 @@ export default function AdminPage() {
 
     const fetchContributionLogs = async () => {
         try {
-            const response = await fetch(
+            const response = await authFetch(
                 `${process.env.NEXT_PUBLIC_API_URL}/admin/contribution_logs`,
                 {
                     method: "GET",
-                    headers: {
-                        ...(!!token && { Authorization: `Bearer ${token}` }),
-                    },
                 }
             );
             const data = (await response.json()) as any;
@@ -634,13 +621,10 @@ export default function AdminPage() {
 
     const fetchContributions = async () => {
         try {
-            const response = await fetch(
+            const response = await authFetch(
                 `${process.env.NEXT_PUBLIC_API_URL}/admin/contributions`,
                 {
                     method: "GET",
-                    headers: {
-                        ...(!!token && { Authorization: `Bearer ${token}` }),
-                    },
                 }
             );
             const data = (await response.json()) as any;
@@ -682,7 +666,6 @@ export default function AdminPage() {
                             updateUrl={card.updateUrl}
                             inputType={card.inputType as any}
                             dataKey={card.dataKey}
-                            token={token || ""}
                             toastTitle={card.toastTitle}
                             toastDescription={card.toastDescription}
                             dropdownOptions={card.dropdownOptions}
@@ -716,7 +699,7 @@ export default function AdminPage() {
                     <ContributionsAccordion
                         contributions={contributions}
                         onDelete={(jid, uid) => {
-                            deleteContribution(jid, uid, token || "", () => {
+                            deleteContribution(jid, uid, authFetch, () => {
                                 fetchContributions();
                             });
                         }}
