@@ -38,7 +38,7 @@ function CallbackHelper() {
     const router = useRouter();
     const [isValid, setIsValid] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-    // The login code works only once, so never send it twice.
+    // Exchange the code once per page load.
     const exchanged = useRef(false);
 
     useEffect(() => {
@@ -101,7 +101,7 @@ function CallbackHelper() {
     return (
         <Message
             title="Error :("
-            description="This login link is invalid, expired, or already used. Login links work once, for 15 minutes."
+            description="This login link is invalid, expired, or already used. Login links expire after 15 minutes."
         >
             <div className="pt-4">
                 <Button asChild>
