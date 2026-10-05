@@ -96,8 +96,12 @@ export default function JobPage() {
     };
 
     useEffect(() => {
-        if (!authIsLoading && loggedIn) {
+        if (authIsLoading) return;
+        if (loggedIn) {
             fetchStageAndJobs();
+        } else {
+            // Without this a logged-out visitor sits on a spinner forever.
+            router.replace("/login");
         }
     }, [authIsLoading, loggedIn, showRankingTable]);
 

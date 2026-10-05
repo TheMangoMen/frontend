@@ -2,18 +2,22 @@
 
 import { useAuth } from "@/context/AuthContext";
 import { capture } from "@/lib/analytics";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { useSearchParams } from "next/navigation";
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Icons } from "../login/components/icons";
+import { Button } from "@/components/ui/button";
 
 const Message = ({
     title,
     description,
+    children,
 }: {
     title: string;
     description: string;
+    children?: React.ReactNode;
 }) => {
     return (
         <div className="w-full h-full flex justify-center items-center mb-[80px]">
@@ -22,13 +26,14 @@ const Message = ({
                     {title}
                 </h1>
                 <p className="text-sm text-muted-foreground">{description}</p>
+                {children}
             </div>
         </div>
     );
 };
 
 function CallbackHelper() {
-    const { login } = useAuth();
+    const { login, token, authIsLoading } = useAuth();
     const searchParams = useSearchParams();
     const router = useRouter();
     const [isValid, setIsValid] = useState(false);
@@ -73,7 +78,14 @@ function CallbackHelper() {
         exchange();
     }, []);
 
-    if (isLoading) {
+    // The link was already used, but this browser is logged in (e.g. the link
+    // was clicked twice): there's nothing to fix, so carry on to jobs.
+    const alreadyLoggedIn = !isLoading && !isValid && token !== null;
+    useEffect(() => {
+        if (alreadyLoggedIn) router.replace("/jobs");
+    }, [alreadyLoggedIn, router]);
+
+    if (isLoading || alreadyLoggedIn || (!isValid && authIsLoading)) {
         return;
     }
 
@@ -89,8 +101,14 @@ function CallbackHelper() {
     return (
         <Message
             title="Error :("
-            description="This login link is invalid, expired, or already used. Please request a new one."
-        />
+            description="This login link is invalid, expired, or already used. Login links work once, for 15 minutes."
+        >
+            <div className="pt-4">
+                <Button asChild>
+                    <Link href="/login">Send a new link</Link>
+                </Button>
+            </div>
+        </Message>
     );
 }
 

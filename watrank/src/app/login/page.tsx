@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/app/login/components/icons";
 import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -40,12 +42,20 @@ export default function AuthenticationPage() {
     const [username, setUsername] = React.useState<string>("");
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
     const { toast } = useToast();
+    const { isLoggedIn, authIsLoading } = useAuth();
+    const router = useRouter();
+    const loggedIn = isLoggedIn();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             username: "",
         },
     });
+
+    // Already logged in (e.g. a stale "Log In" link): go straight to jobs.
+    React.useEffect(() => {
+        if (!authIsLoading && loggedIn) router.replace("/jobs");
+    }, [authIsLoading, loggedIn, router]);
 
     const showErrorToast = ({
         title,
