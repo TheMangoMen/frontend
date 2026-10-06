@@ -1,4 +1,5 @@
 import { Config } from "tailwindcss";
+import plugin from "tailwindcss/plugin";
 
 const config = {
     darkMode: ["class"],
@@ -79,11 +80,36 @@ const config = {
                     from: { opacity: "0" },
                     to: { opacity: "1" },
                 },
+                "bat-fly": {
+                    "0%": { transform: "translate(-10vw, 0)" },
+                    "25%": { transform: "translate(25vw, -3vh)" },
+                    "50%": { transform: "translate(55vw, 2vh)" },
+                    "75%": { transform: "translate(85vw, -2vh)" },
+                    "100%": { transform: "translate(115vw, 1vh)" },
+                },
+                "bat-flap": {
+                    "0%, 100%": { transform: "scaleY(1)" },
+                    "50%": { transform: "scaleY(0.6)" },
+                },
+                "spider-dangle": {
+                    "0%, 100%": { transform: "translateY(0)" },
+                    "50%": { transform: "translateY(18px)" },
+                },
+                flicker: {
+                    "0%, 100%": { opacity: "1" },
+                    "45%": { opacity: "0.85" },
+                    "50%": { opacity: "0.6" },
+                    "55%": { opacity: "0.9" },
+                },
             },
             animation: {
                 "accordion-down": "accordion-down 0.2s ease-out",
                 "accordion-up": "accordion-up 0.2s ease-out",
                 fade: "fadeIn .5s ease-in-out",
+                "bat-fly": "bat-fly 18s linear infinite",
+                "bat-flap": "bat-flap 0.25s ease-in-out infinite",
+                "spider-dangle": "spider-dangle 4s ease-in-out infinite",
+                flicker: "flicker 3s ease-in-out infinite",
             },
             boxShadow: {
                 red: "0 0 6px 6px rgba(239,68,68,0.5)",
@@ -109,7 +135,15 @@ const config = {
             },
         },
     },
-    plugins: [require("tailwindcss-animate")],
+    plugins: [
+        require("tailwindcss-animate"),
+        // Seasonal theme variants, active while <html> has the `halloween`
+        // class (see src/lib/seasonal.ts).
+        plugin(({ addVariant }) => {
+            addVariant("halloween", ".halloween &");
+            addVariant("halloween-dark", ".halloween.dark &");
+        }),
+    ],
 };
 
 export default config;

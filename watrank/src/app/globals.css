@@ -54,6 +54,39 @@
         --chart-interview: 271 91% 65%;
         --chart-nothing: 240 5% 64.9%;
     }
+
+    /* Halloween: pumpkin orange accents, a warm parchment light mode and a
+       deep purple night for dark mode. Toggled in src/lib/seasonal.ts. */
+    .halloween {
+        --background: 36 60% 98%;
+        --card: 36 60% 99%;
+        --popover: 36 60% 99%;
+        --primary: 24.6 95% 53.1%;
+        --primary-foreground: 15 80% 10%;
+        --secondary: 32 40% 93%;
+        --secondary-foreground: 20 10% 35%;
+        --muted: 32 35% 94%;
+        --accent: 30 50% 92%;
+        --border: 30 25% 86%;
+        --input: 30 25% 86%;
+        --ring: 24.6 95% 53.1%;
+    }
+
+    .halloween.dark {
+        --background: 270 30% 6%;
+        --card: 270 25% 10%;
+        --popover: 270 28% 8%;
+        --primary: 24.6 95% 53.1%;
+        --primary-foreground: 15 80% 8%;
+        --secondary: 270 18% 16%;
+        --secondary-foreground: 270 10% 72%;
+        --muted: 270 18% 15%;
+        --muted-foreground: 270 8% 66%;
+        --accent: 270 20% 17%;
+        --border: 270 18% 18%;
+        --input: 270 18% 18%;
+        --ring: 24.6 95% 45%;
+    }
 }
 
 @layer base {

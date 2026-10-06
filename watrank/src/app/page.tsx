@@ -25,6 +25,7 @@ import {
 } from "./jobs/table-shared/expanded-count-cell";
 import { formatDate } from "@/utils/utils";
 import Banner from "@/components/banner";
+import { HalloweenBanner } from "@/components/halloween";
 
 const LandingPage = () => {
     const { isLoggedIn } = useAuth();
@@ -111,6 +112,7 @@ const LandingPage = () => {
                 className="relative py-12 lg:py-24 max-w-6xl px-4 lg:px-8 h-screen grid lg:grid-cols-2 mx-auto content-center lg:items-center justify-center gap-y-8 -mb-6"
             >
                 <div className="mb-8 lg:mb-0">
+                    <HalloweenBanner />
                     {/* <div className="flex justify-center lg:justify-start">
 						<Banner />
 					</div> */}
@@ -162,7 +164,7 @@ const LandingPage = () => {
                 </div>
             </section>
 
-            <div className="w-full h-2 bg-gradient-to-r from-yellow-200 to-green-300"></div>
+            <div className="w-full h-2 bg-gradient-to-r from-yellow-200 to-green-300 halloween:from-orange-500 halloween:via-amber-400 halloween:to-purple-600"></div>
 
             <div className="snap-none grid lg:grid-cols-2 ">
                 <div className="py-8 px-4 lg:p-10 border-b border-med-grey lg:border-r">
