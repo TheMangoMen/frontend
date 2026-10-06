@@ -292,6 +292,16 @@ const StatsCard: React.FC<{
     );
 };
 
+// GET /admin/contributions/cycle_stats
+interface CycleStats {
+    contributors: number;
+    interview_contributors: number;
+    ranking_contributors: number;
+    contributions: number;
+    interview_contributions: number;
+    ranking_contributions: number;
+}
+
 interface ContributionLog {
     LogID: number;
     LogTime: Date;
@@ -572,6 +582,21 @@ export default function AdminPage() {
         []
     );
     const [userCount, setUserCount] = useState<number | null>(null);
+    const [cycleStats, setCycleStats] = useState<CycleStats | null>(null);
+
+    const fetchCycleStats = async () => {
+        try {
+            const response = await authFetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/admin/contributions/cycle_stats`,
+                {
+                    method: "GET",
+                }
+            );
+            setCycleStats((await response.json()) as CycleStats);
+        } catch (error) {
+            console.error("Error fetching cycle stats:", error);
+        }
+    };
 
     const fetchUserCount = async () => {
         try {
@@ -639,6 +664,7 @@ export default function AdminPage() {
             fetchContributionLogs();
             fetchContributions();
             fetchUserCount();
+            fetchCycleStats();
         }
     }, [authIsLoading]);
 
@@ -683,8 +709,26 @@ export default function AdminPage() {
                 <CardContent className="justify-center items-center flex flex-wrap">
                     <StatsCard
                         title="User Count"
-                        description="Number of users who have made contributions"
+                        description="Users who have ever reported an interview status"
                         value={userCount}
+                    />
+                    <StatsCard
+                        title="Contributors This Cycle"
+                        description={
+                            cycleStats
+                                ? `Distinct users: ${cycleStats.interview_contributors} reported statuses, ${cycleStats.ranking_contributors} ranked`
+                                : "Distinct users who contributed this cycle"
+                        }
+                        value={cycleStats?.contributors ?? null}
+                    />
+                    <StatsCard
+                        title="Contributions This Cycle"
+                        description={
+                            cycleStats
+                                ? `${cycleStats.interview_contributions} interview statuses, ${cycleStats.ranking_contributions} rankings`
+                                : "Interview statuses and rankings this cycle"
+                        }
+                        value={cycleStats?.contributions ?? null}
                     />
                 </CardContent>
             </Card>
