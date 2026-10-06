@@ -11,6 +11,8 @@ import { GlobalProvider } from "@/context/StageContext";
 import { AnalyticsProvider } from "@/components/analytics-provider";
 import Main from "./main";
 import { Inter } from "next/font/google";
+import { seasonalThemeScript } from "@/lib/seasonal";
+import { HalloweenDecorations } from "@/components/halloween";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -41,7 +43,12 @@ export default function RootLayout({
     children,
 }: Readonly<{ children: React.ReactNode }>) {
     return (
-        <html lang="en">
+        <html lang="en" suppressHydrationWarning>
+            <head>
+                <script
+                    dangerouslySetInnerHTML={{ __html: seasonalThemeScript }}
+                />
+            </head>
             <GlobalProvider>
                 <AuthProvider>
                     <AnalyticsProvider>
@@ -54,6 +61,7 @@ export default function RootLayout({
                                 className={cn(inter.className, "antialiased ")}
                             >
                                 <Main>{children}</Main>
+                                <HalloweenDecorations />
                             </body>
                         </ThemeProvider>
                     </AnalyticsProvider>

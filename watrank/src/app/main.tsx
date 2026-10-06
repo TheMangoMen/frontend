@@ -20,7 +20,9 @@ export default function Main({
         return <LandingPage />;
     } else {
         return (
-            <main className={"dark:bg-black bg-muted/70 text-foreground"}>
+            <main className={
+                "dark:bg-black halloween-dark:bg-background bg-muted/70 text-foreground"
+            }>
                 <QueryClientProvider client={queryClient}>
                     <TooltipProvider>
                         <div className="h-screen box-border flex flex-col overflow-auto">
